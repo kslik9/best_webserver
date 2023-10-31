@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 08:36:24 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/31 19:17:48 by ylabrahm         ###   ########.fr       */
+/*   Created: 2023/10/31 19:33:48 by ylabrahm          #+#    #+#             */
+/*   Updated: 2023/10/31 19:41:52 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// IO
+#include <cstdlib>
 #include <iostream>
-#include <cstring>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 
-
-// function prototypes
-void ft_handle_client(int client_fd);
+int main(int argc, char const *argv[])
+{
+    if (argc > 1)
+    {
+        std::string req = ("curl -X GET " + static_cast<std::string>(argv[1]));
+        std::cout << "Client tried: " << req << std::endl;
+        if (system(req.c_str()) == -1)
+            std::cout << "An error occurred during the request" << std::endl;
+    }
+    return 0;
+}
