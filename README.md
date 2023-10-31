@@ -6,7 +6,7 @@
   <a href="https://github.com/othneildrew/Best-README-Template">
     <img src="github/white_logo.png" alt="Logo" width="80" height="80">
   </a>
-  <h3 align="center">HTTP server in C++ 98</h3>
+  <div align="center">HTTP server in C++ 98</div>
 </p>
 
 <!-- Table of Contents -->
@@ -37,7 +37,7 @@ Use the `BLANK_README.md` to get started.
 <!-- Roadmap -->
 ## Roadmap
 
-3. **Implement the HTTP Protocol**:
+**Implement the HTTP Protocol**:
 
    - [x] Create a socket.
    - [x] Bind it to an IP and port.
@@ -51,7 +51,6 @@ Use the `BLANK_README.md` to get started.
    - [ ] Implement necessary error handling for invalid requests.
    - [ ] Add "components" document to easily copy & paste sections of the readme.
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
 [Back to Top](#table-of-contents)
 
@@ -60,6 +59,8 @@ See the [open issues](https://github.com/othneildrew/Best-README-Template/issues
 
 - [Socket Programming in C/C++](https://www.geeksforgeeks.org/socket-programming-cc/)
 - [How I Built a Simple HTTP Server from Scratch using C](https://dev.to/jeffreythecoder/how-i-built-a-simple-http-server-from-scratch-using-c-739)
+- [GH:cclaude42](https://github.com/cclaude42/webserv)
+- [GH:solaldunckel](https://github.com/solaldunckel/webserv)
 
 [Back to Top](#table-of-contents)
 
