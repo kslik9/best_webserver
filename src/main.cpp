@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aessaoud <aessaoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 08:34:53 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/31 08:55:24 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:20:53 by aessaoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/webserv.hpp"
+#include "webserv.hpp"
 
 int main(int argc, char const *argv[])
 {
