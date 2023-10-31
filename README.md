@@ -59,13 +59,27 @@ Use the `BLANK_README.md` to get started.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
+3. **Implement the HTTP Protocol**:
+    - Parse incoming HTTP requests.
+    - 
+    - 
+    - 
+    -
+
+- [x] Create a socket.
+- [x] Bind it to an IP and port.
+- [x] Listen for incoming connections.
+- [ ] Accept connections.
+- [ ] Receive and send data through the socket.
+- [ ] Parse incoming HTTP requests.
+- [ ] Handle different request methods (GET, POST, etc.).
+- [ ] Create and send HTTP responses (status line, headers, body).
+- [ ] Handle persistent connections, if desired (Keep-Alive).
+- [ ] Implement necessary error handling for invalid requests.
 - [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+- [ ] Multi-Choice
+    - [ ] LEET
+    - [ ] 1337
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
