@@ -6,7 +6,7 @@
 /*   By: aessaoud <aessaoud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by    #+#            #+#    #+#             */
-/*   Updated: 2023/11/02 00:39:40 by aessaoud         ###   ########.fr       */
+/*   Updated: 2023/11/02 00:43:10 by aessaoud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void ft_handle_client(int client_fd)
 {
     if (client_fd >= 0)
     {
-        // char *buffer = (char *)malloc(BUFFER_SIZE * sizeof(char));
         char *buffer = new char[BUFFER_SIZE];
         ssize_t bytes_received = recv(client_fd, buffer, BUFFER_SIZE, 0);
         if (bytes_received > 0)
@@ -36,5 +35,6 @@ void ft_handle_client(int client_fd)
             // ------------------------------------------------------------------------------------------------
             close(client_fd);
         }
+        delete[] buffer;
     }
 }
