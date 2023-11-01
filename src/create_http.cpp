@@ -10,24 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #ifndef "WEBSERV_HPP"
-// #define "WEBSERV_HPP"
+#include "../inc/webserv.hpp"
 
-// IO
-#include <iostream>
-#include <cstring>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fstream>
-#include <sstream>
-#include <memory>
-#include <sys/stat.h>
-#include <fcntl.h>
+std::string buildHttpResponse(std::string &method, std::string &target)
+{
+    // Build the HTTP header
+    std::stringstream headerStream;
+    headerStream << "HTTP/1.1 200 OK\r\n"
+                 << "Content-Type: text/plain\r\n"
+                 << "\r\n"
+                 << "Method: " << method << "\n"
+                 << "Target: " << target << "\n";
 
-// Consts
-#define BUFFER_SIZE (1024 * 1024) // 1MB
-
-// Function prototypes
-void ft_handle_client(int client_fd);
-std::string buildHttpResponse(std::string &method, std::string &target);
+    // Return the response
+    return (headerStream.str());
+}
