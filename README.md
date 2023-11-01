@@ -49,6 +49,7 @@ Welcome to the Webserv project, a part of the 42 cursus! This project is a hands
 
 - [Socket Programming in C/C++](https://www.geeksforgeeks.org/socket-programming-cc/)
 - [How I Built a Simple HTTP Server from Scratch using C](https://dev.to/jeffreythecoder/how-i-built-a-simple-http-server-from-scratch-using-c-739)
+- [Socket in Computer Network](https://www.geeksforgeeks.org/socket-in-computer-network/)
 - [GH:cclaude42](https://github.com/cclaude42/webserv)
 - [GH:solaldunckel](https://github.com/solaldunckel/webserv)
 
