@@ -16,7 +16,7 @@ OBJS		:= $(addprefix obj/, $(OBJS))
 
 CC 			= c++
 RM			= rm -f
-CFLAGS		= -std=c++98 -Wall -Wextra -Werror 
+CFLAGS		= -std=c++98 #-Wall -Wextra -Werror 
 NAME		= webserv
 INCLUDE		= -Iinc/
 
