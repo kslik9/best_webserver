@@ -1,16 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                  :::      ::::::::                         */
-/*                                :+:      :+:    :+:                         */
-/*                              +:+ +:+         +:+                           */
-/*                            +#+  +:+       +#+                              */
-/*                          +#+#+#+#+#+   +#+                                 */
-/*                               #+#    #+#                                   */
-/*                              ###   ########.fr                             */
-/*                                                                            */
-/* ************************************************************************** */
 
-#include "../inc/webserv.hpp"
+#include "webserv.hpp"
 
 std::map<std::string, std::string> init_mime_types()
 {
@@ -46,33 +35,24 @@ std::map<std::string, std::string> init_mime_types()
     mime_types[".ogg"] = "audio/ogg";
     mime_types[".mp4"] = "video/mp4";
     mime_types[".avi"] = "video/x-msvideo";
-    // Add more mappings as needed
-
     return mime_types;
 }
 
+static std::map<std::string, std::string> mime_types = init_mime_types();
+
 std::string get_mime_type(const std::string &fileName)
 {
-    // Define a mapping of file extensions to MIME types
-    std::map<std::string, std::string> mime_types;
-    mime_types = init_mime_types();
-
-    // Find the file extension in the given file name
     size_t dotPosition = fileName.find_last_of('.');
     if (dotPosition != std::string::npos)
     {
         std::string fileExtension = fileName.substr(dotPosition);
-
-        // Search for the MIME type in the mapping
         std::map<std::string, std::string>::iterator it = mime_types.find(fileExtension);
         if (it != mime_types.end())
         {
             return it->second;
         }
     }
-
-    // Default to a generic binary MIME type if the extension is not recognized
-    return "application/octet-stream";
+    return "application/octet-stream"; // Default MIME type
 }
 
 std::string not_found_404()
@@ -82,22 +62,19 @@ std::string not_found_404()
 
 std::string buildHttpResponse(std::string __unused &method, std::string &target)
 {
-    if (target.empty())
+    if (target == "/")
         target = "index.html";
     std::string mime_type = get_mime_type(target), response;
     std::stringstream header;
     header << "HTTP/1.1 200 OK\r\n"
            << "Content-Type: " << mime_type << "\r\n"
            << "\r\n";
-    // --------------------------------------------------------------
     response = header.str();
     std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
     if (!file)
         return not_found_404();
-    // --------------------------------------------------------------
     std::ostringstream fileContent;
     fileContent << file.rdbuf();
     response += fileContent.str();
-    // --------------------------------------------------------------
-    return (response);
+    return response;
 }
