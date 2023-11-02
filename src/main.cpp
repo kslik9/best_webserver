@@ -1,9 +1,9 @@
 #include "webserv.hpp"
 
 const char *sIp = "192.168.1.100";
+
 int main(int __unused argc, char const __unused *argv[])
 {
-    // --------------------------------------------------------------
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1)
     {
