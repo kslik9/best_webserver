@@ -1,17 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                  :::      ::::::::                         */
-/*                                :+:      :+:    :+:                         */
-/*                              +:+ +:+         +:+                           */
-/*                            +#+  +:+       +#+                              */
-/*                          +#+#+#+#+#+   +#+                                 */
-/*                               #+#    #+#                                   */
-/*                              ###   ########.fr                             */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "webserv.hpp"
 
+const char *sIp = "192.168.1.100";
 int main(int __unused argc, char const __unused *argv[])
 {
     // --------------------------------------------------------------
@@ -26,6 +15,7 @@ int main(int __unused argc, char const __unused *argv[])
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(8080);
     server_address.sin_addr.s_addr = INADDR_ANY;
+    // server_address.sin_addr.s_addr = inet_addr("0.0.0.0");   ----  inet_addr converts ip address
     if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)) == -1)
     {
         std::cerr << "Error binding socket" << std::endl;
