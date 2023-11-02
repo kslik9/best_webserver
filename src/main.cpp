@@ -3,11 +3,18 @@
 
 int main(int argc, char const *argv[])
 {
+    int opt = 1;
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1)
     {
         std::cerr << "Error creating socket" << '\n';
         return EXIT_FAILURE;
+    }
+    // -----------------------------------------------------
+    // this solve the error of error binding by reusing address and port
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(1);
     }
     // -----------------------------------------------------
     sockaddr_in server_address;
