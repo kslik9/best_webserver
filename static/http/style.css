@@ -4,7 +4,25 @@
     box-sizing: border-box;
 }
 
-h1 {
-    color: red;
+body {
+    font-family: sans-serif;
+    background-color: rgb(243, 217, 178);
+}
+h1, p {
     text-align: center;
+    margin: 10px;
+}
+
+#butona {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 21px;
+    border: unset;
+    border-radius: 8px;
+    text-align: center;
+    margin: 0 auto;
+    width: 100px;
+    display: block;
+    margin-top: 50px;
 }
