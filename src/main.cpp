@@ -1,6 +1,7 @@
 
 #include "webserv.hpp"
 
+
 int main(int argc, char const *argv[])
 {
     int opt = 1;
@@ -11,7 +12,7 @@ int main(int argc, char const *argv[])
         return EXIT_FAILURE;
     }
     // -----------------------------------------------------
-    // this solve the error of error binding by reusing address and port
+    // this solves the error of binding by reusing address 
     if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
         perror("setsockopt");
         exit(1);
@@ -42,6 +43,11 @@ int main(int argc, char const *argv[])
         sockaddr client_addr;
         socklen_t client_addr_len = sizeof(client_addr);
         int client_fd = accept(server_socket, &client_addr, &client_addr_len);
+        if (client_fd < 0)
+        {
+            perror("accept");
+            return EXIT_FAILURE;
+        }
         ft_handle_client(client_fd);
     }
     // -----------------------------------------------------
