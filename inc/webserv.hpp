@@ -1,5 +1,4 @@
-// #ifndef "WEBSERV_HPP"
-// #define "WEBSERV_HPP"
+#pragma once
 
 // IO
 #include <iostream>
@@ -15,6 +14,9 @@
 #include <arpa/inet.h>
 #include <string>
 #include <map>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/select.h>
 
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB

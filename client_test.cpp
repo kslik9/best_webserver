@@ -37,11 +37,12 @@ int sendRequest()
 
 int main() 
 {
-    // fork();
-    // for (int i = 0; i < 4500; i++)
-    // {
-        sendRequest();
-    // }
-    // wait(NULL);
+    fork();
+    for (int i = 0; i < 500; i++)
+    {
+        // sendRequest();
+        system("curl localhost:8080");
+    }
+    wait(NULL);
     return 0;
 }

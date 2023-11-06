@@ -52,7 +52,9 @@ Welcome to the Webserv project, a part of the 42 cursus! This project is a hands
 - [Socket in Computer Network](https://www.geeksforgeeks.org/socket-in-computer-network/)
 - [GH:cclaude42](https://github.com/cclaude42/webserv)
 - [GH:solaldunckel](https://github.com/solaldunckel/webserv)
-
+- [ECE 252 Lecture 26: Asynchronous I/O with select, poll](https://www.youtube.com/watch?v=tAGF0T2cXRA)
+- [Getting Started with the Select Model](https://www.topcoder.com/thrive/articles/Linux%20Programming%20-%20Getting%20Started%20with%20the%20Select%20Model)
+- [Socket Programming in C/C++: Handling multiple clients on server without multi threading](https://www.geeksforgeeks.org/socket-programming-in-cc-handling-multiple-clients-on-server-without-multi-threading/)
 [Back to Top](#table-of-contents)
 
 <!-- Markdown Links & Images -->
