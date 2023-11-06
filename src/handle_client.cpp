@@ -16,6 +16,8 @@ void parse_request(const std::string &request, std::string &method, std::string 
     }
 }
 
+int client_id = 0;
+
 void ft_handle_client(int client_fd)
 {
     if (client_fd >= 0)
@@ -23,6 +25,8 @@ void ft_handle_client(int client_fd)
         // -----------------------------------------------------
         char *buffer = new char[BUFFER_SIZE];
         ssize_t bytes_received = recv(client_fd, buffer, BUFFER_SIZE, 0);
+        
+        // std::cout << "--------[" << buffer << "]--------\n";
         // -----------------------------------------------------
         if (bytes_received > 0)
         {
