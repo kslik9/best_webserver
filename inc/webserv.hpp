@@ -25,7 +25,7 @@
 #define STATIC_HTTP "static/http/"
 #define STATIC_404 "static/404/index.html"
 
-#define CLIENTS_COUNT 2
+#define CLIENTS_COUNT 10
 
 // Function prototypes
 void ft_handle_client(int client_fd);
