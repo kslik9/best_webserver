@@ -1,4 +1,6 @@
-SRCS		= src/main.cpp src/handle_client.cpp src/create_http.cpp src/CreateServerSocket.cpp
+SRCS		=	src/main.cpp src/handle_client.cpp src/create_http.cpp src/CreateServerSocket.cpp \
+				src/Config/Config.cpp src/Session/Session.cpp src/Server/Server.cpp \
+				src/Logger/Logger.cpp
 OBJS		:= $(SRCS:.cpp=.o)
 OBJS		:= $(addprefix obj/, $(OBJS))
 

@@ -1,6 +1,8 @@
+
 #include "webserv.hpp"
 
-int CreateServerSocket() {
+int CreateServerSocket()
+{
     int opt = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == -1)
@@ -9,8 +11,9 @@ int CreateServerSocket() {
         exit(EXIT_FAILURE);
     }
     // -----------------------------------------------------
-    // this solves the error of binding by reusing address 
-    if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+    // this solves the error of binding by reusing address
+    if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+    {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
