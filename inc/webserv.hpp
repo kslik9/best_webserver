@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WEBSERV_HPP
+#define WEBSERV_HPP
 
 // IO
 #include <iostream>
@@ -22,19 +23,11 @@
 #include <poll.h>
 #include <exception>
 
-// 
-enum LogLevel
-{
-	ERROR,
-	WARNING,
-	INFO
-};
 
 // OOP
 #include "../src/Config/Config.hpp"
-#include "../src/Server/Server.hpp"
-#include "../src/Session/Session.hpp"
 #include "../src/Logger/Logger.hpp"
+#include "../src/Server/Server.hpp"
 
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
@@ -54,3 +47,5 @@ int CreateServerSocket();
 int waitClients(int serverSocket);
 
 // global variables
+
+#endif

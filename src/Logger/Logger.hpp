@@ -3,6 +3,13 @@
 
 #include "webserv.hpp"
 
+enum LogLevel
+{
+	ERROR,
+	WARNING,
+	INFO
+};
+
 class Logger
 {
 public:
