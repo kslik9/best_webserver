@@ -38,6 +38,11 @@ void Server::start()
 {
 	int opt = 1;
 	this->SocketFd = socket(AF_INET, SOCK_STREAM, 0);
+
+	int flags = fcntl(this->SocketFd, F_GETFL);
+	flags |= O_NONBLOCK;
+	fcntl(this->SocketFd, F_SETFL, flags);
+
 	if (this->SocketFd < 0)
 	{
 		logger.Log(ERROR, "Error creating server socket");
@@ -98,7 +103,7 @@ void Server::waitClients()
 	// -----------------------------------------------------
 	while (true)
 	{
-		int activity = poll(fds, this->activeClients + 1, 5000);
+		int activity = poll(fds, CLIENTS_COUNT, 0);
 		if (activity < -1)
 			std::cout << "Error : L:36" << std::endl;
 		else
@@ -109,6 +114,11 @@ void Server::waitClients()
 				struct sockaddr_in client_addr;
 				socklen_t client_addr_len = sizeof(client_addr);
 				int clientSocket = accept(this->SocketFd, (struct sockaddr *)&client_addr, &client_addr_len);
+				int flags = fcntl(clientSocket, F_GETFL);
+				flags |= O_NONBLOCK;
+				fcntl(clientSocket, F_SETFL, flags);
+
+
 				for (int i = 1; i < CLIENTS_COUNT; i++)
 				{
 					if (fds[i].fd == 0)
@@ -121,11 +131,10 @@ void Server::waitClients()
 					}
 				}
 			}
+			
 			// check data from clients
-			for (int i = 1; i < CLIENTS_COUNT; i++)
-			{
-				if (fds[i].fd > 0 && (fds[i].revents & POLLIN))
-				{
+			for (int i = 1; i < CLIENTS_COUNT; i++) {
+				if (fds[i].fd > 0 && (fds[i].revents & POLLIN)) {
 					char *buffer = new char[BUFFER_SIZE];
 					ssize_t bytes_received = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
 					if (bytes_received < 0 || bytes_received == 0)
@@ -148,10 +157,14 @@ void Server::waitClients()
 						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 						close(fds[i].fd);
 					}
+					delete[] buffer;
 				}
+				
 			}
 		}
 	}
+
+	close(this->SocketFd);
 }
 
 /*
