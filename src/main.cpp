@@ -16,6 +16,7 @@ int main(int argc, char const *argv[])
         Server server(config);
         server.start();
         server.waitClients();
+        
     }
     catch (const std::exception &e)
     {
