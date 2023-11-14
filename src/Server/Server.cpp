@@ -34,49 +34,13 @@ Server &Server::operator=(Server const &rhs)
 ** --------------------------------- METHODS ----------------------------------
 */
 
-void Server::start()
-{
-	int opt = 1;
-	this->SocketFd = socket(AF_INET, SOCK_STREAM, 0);
-
-	int flags = fcntl(this->SocketFd, F_GETFL);
+void	setNonBlocking(int socketFd) {
+	int flags = fcntl(socketFd, F_GETFL);
 	flags |= O_NONBLOCK;
-	fcntl(this->SocketFd, F_SETFL, flags);
-
-	if (this->SocketFd < 0)
-	{
-		logger.Log(ERROR, "Error creating server socket");
-		throw std::runtime_error("Error creating server socket");
-	}
-	// this solves the error of binding by reusing address
-	if (setsockopt(this->SocketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-	{
-		logger.Log(ERROR, "Error of binding by reusing address");
-		throw std::runtime_error("Error of binding by reusing address");
-	}
-	// binding socket with address 0.0.0.0:8080
-	this->server_address.sin_family = AF_INET;
-	this->server_address.sin_port = htons(config.getPort());
-	this->server_address.sin_addr.s_addr = INADDR_ANY;
-	if (bind(this->SocketFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
-	{
-		logger.Log(ERROR, "Error binding server socket");
-		throw std::runtime_error("Error binding server socket");
-	}
-	// listen on 0.0.0.0:8080
-	if (listen(this->SocketFd, CLIENTS_COUNT) < 0)
-	{
-		logger.Log(ERROR, "Error listening on socket");
-		throw std::runtime_error("Error listening on socket");
-	}
-	// -----------------------------------------------------
-	std::cout << "Server is listening on "
-			  << "http://0.0.0.0"
-			  << ":" << this->config.getPort() << std::endl;
+	fcntl(socketFd, F_SETFL, flags);
 }
 
-void parse_request(const std::string &request, std::string &method, std::string &target)
-{
+void parse_request(const std::string &request, std::string &method, std::string &target) {
 	try
 	{
 		std::istringstream iss(request);
@@ -90,10 +54,56 @@ void parse_request(const std::string &request, std::string &method, std::string 
 	}
 }
 
+void Server::start() {
+	int opt = 1;
+	this->socketFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (socketFd < 0)
+	{
+		perror("socket() failed");
+		exit(EXIT_FAILURE);
+	}
+	//setnonblocking
+	setNonBlocking(this->socketFd);
+	
+
+	if (this->socketFd < 0)
+	{
+		logger.Log(ERROR, "Error creating server socket");
+		throw std::runtime_error("Error creating server socket");
+	}
+	// this solves the error of binding by reusing address
+	if (setsockopt(this->socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+	{
+		logger.Log(ERROR, "Error of binding by reusing address");
+		throw std::runtime_error("Error of binding by reusing address");
+	}
+	// binding socket with address 0.0.0.0:8080
+	this->server_address.sin_family = AF_INET;
+	this->server_address.sin_port = htons(config.getPort());
+	this->server_address.sin_addr.s_addr = INADDR_ANY;
+	if (bind(this->socketFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
+	{
+		logger.Log(ERROR, "Error binding server socket");
+		throw std::runtime_error("Error binding server socket");
+	}
+	// listen on 0.0.0.0:8080
+	if (listen(this->socketFd, CLIENTS_COUNT) < 0)
+	{
+		logger.Log(ERROR, "Error listening on socket");
+		throw std::runtime_error("Error listening on socket");
+	}
+	// -----------------------------------------------------
+	std::cout << "Server is listening on "
+			  << "http://0.0.0.0"
+			  << ":" << this->config.getPort() << std::endl;
+}
+
+
+
 void Server::waitClients()
 {
 	struct pollfd fds[CLIENTS_COUNT + 1];
-	fds[0].fd = this->SocketFd;
+	fds[0].fd = this->socketFd;
 	fds[0].events = POLLIN | POLLPRI;
 	this->activeClients = 0;
 	// -----------------------------------------------------
@@ -113,11 +123,10 @@ void Server::waitClients()
 			{
 				struct sockaddr_in client_addr;
 				socklen_t client_addr_len = sizeof(client_addr);
-				int clientSocket = accept(this->SocketFd, (struct sockaddr *)&client_addr, &client_addr_len);
-				int flags = fcntl(clientSocket, F_GETFL);
-				flags |= O_NONBLOCK;
-				fcntl(clientSocket, F_SETFL, flags);
-
+				int clientSocket = accept(this->socketFd, (struct sockaddr *)&client_addr, &client_addr_len);
+				
+				//set the client socket as non blocking
+				setNonBlocking(clientSocket);
 
 				for (int i = 1; i < CLIENTS_COUNT; i++)
 				{
@@ -164,7 +173,7 @@ void Server::waitClients()
 		}
 	}
 
-	close(this->SocketFd);
+	close(this->socketFd);
 }
 
 /*
@@ -173,7 +182,7 @@ void Server::waitClients()
 
 unsigned int Server::getSocketFd() const
 {
-	return this->SocketFd;
+	return this->socketFd;
 }
 
 Config Server::getConfig() const
