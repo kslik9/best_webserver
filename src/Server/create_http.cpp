@@ -60,8 +60,15 @@ std::string not_found_404()
     return "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h1>404 Not Found</h1>";
 }
 
+std::string forbidden_403()
+{
+    return "HTTP/1.1 403 Forebidden\r\nContent-Type: text/html\r\n\r\n<h1>403 Forbidden</h1>";
+}
+
 std::string buildHttpResponse(std::string __unused &method, std::string &target)
 {
+    int fileStat;
+
     if (target == "/")
         target = "index.html";
     std::string mime_type = get_mime_type(target), response;
@@ -70,8 +77,13 @@ std::string buildHttpResponse(std::string __unused &method, std::string &target)
            << "Content-Type: " << mime_type << "\r\n"
            << "\r\n";
     response = header.str();
+    fileStat = access((STATIC_HTTP + target).c_str(), F_OK);
+    if (access((STATIC_HTTP + target).c_str(), F_OK))
+        return not_found_404();
+    else if (access((STATIC_HTTP + target).c_str(), R_OK))
+        return forbidden_403();
     std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
-    if (!file)
+    if (!file.is_open())
         return not_found_404();
     std::ostringstream fileContent;
     fileContent << file.rdbuf();
