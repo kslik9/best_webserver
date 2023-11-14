@@ -38,7 +38,7 @@ int sendRequest()
 int main() 
 {
     fork();
-    for (int i = 0; i < 8000; i++)
+    for (int i = 0; i < 500; i++)
     {
         sendRequest();
         // system("curl localhost:8080");
