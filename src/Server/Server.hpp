@@ -1,3 +1,26 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
@@ -9,7 +32,7 @@ class Server
 {
 private:
 	Config &config;
-	unsigned int SocketFd;
+	int socketFd;
 	unsigned int activeClients;
 	sockaddr_in server_address;
 
