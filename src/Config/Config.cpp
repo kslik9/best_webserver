@@ -11,7 +11,16 @@ Config::Config()
 Config::Config(const Config &src)
 {
 }
+void Config::parseConf()
+{
+	// std::vector<std::string>::iterator it = this->raw_data.begin();
+	// while(it != this->raw_data.end())
+	// {
+	// 	std::cout << *it << std::endl;
+	// 	it++;
+	// }
 
+}
 Config::Config(std::string conf)
 {
 	this->port = 8080;
@@ -26,6 +35,7 @@ Config::Config(std::string conf)
 		std::string line;
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
+		parseConf();
 	}
 }
 
