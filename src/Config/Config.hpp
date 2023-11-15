@@ -2,15 +2,18 @@
 #define CONFIG_HPP
 
 #include "webserv.hpp"
+typedef std::vector<std::string> vec;
+typedef std::map<std::string, std::string> mp;
 
 struct serv_conf
 {
 	std::string host;
 	int port;
 	std::string errorPages;
+	std::string name;
 	int clientBodyLimit;
 	std::string root;
-	std::string routes;
+	mp routes;
 };
 class Config
 {
@@ -24,6 +27,7 @@ public:
 	// 
 	unsigned int getPort() const;
 	serv_conf srvConf;
+	std::string value_fo_loca(vec::iterator it);
 	void parseConf();
 private:
 	std::vector<std::string> raw_data;
