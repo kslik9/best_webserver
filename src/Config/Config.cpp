@@ -79,9 +79,8 @@ Config::Config(std::string conf)
 		std::string line;
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
-		parseConf();
+		parseConf(); //not completed
 	}
-	exit(0);
 }
 
 /*
