@@ -28,20 +28,23 @@
 #include "../src/Config/Config.hpp"
 #include "../src/Logger/Logger.hpp"
 #include "../src/Server/Server.hpp"
+#include "../src/ReturnStatus/ReturnStatus.hpp"
  
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_HTTP "static/http/"
-#define STATIC_404 "static/404/index.html"
+#define STATIC_404 "static/errors/404.html"
+#define STATIC_403 "static/errors/403.html"
 #define CLIENTS_COUNT 4000
 #define RESET_COLOR "\033[0m"
 #define BLUE_TEXT "\033[1;34m"
 #define RED_TEXT "\033[1;31m"
 #define GREEN_TEXT "\033[1;32m"
 
+class ReturnStatus;
 // Function prototypes
 void ft_handle_client(int client_fd);
-std::string buildHttpResponse(std::string __unused &method, std::string &target);
+std::string buildHttpResponse(std::string __unused &method, std::string &target, ReturnStatus &rs);
 void parse_request(const std::string &request, std::string &method, std::string &target);
 int CreateServerSocket();
 int waitClients(int serverSocket);

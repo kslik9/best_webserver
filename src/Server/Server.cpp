@@ -102,6 +102,9 @@ void Server::start() {
 
 void Server::waitClients()
 {
+	//return status
+	ReturnStatus rs;
+
 	struct pollfd fds[CLIENTS_COUNT + 1];
 	fds[0].fd = this->socketFd;
 	fds[0].events = POLLIN | POLLPRI;
@@ -148,12 +151,12 @@ void Server::waitClients()
 					ssize_t bytes_received = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
 					if (bytes_received < 0 || bytes_received == 0)
 					{
+						std::cout << "fd " << fds[i].fd << " removed\n";
 						close(fds[i].fd);
 						fds[i].fd = 0;
 						fds[i].events = 0;
 						fds[i].revents = 0;
 						this->activeClients--;
-						std::cout << "fd " << fds[i].fd << " removed\n";
 					}
 					else
 					{
@@ -162,7 +165,7 @@ void Server::waitClients()
 						// -----------------------------------------------------
 						parse_request(str_buffer, method, target);
 						// -----------------------------------------------------
-						std::string http_resp = buildHttpResponse(method, target);
+						std::string http_resp = buildHttpResponse(method, target, rs);
 						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 						close(fds[i].fd);
 					}
