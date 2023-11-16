@@ -8,11 +8,10 @@ typedef std::map<std::string, std::string> mp;
 struct serv_conf
 {
 	std::string host;
-	int port;
+	long long port;
 	std::string errorPages;
 	std::string name;
-	int clientBodyLimit;
-	std::string root;
+	long long clientBodyLimit;
 	mp routes;
 };
 class Config
@@ -26,6 +25,9 @@ public:
 	Config &operator=(Config const &rhs);
 	// 
 	unsigned int getPort() const;
+	void parseInfosStr(std::string name , int leng, std::string &host);
+	void parseInfosInt(std::string name , int leng, long long &host);
+	void parseLocation();
 	serv_conf srvConf;
 	std::string value_fo_loca(vec::iterator it);
 	void parseConf();
