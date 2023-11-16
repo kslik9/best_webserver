@@ -37,11 +37,11 @@ std::string Config::value_fo_loca(vec::iterator it)
 	}
 	return map;
 }
-void Config::parseConf()
+void Config::parseLocation()
 {
-	vec::iterator it = this->raw_data.begin();
 	std::string tmp;
 	std::string value;
+	vec::iterator it = this->raw_data.begin();
 	while(it != this->raw_data.end())
 	{
 		tmp = *it;
@@ -62,7 +62,61 @@ void Config::parseConf()
 	{
 		std::cout << pop->first << " " << pop->second << std::endl;
 		pop++;
+	}	
+}
+void Config::parseInfosStr(std::string name , int leng, std::string &host)
+{
+	vec::iterator it = this->raw_data.begin();
+	std::string tmp;
+	while(it != this->raw_data.end())
+	{
+		tmp = *it;
+		size_t loc = tmp.find(name);
+		if(loc != std::string::npos)
+		{
+			tmp = tmp.substr(loc + leng );
+			host = tmp;
+			break;
+		}
+		it++;
 	}
+	std::replace(host.begin(), host.end(), ';', ' ');
+	host.erase(std::remove_if(host.begin(), host.end(), ::isspace), host.end());
+
+
+}
+void Config::parseInfosInt(std::string name , int leng, long long &host)
+{
+	vec::iterator it = this->raw_data.begin();
+	std::string tmp;
+	while(it != this->raw_data.end())
+	{
+		tmp = *it;
+		size_t loc = tmp.find(name);
+		if(loc != std::string::npos)
+		{
+			tmp = tmp.substr(loc + leng );
+			host = std::atof(tmp.c_str());
+			break;
+		}
+		it++;
+	}
+}
+void Config::parseConf()
+{
+	// parseLocation();
+	parseInfosStr("host", 4, srvConf.host);
+	parseInfosStr("error", 5, srvConf.errorPages);
+	parseInfosStr("name", 4, srvConf.name);
+	parseInfosInt("listen", 6, srvConf.port);
+	parseInfosInt("body_size", 10, srvConf.clientBodyLimit);
+
+
+	// std::cout << srvConf.host << std::endl;
+	// std::cout << srvConf.errorPages << std::endl;
+	// std::cout << srvConf.name << std::endl;
+	// std::cout << srvConf.clientBodyLimit << std::endl;
+	// std::cout << srvConf.port << std::endl;
 
 }
 Config::Config(std::string conf)
