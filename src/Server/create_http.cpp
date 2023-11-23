@@ -85,14 +85,13 @@ std::string buildHttpResponse(std::string __unused &method, std::string &target,
         return rs.notFound_404();
     else if (access((STATIC_HTTP + target).c_str(), R_OK))
         return rs.forbidden_403();
-
     //open the file
     std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
     if (!file.is_open())
         return rs.notFound_404();
-    
     std::ostringstream fileContent;
     fileContent << file.rdbuf();
     response += fileContent.str();
+    // response += execute_php("php/index.php"); // CGI
     return response;
 }
