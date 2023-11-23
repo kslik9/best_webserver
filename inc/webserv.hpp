@@ -1,6 +1,10 @@
 #ifndef WEBSERV_HPP
 #define WEBSERV_HPP
 
+
+
+#include <sys/wait.h>
+
 // IO
 #include <iostream>
 #include <sstream>
@@ -48,6 +52,8 @@ std::string buildHttpResponse(std::string __unused &method, std::string &target,
 void parse_request(const std::string &request, std::string &method, std::string &target);
 int CreateServerSocket();
 int waitClients(int serverSocket);
+
+std::string execute_php(std::string file);
 
 // global variables
 

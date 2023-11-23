@@ -4,6 +4,7 @@ Logger logger = Logger("webserv.log");
 
 int main(int argc, char const *argv[])
 {
+    // execute_php("php/index.php");
     try
     {
         if (argc != 2)
@@ -16,7 +17,6 @@ int main(int argc, char const *argv[])
         Server server(config);
         server.start();
         server.waitClients();
-        
     }
     catch (const std::exception &e)
     {
