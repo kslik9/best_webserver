@@ -37,20 +37,32 @@ std::string Config::value_fo_loca(vec::iterator it)
 	}
 	return map;
 }
-// int whichMethAmI(std::string str, int i)
-// {
-// 	size_t k = 1;
-// 	while(k != std::string::npos)
-// 	{
-		
-// 	}
-// }
-void t_ry(std::string str, std::string &host, std::string name, int len)
+int whichMethAmI(std::string str)
+{
+	int i = 0 ;
+	size_t k = 0;
+	int c = 0 ;
+	while(i < str.length())
+	{
+		if(k < str.length() + 1)
+			k = str.find("method", k + 1);
+		else 
+			break;
+		if(k != std::string::npos)
+			c++;
+		i++;
+	}
+	return c;
+}
+void t_ry(std::string str, std::string &host, std::string name, int len, int flag)
 {
 	int i = 0;
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
+	int howmuch_meth = whichMethAmI(str);
+	if(flag == 0)
+		meth = 0;
 	if(name  == "method")
 		meth++;
     while (i < str.length()) 
@@ -64,7 +76,12 @@ void t_ry(std::string str, std::string &host, std::string name, int len)
                 host = str.substr(k + len, j - (k + len));
 				host.erase(std::remove_if(host.begin(), host.end(), ::isspace), host.end());
                 k = j;
-				if(mindex == meth && name  == "method")
+				if(meth > howmuch_meth)
+				{
+					host = "none";
+					return;
+				}
+				else if(mindex == meth && name  == "method")
 					break;
 				else
 					mindex++;
@@ -76,16 +93,18 @@ void t_ry(std::string str, std::string &host, std::string name, int len)
 locate Config::get_info_for_loca(std::string str)
 {
 	struct locate tm;
-	t_ry(str, tm.autoindex, "autoindex", 9);
-	t_ry(str, tm.cgi_path, "cgi_path", 9);
-	t_ry(str, tm.cgi_extension, "cgi_extension", 14);
-	t_ry(str, tm.index, "index", 5);
-	t_ry(str, tm.root, "root", 4);
-	t_ry(str, tm.method, "method", 6);
-	t_ry(str, tm.method1, "method", 6);
-	t_ry(str, tm.method2, "method", 6);
-	t_ry(str, tm.method3, "method", 6);
-	t_ry(str, tm.redirect, "redirect", 9);
+	t_ry(str, tm.autoindex, "autoindex", 9, 1);
+	t_ry(str, tm.cgi_path, "cgi_path", 9, 1);
+	t_ry(str, tm.cgi_extension, "cgi_extension", 14, 1);
+	t_ry(str, tm.index, "index", 5, 1);
+	t_ry(str, tm.root, "root", 4, 1);
+	t_ry(str, tm.method, "method", 6, 1);
+	t_ry(str, tm.method1, "method", 6, 1);
+	t_ry(str, tm.method2, "method", 6, 1);
+	t_ry(str, tm.method3, "method", 6, 1);
+	t_ry(str, tm.redirect, "redirect", 9, 1);
+	t_ry(str, tm.redirect, "redirect", 9, 0);
+
 	return tm;
 }
 void display_all(serv_conf srvConf)
@@ -95,8 +114,8 @@ void display_all(serv_conf srvConf)
 	std::cout << "the error page is " << srvConf.errorPages << std::endl;
 	std::cout << "the name is " << srvConf.name << std::endl;
 	std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
-	std::cout << "the routes is ";
 	map_last::iterator it;
+	std::cout << "-------routes----------\n";
 		it = srvConf.rout.begin();
 		while(it != srvConf.rout.end())
 		{
@@ -106,7 +125,8 @@ void display_all(serv_conf srvConf)
 			std::cout << " cgi extension =>" << it->second.cgi_extension ;
 			std::cout << " index =>" << it->second.index ;
 			std::cout << " root =>" << it->second.root ;
-			std::cout << " redirect =>" << it->second.redirect ;
+			if(it->second.redirect[0])
+				std::cout << " redirect =>" << it->second.redirect ;
 			std::cout << " first method =>" << it->second.method ;
 			std::cout << " second method =>" << it->second.method1 ;
 			std::cout << " third method =>" << it->second.method2 ;
@@ -227,10 +247,6 @@ Config::~Config()
 
 Config &Config::operator=(Config const &rhs)
 {
-	// if ( this != &rhs )
-	//{
-	// this->_value = rhs.getValue();
-	//}
 	return *this;
 }
 
