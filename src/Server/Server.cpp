@@ -100,6 +100,7 @@ void Server::start() {
 
 
 
+
 void Server::waitClients()
 {
 	//return status
@@ -164,6 +165,8 @@ void Server::waitClients()
 						int pos = str_buffer.find(" ");
 						// -----------------------------------------------------
 						parse_request(str_buffer, method, target);
+						// std::cout << "[" << str_buffer << "]" << std::endl;
+						
 						// -----------------------------------------------------
 						std::string http_resp = buildHttpResponse(method, target, rs);
 						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
