@@ -33,6 +33,7 @@
 #include "../src/Logger/Logger.hpp"
 #include "../src/Server/Server.hpp"
 #include "../src/ReturnStatus/ReturnStatus.hpp"
+#include "../src/ReturnStatus/HttpMessage.hpp"
  
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
@@ -48,7 +49,7 @@
 class ReturnStatus;
 // Function prototypes
 void ft_handle_client(int client_fd);
-std::string buildHttpResponse(std::string __unused &method, std::string &target, ReturnStatus &rs);
+std::string buildHttpResponse(std::string &method, std::string &target, ReturnStatus &rs);
 void parse_request(const std::string &request, std::string &method, std::string &target);
 int CreateServerSocket();
 int waitClients(int serverSocket);

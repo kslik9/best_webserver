@@ -21,7 +21,6 @@ ReturnStatus::ReturnStatus() {
     std::ifstream file2(STATIC_404, std::ios::binary);
     fileContent << file2.rdbuf();
     this->message404 += fileContent.str();
-    
 }
 
 std::string ReturnStatus::forbidden_403() {

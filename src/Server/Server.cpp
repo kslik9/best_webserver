@@ -4,11 +4,11 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Server::Server(const Server &src) : config(src.config)
+Server::Server(const Server &src, HttpMessage &httpMsg) : config(src.config), httpMessage(httpMsg)
 {
 }
 
-Server::Server(Config &config) : config(config)
+Server::Server(Config &config, HttpMessage &httpMsg) : config(config), httpMessage(httpMsg)
 {
 	std::cout << "Config loaded at the server" << std::endl;
 }
@@ -40,19 +40,19 @@ void	setNonBlocking(int socketFd) {
 	fcntl(socketFd, F_SETFL, flags);
 }
 
-void parse_request(const std::string &request, std::string &method, std::string &target) {
-	try
-	{
-		std::istringstream iss(request);
-		iss >> method >> target;
-	}
-	catch (const std::exception &e)
-	{
-		std::cerr << e.what() << '\n';
-		method = "GET";
-		target = "/";
-	}
-}
+// void parse_request(const std::string &request, std::string &method, std::string &target) {
+// 	try
+// 	{
+// 		std::istringstream iss(request);
+// 		iss >> method >> target;
+// 	}
+// 	catch (const std::exception &e)
+// 	{
+// 		std::cerr << e.what() << '\n';
+// 		method = "GET";
+// 		target = "/";
+// 	}
+// }
 
 void Server::start() {
 	int opt = 1;
@@ -99,12 +99,16 @@ void Server::start() {
 }
 
 
-
 void Server::waitClients()
 {
 	//return status
-	ReturnStatus rs;
+	// ReturnStatus rs;
 
+	// std::map<std::string, locate>::iterator it = config.srvConf.rout.begin();
+	// std::cout << it->first << std::endl;
+	// std::cout << it->second.autoindex << std::endl;
+
+	
 	struct pollfd fds[CLIENTS_COUNT + 1];
 	fds[0].fd = this->socketFd;
 	fds[0].events = POLLIN | POLLPRI;
@@ -130,7 +134,6 @@ void Server::waitClients()
 				
 				//set the client socket as non blocking
 				setNonBlocking(clientSocket);
-
 				for (int i = 1; i < CLIENTS_COUNT; i++)
 				{
 					if (fds[i].fd == 0)
@@ -160,13 +163,18 @@ void Server::waitClients()
 					}
 					else
 					{
-						std::string str_buffer(buffer), target, method;
-						int pos = str_buffer.find(" ");
-						// -----------------------------------------------------
-						parse_request(str_buffer, method, target);
-						// -----------------------------------------------------
-						std::string http_resp = buildHttpResponse(method, target, rs);
-						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+
+						// std::string str_buffer(buffer), target, method;
+						// int pos = str_buffer.find(" ");
+						// // -----------------------------------------------------
+						// parse_request(str_buffer, method, target);
+						// // std::cout << "[" << str_buffer << "]" << std::endl;
+						
+						// // -----------------------------------------------------
+						// std::string http_resp = buildHttpResponse(method, target);
+						std::string str_buffer(buffer);
+						std::string http_resp = buildHttpResponse(str_buffer);
+						// send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 						close(fds[i].fd);
 					}
 					delete[] buffer;
