@@ -1,6 +1,9 @@
 SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/Config/Config.cpp src/Logger/Logger.cpp src/Server/Server.cpp \
 				src/ReturnStatus/ReturnStatus.cpp \
+				src/ReturnStatus/HttpMessage.cpp \
+				src/ReturnStatus/Checkers.cpp \
+				src/ReturnStatus/HandleGetMethod.cpp \
 				src/CGI/cgi.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)
@@ -8,7 +11,8 @@ OBJS		:= $(addprefix obj/, $(OBJS))
 
 CC 			= c++
 RM			= rm -f
-CFLAGS		= -std=c++98 -fsanitize=address #-Wall -Wextra -Werror 
+# CFLAGS		= -std=c++98 -fsanitize=address #-Wall -Wextra -Werror 
+CFLAGS      =
 NAME		= webserv
 INCLUDE		= -Iinc/
 

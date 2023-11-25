@@ -14,9 +14,12 @@ int main(int argc, char const *argv[])
             return 1;
         }
         Config config(argv[1]);
-        Server server(config);
+        HttpMessage HttpMessage("ls", config);
+
+        Server server(config, HttpMessage);
         server.start();
         server.waitClients();
+        
     }
     catch (const std::exception &e)
     {
