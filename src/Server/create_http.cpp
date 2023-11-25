@@ -66,29 +66,6 @@ std::string forbidden_403()
 }
 
 
-
-
-
-//400 Bad Request
-bool check400(std::string &target) {
-	std::string allowedChars  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
-	unsigned int	targetLen = target.length();
-
-	// std::cout << "target : " << target << std::endl;
-	for (int i = 1; i < targetLen; i++) {
-		if (allowedChars.find(target[i]) == std::string::npos)
-			return true;
-	}
-	return false;
-}
-
-//414 URI Too Long
-bool check414(std::string &target) {
-	if (target.length() > 2048)
-		return true;
-	return false;
-}
-
 bool check404(std::string &target, int stat) {
     //check if no location matches the target
     //.
@@ -131,78 +108,49 @@ bool autoIndexOff(std::string &target) {
 bool LocationIncludesCgi() {
     return false;
 }
-#define NO_LOCATION_MATCHES_TARGET 1
-#define RESOURCE_NOT_FOUND_IN_ROOT 2
-
-void	checkRequest(std::string &method, std::string &target) {
-	if(check400(target))
-		std::cout << "400 Bad Request\n";
-	else if(check414(target))
-		std::cout << "414 URI Too Long\n";
-	else if(check404(target, NO_LOCATION_MATCHES_TARGET))
-        std::cout << "404 Not Found\n";
-    else if(check301())
-        std::cout << "redirection\n";
-    else if (check405(method))
-        std::cout << "405 Method Not Allowed\n";
-    else if (method == "GET") {
-        if (check404(target, RESOURCE_NOT_FOUND_IN_ROOT))
-            std::cout << "404 Not Found\n";
-        //check resourses type if is dir ...
-        if (isTargetDir(target)) {
-            //check if this directory has an index file (eg: index.html)
-            if (!isDirHasIndexFile(target)) {
-                //check autoindex off
-                if (autoIndexOff(target))
-                    std::cout << "403 Forbidden\n";
-                else
-                    //return autoindex of the directory
-                    std::cout << "200 OK\n";
-            }
-        }
-        // else if it's file
-        else {
-            if (LocationIncludesCgi()) {
-                //run cgi on requested file
-                //return code depend on cgi
-            }
-            else {
-                // return the file
-                std::cout << "200 OK\n";
-            }
-        }
-    }
-}
 
 
-std::string buildHttpResponse(std::string __unused &method, std::string &target, ReturnStatus &rs)
+// #include "HttpMessage.hpp"
+// std::string Server::buildHttpResponse(std::string &method, std::string &target)
+std::string Server::buildHttpResponse(std::string request)
 {
-    int fileStat;
+    std::string target;
+    std::string method;
+    int         fileStat;
 
-    if (target == "/")
-        target = "index.html";
-    std::string mime_type = get_mime_type(target), response;
-    std::stringstream header;
-    header << "HTTP/1.1 200 OK\r\n"
-           << "Content-Type: " << mime_type << "\r\n"
-           << "\r\n";
-    response = header.str();
-    fileStat = access((STATIC_HTTP + target).c_str(), F_OK);
+    // parse_request(request, method, target);
+    HttpMessage hm(request, config);
+
+    hm.checkRequest();
 
 
-    checkRequest(method, target);
 
-    if (access((STATIC_HTTP + target).c_str(), F_OK))
-        return rs.notFound_404();
-    else if (access((STATIC_HTTP + target).c_str(), R_OK))
-        return rs.forbidden_403();
-    //open the file
-    std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
-    if (!file.is_open())
-        return rs.notFound_404();
-    std::ostringstream fileContent;
-    fileContent << file.rdbuf();
-    response += fileContent.str();
+    // if (target == "/")
+    //     target = "index.html";
+    // std::string mime_type = get_mime_type(target), response;
+    // std::stringstream header;
+    // header << "HTTP/1.1 200 OK\r\n"
+    //        << "Content-Type: " << mime_type << "\r\n"
+    //        << "\r\n";
+    // response = header.str();
+    // fileStat = access((STATIC_HTTP + target).c_str(), F_OK);
+
+    // HttpMessage.createHttpHeader();
+
+    // checkRequest(method, target);
+
+    // if (access((STATIC_HTTP + target).c_str(), F_OK))
+    //     return rs.notFound_404();
+    // else if (access((STATIC_HTTP + target).c_str(), R_OK))
+    //     return rs.forbidden_403();
+    // //open the file
+    // std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
+    // if (!file.is_open())
+    //     return rs.notFound_404();
+    // std::ostringstream fileContent;
+    // fileContent << file.rdbuf();
+    // response += fileContent.str();
     // response += execute_php("php/index.php"); // CGI
+    std::string response;
     return response;
 }
