@@ -4,11 +4,11 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Server::Server(const Server &src, HttpMessage &httpMsg) : config(src.config), httpMessage(httpMsg)
+Server::Server(const Server &src) : config(src.config)
 {
 }
 
-Server::Server(Config &config, HttpMessage &httpMsg) : config(config), httpMessage(httpMsg)
+Server::Server(Config &config) : config(config)
 {
 	std::cout << "Config loaded at the server" << std::endl;
 }

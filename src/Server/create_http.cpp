@@ -112,16 +112,19 @@ bool LocationIncludesCgi() {
 
 // #include "HttpMessage.hpp"
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
-std::string Server::buildHttpResponse(std::string request)
+std::string Server::buildHttpResponse(std::string requestStr)
 {
-    std::string target;
-    std::string method;
     int         fileStat;
 
-    // parse_request(request, method, target);
-    HttpMessage hm(request, config);
+    //request data
+    RequestData request(requestStr);
 
-    hm.checkRequest();
+    //http request checker
+    HttpRequestChecker hm(request, config);
+    hm.checkRequestAndReturnHttpMessage();
+
+    //after checking the request we create a response
+    HttpResponseMsgCreator response(request);
 
 
 
@@ -137,7 +140,7 @@ std::string Server::buildHttpResponse(std::string request)
 
     // HttpMessage.createHttpHeader();
 
-    // checkRequest(method, target);
+    // checkRequestAndReturnHttpMessage(method, target);
 
     // if (access((STATIC_HTTP + target).c_str(), F_OK))
     //     return rs.notFound_404();
@@ -151,6 +154,6 @@ std::string Server::buildHttpResponse(std::string request)
     // fileContent << file.rdbuf();
     // response += fileContent.str();
     // response += execute_php("php/index.php"); // CGI
-    std::string response;
-    return response;
+    std::string responsee;
+    return responsee;
 }

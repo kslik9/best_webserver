@@ -5,19 +5,18 @@
 // #include "../ReturnStatus/ReturnStatus.hpp"
 
 class Config;
-class HttpMessage;
+class HttpMessageChecker;
 
 class Server
 {
 	private:
 		Config &config;
-		HttpMessage &httpMessage;
 		int socketFd;
 		unsigned int activeClients;
 		sockaddr_in server_address;
 	public:
-		Server(Config &config, HttpMessage &httpMsg);
-		Server(Server const &src, HttpMessage &httpMsg);
+		Server(Config &config);
+		Server(Server const &src);
 		~Server();
 		void start();
 		void waitClients();
