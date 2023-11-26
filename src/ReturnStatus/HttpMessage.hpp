@@ -2,6 +2,7 @@
 #include "webserv.hpp"
 
 class Config;
+class RequestData;
 
 class HttpMessage {
     private:
@@ -11,21 +12,25 @@ class HttpMessage {
         std::string method;
         bool        checkNotAllowededChars();
         bool        checkUriLength();
-        bool        checkRequestBodyTooLarge();
-        bool        checkNoLocationMatchRequestUri();
+        bool        checkRequestHttpMessage();
+        bool        checkLocationMatchRequestUri();
         bool        checkLocationHasRedirection();
-        bool        checkMethodNotAllowed();
-        bool        checkContentNotExistInRoot();
+        bool        checkMethodAllowed();
+        bool        checkContentExistsInRoot();
         bool        checkContentIsDir();
         bool        checkIndexFilesInDir();
         bool        checkAutoIndexOn();
         bool        checkLocationIncludesCgi();
+        bool        checkDirIndedWithBackSlash();
 
-        Config &config;
+        Config      &config;
     public:
-        HttpMessage(std::string const &request, Config &config);
+        RequestData &requestData;
+        HttpMessage(RequestData &requestData, Config &config);
         std::string getStatusCode();
         void        createHttpHeader();
-        void        checkRequest();
+        void        checkRequestAndReturnHttpMessage();
         void        handleGetMethod();
+        void        handlePostMethod();
+        void        handleDeleteMethod();
 };

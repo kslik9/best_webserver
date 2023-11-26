@@ -1,21 +1,6 @@
 #include "HttpMessage.hpp"
 
-void parse_request(const std::string &request, std::string &method, std::string &target) {
-	try
-	{
-		std::istringstream iss(request);
-		iss >> method >> target;
-	}
-	catch (const std::exception &e)
-	{
-		std::cerr << e.what() << '\n';
-		method = "GET";
-		target = "/";
-	}
-}
-
-HttpMessage::HttpMessage(std::string const &request, Config &config) : config(config) {
-    parse_request(request, this->method, this->target);
+HttpMessage::HttpMessage(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
 }
 
 std::string HttpMessage::getStatusCode() {
@@ -29,8 +14,9 @@ void    HttpMessage::createHttpHeader() {
 
 
 
-
-void    HttpMessage::checkRequest() {
+//this will check the request and at the end it will create an http message and return it
+void    HttpMessage::checkRequestAndReturnHttpMessage() {
+    //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
         //create 400 bad request ()
         //this->statusCode = 400
@@ -43,25 +29,29 @@ void    HttpMessage::checkRequest() {
         //this->statusMessage = Request-URI Too Long
         // return errorPage
     }
-    if (checkRequestBodyTooLarge()) {
+    if (checkRequestHttpMessage()) {
         //create 413 Request Entity Too Large
         //this->statusCode = 413
         //this->statusMessage = Request Entity Too Large
         // return errorPage
     }
-    if (checkNoLocationMatchRequestUri()) {
+    
+    if (!checkLocationMatchRequestUri()) {
         //create 404 Not Found
         //this->statusCode = 404
         //this->statusMessage = Not Found
-        // return errorPage
+        //return Page
     }
+
     if (checkLocationHasRedirection()) {
         //create 301 Moved Permanently
         //this->statusCode = 301
         //this->statusMessage = MOved Permanently
         //return Page
     }
-    if (checkMethodNotAllowed()) {
+
+    //check if the method allowed in location
+    if (checkMethodAllowed()) {
         //create 405 Method Not Allowed
         //this->statusCode = 405
         //this->statusMessage = Method Not Allowed
@@ -71,37 +61,8 @@ void    HttpMessage::checkRequest() {
     //now we check the request method
     //////////////////////////////// GET ///////////////////////////
     if (method == "GET") {
-        if(checkContentNotExistInRoot()) {
-        //create 404 Not Found
-        //this->statusCode = 404
-        //this->statusMessage = Not Found
-        //return Page
-        }
-        if (checkContentIsDir() && !checkIndexFilesInDir()) {
-            if (checkAutoIndexOn()) {
-                //return autoindex of the directory
-                //statusCode  = 200
-                //statusMessge = OK
-            }
-            else {
-                //create 403 Forbidden
-                //this->statusCode = 403
-                //this->statusMessage = Forbidden
-                //return errorPage
-            }
-        }
-        //the content type is dir but it include index files in dir [or] the content type is file or 
-        else if ((checkContentIsDir() && checkIndexFilesInDir()) || !checkContentIsDir()) {
-            if (checkLocationIncludesCgi()) {
-                //run cgi on request file
-                //return depends on cgi
-            }
-            //location will run static pages
-            else {
-                //return requested file
-                //status code 200
-                //statusmessge OK
-            }
-        }
+        handleGetMethod();
     }
+
+    //return the created http response message
 }
