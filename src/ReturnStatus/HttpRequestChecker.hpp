@@ -23,7 +23,8 @@ class HttpRequestChecker {
         bool        checkAutoIndexOn();
         bool        checkLocationIncludesCgi();
         bool        checkDirIndedWithBackSlash();
-
+        bool        CheckDeleteDirContent();
+        bool        checkWriteAccessOnDir();
         Config      &config;
     public:
         RequestData &requestData;
