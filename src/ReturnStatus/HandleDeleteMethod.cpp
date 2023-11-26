@@ -11,32 +11,49 @@ void HttpRequestChecker::handleDeleteMethod() {
 
     //we check if the uri is dir (has '/' at end)
     if (checkContentIsDir()) {
-        if (checkIndexFilesInDir()) {
-            if (checkLocationIncludesCgi()) {
-                //run cgi on requested file with GET request method
-            }
-            else {
-                //create 403 Forbidden
-                //return requested file
-            }
+
+        if (!checkDirIndedWithBackSlash()) {
+            //creeate 409 conflict
+            //return;
         }
         else {
-            //create 403 Forbidden
-            //this->statusCode = 403
-            //this->statusMessage = Forbidden
-            //return errorPage
+            //location includes cgi
+            if (checkLocationIncludesCgi()) {
+                if (!checkIndexFilesInDir()) {
+                    //create 403 Forbidden
+                }
+                else {
+                    //run cgi on requested file with DELETE request_method
+                }
+            }
+            //location doesn't include cgi
+            else {
+                if (CheckDeleteDirContent()) {
+                    //create 205 No Content
+                }
+                //in case of unable to clear the folder content
+                else {
+                    if (checkWriteAccessOnDir()) {
+                        //create Internal Server Error
+                    }
+                    else {
+                        //create 403 Forbidden
+                    }
+                }
+
+            }
         }
+
     }
     //we request a file here
     else {
         if (checkLocationIncludesCgi()) {
-            //run cgi on requested file with POST request method
+            //run cgi on requested file with DELETE request method
         }
+        //requested location doesn't have cgi
         else {
-            //create 403 Forbidden
-            //this->statusCode = 403
-            //this->statusMessage = Forbidden
-            //return errorPage
+            //delete the file
+            //204 No Content
         }
     }
 }
