@@ -1,9 +1,11 @@
 SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/Config/Config.cpp src/Logger/Logger.cpp src/Server/Server.cpp \
 				src/ReturnStatus/ReturnStatus.cpp \
-				src/ReturnStatus/HttpMessage.cpp \
+				src/ReturnStatus/HttpRequestChecker.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
+				src/ReturnStatus/RequestData.cpp \
+				src/ReturnStatus/HttpResponseMsgCreator.cpp \
 				src/CGI/cgi.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)
