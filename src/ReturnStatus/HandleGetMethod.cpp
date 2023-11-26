@@ -1,6 +1,6 @@
-#include "HttpMessageChecker.hpp"
+#include "HttpRequestChecker.hpp"
 
-void HttpMessageChecker::handleGetMethod() {
+void HttpRequestChecker::handleGetMethod() {
     std::cout << this->target << std::endl;
     if(!checkContentExistsInRoot()) {
         //create 404 Not Found
