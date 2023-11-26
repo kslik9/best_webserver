@@ -55,6 +55,7 @@ Welcome to the Webserv project, a part of the 42 cursus! This project is a hands
 - [ECE 252 Lecture 26: Asynchronous I/O with select, poll](https://www.youtube.com/watch?v=tAGF0T2cXRA)
 - [Socket Programming in C/C++: Handling multiple clients on server without multi threading](https://www.geeksforgeeks.org/socket-programming-in-cc-handling-multiple-clients-on-server-without-multi-threading/)
 - [Poll() Function in C Language](https://linuxhint.com/use-poll-system-call-c/)
+- [Getting Started with CGI Programming in C](https://jkorpela.fi/forms/cgic.html)
 
 [Back to Top](#table-of-contents)
 
