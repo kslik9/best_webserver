@@ -55,7 +55,16 @@ Welcome to the Webserv project, a part of the 42 cursus! This project is a hands
 - [ECE 252 Lecture 26: Asynchronous I/O with select, poll](https://www.youtube.com/watch?v=tAGF0T2cXRA)
 - [Socket Programming in C/C++: Handling multiple clients on server without multi threading](https://www.geeksforgeeks.org/socket-programming-in-cc-handling-multiple-clients-on-server-without-multi-threading/)
 - [Poll() Function in C Language](https://linuxhint.com/use-poll-system-call-c/)
-- [Getting Started with CGI Programming in C](https://jkorpela.fi/forms/cgic.html)
+- CGI 
+  - [Getting Started with CGI Programming in C](https://jkorpela.fi/forms/cgic.html)
+  - [Query String](https://en.wikipedia.org/wiki/Query_string)
+  - [CGI Programming](https://www.ibm.com/docs/en/i/7.4?topic=programming-cgi)
+  - [Common Gateway Interface](https://en.wikipedia.org/wiki/Common_Gateway_Interface)
+  - [Getting Started with CGI Programming](https://www.mnuwer.dbasedeveloper.co.uk/dlearn/web/session01.htm)
+  - [HOW-TO Write a CGI Program in C/C++](https://www.purplepixie.org/cgi/howto.php)
+  - [CGI Programming 101](http://www.cgi101.com/book/ch1/text.html)
+  - [Environment Variables set by HTTP server](https://www.ibm.com/docs/en/i/7.4?topic=information-environment-variables)
+  - [Developing CGIs with C and C++](https://cmd.inp.nsk.su/old/cmd2/manuals/unix/UNIX_Unleashed/ch20.htm)
 
 [Back to Top](#table-of-contents)
 
