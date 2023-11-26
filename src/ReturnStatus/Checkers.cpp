@@ -1,6 +1,6 @@
-#include "HttpMessage.hpp"
+#include "HttpMessageChecker.hpp"
 
-bool    HttpMessage::checkNotAllowededChars() {
+bool    HttpMessageChecker::checkNotAllowededChars() {
     std::string allowedChars  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 	unsigned int	targetLen = target.length();
 
@@ -11,57 +11,57 @@ bool    HttpMessage::checkNotAllowededChars() {
 	return false;
 }
 
-bool    HttpMessage::checkUriLength() {
+bool    HttpMessageChecker::checkUriLength() {
     if (target.length() > 2048)
 		return true;
 	return false;
 }
 
-bool    HttpMessage::checkRequestHttpMessage() {
+bool    HttpMessageChecker::checkRequestHttpMessage() {
     //check if the request body is larger than cliant max body size in config file
     return false;
 }
 
-bool    HttpMessage::checkLocationMatchRequestUri() {
+bool    HttpMessageChecker::checkLocationMatchRequestUri() {
     //check if there is any location match with the uri (target)
     return false;
 }
 
-bool    HttpMessage::checkLocationHasRedirection() {
+bool    HttpMessageChecker::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
     return true;
 }
 
-bool    HttpMessage::checkMethodAllowed() {
+bool    HttpMessageChecker::checkMethodAllowed() {
     //check if the method is allowed or not in the location
     return true;
 }
 
-bool    HttpMessage::checkContentExistsInRoot() {
+bool    HttpMessageChecker::checkContentExistsInRoot() {
     //check if the content is exist in in root
     return true;
 }
 
-bool    HttpMessage::checkContentIsDir() {
+bool    HttpMessageChecker::checkContentIsDir() {
     //check if the content is dir
     return true;
 }
 
-bool    HttpMessage::checkIndexFilesInDir() {
+bool    HttpMessageChecker::checkIndexFilesInDir() {
     //check if the directory has an index file
     return true;
 }
 
-bool    HttpMessage::checkAutoIndexOn() {
+bool    HttpMessageChecker::checkAutoIndexOn() {
     //check if the index file is on
     return true;
 }
 
-bool    HttpMessage::checkLocationIncludesCgi() {
+bool    HttpMessageChecker::checkLocationIncludesCgi() {
     //check if the location include cgi configurations
     return true;
 }
 
-bool    HttpMessage::checkDirIndedWithBackSlash() {
-    
+bool    HttpMessageChecker::checkDirIndedWithBackSlash() {
+    return true;
 }

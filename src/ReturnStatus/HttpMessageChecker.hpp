@@ -4,7 +4,7 @@
 class Config;
 class RequestData;
 
-class HttpMessage {
+class HttpMessageChecker {
     private:
         std::string statusCode;
         std::string statusMessage;
@@ -26,7 +26,7 @@ class HttpMessage {
         Config      &config;
     public:
         RequestData &requestData;
-        HttpMessage(RequestData &requestData, Config &config);
+        HttpMessageChecker(RequestData &requestData, Config &config);
         std::string getStatusCode();
         void        createHttpHeader();
         void        checkRequestAndReturnHttpMessage();
