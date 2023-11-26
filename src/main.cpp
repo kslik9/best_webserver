@@ -14,7 +14,9 @@ int main(int argc, char const *argv[])
             return 1;
         }
         Config config(argv[1]);
-        HttpMessage HttpMessage("ls", config);
+        std::string l = "la";
+        RequestData rd(l);
+        HttpMessage HttpMessage(rd, config);
 
         Server server(config, HttpMessage);
         server.start();

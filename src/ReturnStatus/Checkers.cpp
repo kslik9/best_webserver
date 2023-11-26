@@ -17,12 +17,12 @@ bool    HttpMessage::checkUriLength() {
 	return false;
 }
 
-bool    HttpMessage::checkRequestBodyTooLarge() {
+bool    HttpMessage::checkRequestHttpMessage() {
     //check if the request body is larger than cliant max body size in config file
     return false;
 }
 
-bool    HttpMessage::checkNoLocationMatchRequestUri() {
+bool    HttpMessage::checkLocationMatchRequestUri() {
     //check if there is any location match with the uri (target)
     return false;
 }
@@ -32,12 +32,12 @@ bool    HttpMessage::checkLocationHasRedirection() {
     return true;
 }
 
-bool    HttpMessage::checkMethodNotAllowed() {
+bool    HttpMessage::checkMethodAllowed() {
     //check if the method is allowed or not in the location
     return true;
 }
 
-bool    HttpMessage::checkContentNotExistInRoot() {
+bool    HttpMessage::checkContentExistsInRoot() {
     //check if the content is exist in in root
     return true;
 }
@@ -60,4 +60,8 @@ bool    HttpMessage::checkAutoIndexOn() {
 bool    HttpMessage::checkLocationIncludesCgi() {
     //check if the location include cgi configurations
     return true;
+}
+
+bool    HttpMessage::checkDirIndedWithBackSlash() {
+    
 }

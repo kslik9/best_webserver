@@ -114,14 +114,15 @@ bool LocationIncludesCgi() {
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
 std::string Server::buildHttpResponse(std::string request)
 {
-    std::string target;
-    std::string method;
     int         fileStat;
 
-    // parse_request(request, method, target);
-    HttpMessage hm(request, config);
+    //request data
+    RequestData rd(request);
 
-    hm.checkRequest();
+    //http meassage
+    HttpMessage hm(rd, config);
+
+    hm.checkRequestAndReturnHttpMessage();
 
 
 
@@ -137,7 +138,7 @@ std::string Server::buildHttpResponse(std::string request)
 
     // HttpMessage.createHttpHeader();
 
-    // checkRequest(method, target);
+    // checkRequestAndReturnHttpMessage(method, target);
 
     // if (access((STATIC_HTTP + target).c_str(), F_OK))
     //     return rs.notFound_404();

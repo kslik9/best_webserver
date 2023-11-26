@@ -4,6 +4,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/HttpMessage.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
+				src/ReturnStatus/RequestData.cpp \
 				src/CGI/cgi.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)

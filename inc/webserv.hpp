@@ -34,6 +34,8 @@
 #include "../src/Server/Server.hpp"
 #include "../src/ReturnStatus/ReturnStatus.hpp"
 #include "../src/ReturnStatus/HttpMessage.hpp"
+#include "../src/ReturnStatus/RequestData.hpp"
+
  
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
