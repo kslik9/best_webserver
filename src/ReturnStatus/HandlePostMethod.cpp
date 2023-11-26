@@ -1,6 +1,6 @@
-#include "HttpMessage.hpp"
+#include "HttpMessageChecker.hpp"
 
-void HttpMessage::handlePostMethod() {
+void HttpMessageChecker::handlePostMethod() {
     
     //check if location support upload
     if(checkLocationSupportUpload()) {

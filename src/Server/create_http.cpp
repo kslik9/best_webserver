@@ -120,7 +120,7 @@ std::string Server::buildHttpResponse(std::string request)
     RequestData rd(request);
 
     //http meassage
-    HttpMessage hm(rd, config);
+    HttpMessageChecker hm(rd, config);
 
     hm.checkRequestAndReturnHttpMessage();
 

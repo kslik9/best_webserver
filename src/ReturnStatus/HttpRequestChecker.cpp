@@ -1,13 +1,13 @@
-#include "HttpMessage.hpp"
+#include "HttpRequestChecker.hpp"
 
-HttpMessage::HttpMessage(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
+HttpRequestChecker::HttpRequestChecker(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
 }
 
-std::string HttpMessage::getStatusCode() {
+std::string HttpRequestChecker::getStatusCode() {
     return this->statusCode;
 }
 
-void    HttpMessage::createHttpHeader() {
+void    HttpRequestChecker::createHttpHeader() {
     
 }
 
@@ -15,7 +15,7 @@ void    HttpMessage::createHttpHeader() {
 
 
 //this will check the request and at the end it will create an http message and return it
-void    HttpMessage::checkRequestAndReturnHttpMessage() {
+void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
         //create 400 bad request ()
