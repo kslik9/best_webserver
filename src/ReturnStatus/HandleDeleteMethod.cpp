@@ -1,6 +1,6 @@
-#include "HttpMessage.hpp"
+#include "HttpRequestChecker.hpp"
 
-void HttpMessage::handleDeleteMethod() {
+void HttpRequestChecker::handleDeleteMethod() {
 
     if(!checkContentExistsInRoot()) {
         //create 404 Not Found

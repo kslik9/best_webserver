@@ -1,8 +1,14 @@
+#pragma once
 #include "webserv.hpp"
 
-
+class RequestData;
 
 class HttpResponseMsgCreator {
-    std::string statusCode;
-    Std::string
-}
+    private:
+        std::string statusCode;
+        std::string statusMessage;
+        std::string body;
+        // RequestData request;
+    public:
+        HttpResponseMsgCreator(RequestData &request);
+};

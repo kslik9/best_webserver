@@ -1,6 +1,4 @@
-#ifndef WEBSERV_HPP
-#define WEBSERV_HPP
-
+#pragma once
 
 
 #include <sys/wait.h>
@@ -33,8 +31,12 @@
 #include "../src/Logger/Logger.hpp"
 #include "../src/Server/Server.hpp"
 #include "../src/ReturnStatus/ReturnStatus.hpp"
-#include "../src/ReturnStatus/HttpMessageChecker.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
+#include "../src/ReturnStatus/HttpResponseMsgCreator.hpp"
+#include "../src/ReturnStatus/HttpRequestChecker.hpp"
+
+
+
 
  
 // Consts
@@ -60,4 +62,3 @@ std::string execute_php(std::string file);
 
 // global variables
 
-#endif
