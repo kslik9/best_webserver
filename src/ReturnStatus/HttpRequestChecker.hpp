@@ -4,14 +4,12 @@
 // #include "RequestData.hpp"
 class Config;
 class RequestData;
-
 class HttpRequestChecker {
     private:
         std::string statusCode;
         std::string statusMessage;
         std::string target;
         std::string method;
-        std::string location;
         bool        checkNotAllowededChars();
         bool        checkUriLength();
         bool        checkRequestHttpMessage();
@@ -27,6 +25,7 @@ class HttpRequestChecker {
         bool        CheckDeleteDirContent();
         bool        checkWriteAccessOnDir();
         Config      &config;
+        std::map<std::string, std::string> location;
     public:
         RequestData &requestData;
         HttpRequestChecker(RequestData &requestData, Config &config);
