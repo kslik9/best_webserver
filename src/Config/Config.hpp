@@ -27,7 +27,7 @@ struct serv_conf
 	std::string errorPages;
 	std::string name;
 	long long clientBodyLimit;
-	mp routes;
+	mp routes; //dyali do not use it
 	map_last rout;
 };
 
@@ -40,15 +40,19 @@ class Config
 		~Config();
 		Config &operator=(Config const &rhs);
 		// 
+		int 	how_mn_servers();
+		void display_all(serv_conf srvConf);
+		int servers_number;
 		unsigned int getPort() const;
 		void parseInfosStr(std::string name , int leng, std::string &host);
 		locate get_info_for_loca(std::string str);
 		void parseInfosInt(std::string name , int leng, long long &host);
-		void parseLocation();
-		serv_conf srvConf;
+		void parseLocation(int i);
 		std::string value_fo_loca(vec::iterator it);
 		void parseConf();
+		std::vector<serv_conf> srvConf; 
 	private:
+		static const int arr = 10;
 		std::vector<std::string> raw_data;
 		unsigned int port;
 };
