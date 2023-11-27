@@ -6,6 +6,7 @@
 
 Config::Config()
 {
+	srvConf.resize(10);
 }
 
 Config::Config(const Config &src)
@@ -107,35 +108,42 @@ locate Config::get_info_for_loca(std::string str)
 
 	return tm;
 }
-void display_all(serv_conf srvConf)
+void Config::display_all(serv_conf srvConf)
 {
-	std::cout << "the host is " << srvConf.host << std::endl;
-	std::cout << "the port is " << srvConf.port << std::endl;
-	std::cout << "the error page is " << srvConf.errorPages << std::endl;
-	std::cout << "the name is " << srvConf.name << std::endl;
-	std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
-	map_last::iterator it;
-	std::cout << "-------routes----------\n";
-		it = srvConf.rout.begin();
-		while(it != srvConf.rout.end())
-		{
-			std::cout << "route name = is " << it->first ;
-			std::cout << " auto index =>" << it->second.autoindex ;
-			std::cout << " cgi path =>" << it->second.cgi_path ;
-			std::cout << " cgi extension =>" << it->second.cgi_extension ;
-			std::cout << " index =>" << it->second.index ;
-			std::cout << " root =>" << it->second.root ;
-			if(it->second.redirect[0])
-				std::cout << " redirect =>" << it->second.redirect ;
-			std::cout << " first method =>" << it->second.method ;
-			std::cout << " second method =>" << it->second.method1 ;
-			std::cout << " third method =>" << it->second.method2 ;
-			std::cout << " forth method =>" << it->second.method3 ;
-			*it++;
-			std::cout << std::endl;
-		}
+	int i = 0;
+	while(i < this->servers_number)
+	{
+		std::cout << "server number {" << i << "}\n";
+		std::cout << "the host is " << srvConf.host << std::endl;
+		std::cout << "the port is " << srvConf.port << std::endl;
+		std::cout << "the error page is " << srvConf.errorPages << std::endl;
+		std::cout << "the name is " << srvConf.name << std::endl;
+		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
+		map_last::iterator it;
+		std::cout << "-------routes----------\n";
+			it = srvConf.rout.begin();
+			while(it != srvConf.rout.end())
+			{
+				std::cout << "route name = is " << it->first ;
+				std::cout << " auto index =>" << it->second.autoindex ;
+				std::cout << " cgi path =>" << it->second.cgi_path ;
+				std::cout << " cgi extension =>" << it->second.cgi_extension ;
+				std::cout << " index =>" << it->second.index ;
+				std::cout << " root =>" << it->second.root ;
+				if(it->second.redirect[0])
+					std::cout << " redirect =>" << it->second.redirect ;
+				std::cout << " first method =>" << it->second.method ;
+				std::cout << " second method =>" << it->second.method1 ;
+				std::cout << " third method =>" << it->second.method2 ;
+				std::cout << " forth method =>" << it->second.method3 ;
+				*it++;
+				std::cout << std::endl;
+			}
+		std::cout << "----------------------------------------------------------------------\n";
+		i++;
+	}
 }
-void Config::parseLocation()
+void Config::parseLocation(int i)
 {
 	std::string tmp;
 	std::string value;
@@ -150,16 +158,16 @@ void Config::parseLocation()
 			tmp = tmp.substr(pos - 1);
 
 			value = value_fo_loca(it);
-			srvConf.routes[tmp] = value;
+			srvConf[0].routes[tmp] = value;
 		}
 		it++;
 	}
 	mp::iterator pop;
-	map_last::iterator iter = srvConf.rout.begin();
-	pop = srvConf.routes.begin();
-	while(pop != srvConf.routes.end())
+	map_last::iterator iter = srvConf[0].rout.begin();
+	pop = srvConf[0].routes.begin();
+	while(pop != srvConf[0].routes.end())
 	{		
-		srvConf.rout[pop->first] = get_info_for_loca(pop->second);
+		srvConf[0].rout[pop->first] = get_info_for_loca(pop->second);
 		pop++;
 	}	
 }
@@ -201,19 +209,43 @@ void Config::parseInfosInt(std::string name , int leng, long long &host)
 		it++;
 	}
 }
+int 	Config::how_mn_servers()
+{
+	int i = 0 ;
+	size_t k = 0;
+	vec::iterator it = this->raw_data.begin();
+	std::string tmp;
+	int c = 0 ;
+	while(it != this->raw_data.end())
+	{
+		tmp = *it;
+		tmp.erase(std::remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+		if(tmp == "server")
+			c++;
+
+		it++;
+	}
+	return c;
+}
 void Config::parseConf()
 {
-	parseLocation();
-	parseInfosStr("host", 4, srvConf.host);
-	parseInfosStr("error", 5, srvConf.errorPages);
-	parseInfosStr("name", 4, srvConf.name);
-	parseInfosInt("listen", 6, srvConf.port);
-	parseInfosInt("body_size", 10, srvConf.clientBodyLimit);
+	this->servers_number = how_mn_servers();
+	int i = 0;
+	while(i < this->servers_number)
+	{
+		parseLocation(i);
+		parseInfosStr("host", 4, srvConf[i].host);
+		parseInfosStr("error", 5, srvConf[i].errorPages);
+		parseInfosStr("name", 4, srvConf[i].name);
+		parseInfosInt("listen", 6, srvConf[i].port);
+		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit);
+		i++;
+	}
 
-	// std::cout << it->first << std::endl;
 }
 Config::Config(std::string conf)
 {
+	srvConf.resize(10);
 	this->port = 8080;
 	std::fstream file(conf);
 	if (!file.is_open())
@@ -226,9 +258,9 @@ Config::Config(std::string conf)
 		std::string line;
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
-		parseConf(); //not completed
-		// display_all(srvConf);
-		// exit(0);
+		parseConf();
+		display_all(srvConf[0]);
+		exit(0);
 
 	}
 }
