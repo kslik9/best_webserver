@@ -259,8 +259,8 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		display_all(srvConf[0]);
-		exit(0);
+		// display_all(srvConf[0]);
+		// exit(0);
 
 	}
 }
