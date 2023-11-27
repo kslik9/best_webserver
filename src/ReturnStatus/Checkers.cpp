@@ -22,9 +22,60 @@ bool    HttpRequestChecker::checkRequestHttpMessage() {
     return false;
 }
 
+std::string trim(std::string str) {
+    unsigned int fIndex = 0;
+    unsigned int lIndex = 0;
+    unsigned int strLen = str.length();
+
+    while (fIndex < strLen && str.at(fIndex) == ' ')
+        fIndex++;
+
+    lIndex = str.length() - 1;
+    while (lIndex >= 0 && str.at(lIndex) == ' ')
+        lIndex--;
+
+    return str.substr(fIndex, lIndex - fIndex + 1);
+}
+
+bool isFile(std::string const &file) {
+    return file.find(".") != std::string::npos ? true : false;
+}
+
+std::string getRouteStr(std::string &url) {
+    int pos = 0;
+    url = url.substr(1);
+    std::string route = "/";
+    // std::cout << url << std::endl;
+    while ((pos = url.find("/")) != std::string::npos) {
+        //here i will check if 
+        std::string fragment = url.substr(0, pos);
+        // std::cout << "fragment: " << fragment;
+        if (isFile(fragment))
+            return route;
+        else
+            route += (fragment + "/");
+        url = url.substr(pos + 1);
+    }
+    if (!url.empty()) {
+        // std::cout << "fragment: " << url;
+        if (isFile(url))
+            return route;
+        else
+            route += (url);
+    }
+    return route;
+}
+
+//check if there is any location match with the uri (target)
 bool    HttpRequestChecker::checkLocationMatchRequestUri() {
-    //check if there is any location match with the uri (target)
-    return false;
+    // std::map<std::string, locate > mp = config.srvConf.rout;
+    // std::map<std::string, locate >::iterator it = mp.begin();
+    // while (it != mp.end()) {
+    //     std::string locationn = trim(it->first);
+    // }
+    std::string stringRoute = getRouteStr(target);
+    std::cout << stringRoute << std::endl;
+    return true;
 }
 
 bool    HttpRequestChecker::checkLocationHasRedirection() {
