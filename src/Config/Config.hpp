@@ -4,6 +4,7 @@
 #include "webserv.hpp"
 typedef std::vector<std::string> vec;
 typedef std::map<std::string, std::string> mp;
+
 struct locate
 {
 	std::string autoindex;

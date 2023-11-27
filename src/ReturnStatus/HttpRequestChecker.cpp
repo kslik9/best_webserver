@@ -1,6 +1,8 @@
 #include "HttpRequestChecker.hpp"
 
 HttpRequestChecker::HttpRequestChecker(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
+    this->target = requestData.getUri();
+    this->method = requestData.getMethod();
 }
 
 std::string HttpRequestChecker::getStatusCode() {
@@ -18,10 +20,9 @@ void    HttpRequestChecker::createHttpHeader() {
 void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
-        //create 400 bad request ()
-        //this->statusCode = 400
-        //this->statusMessage = "Bad Request"
-        //return errorpage
+        this->statusCode = "400";
+        this->statusMessage = "Bad Request";
+        return;
     }
     if (checkUriLength()) {
         //create 414 Request-URI Too Long
@@ -36,13 +37,16 @@ void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         // return errorPage
     }
     
+    //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) {
         //create 404 Not Found
         //this->statusCode = 404
         //this->statusMessage = Not Found
         //return Page
+        // std::cout << "not found a bb\n";
+        // return ;
     }
-
+    return;
     if (checkLocationHasRedirection()) {
         //create 301 Moved Permanently
         //this->statusCode = 301

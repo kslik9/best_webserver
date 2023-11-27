@@ -11,6 +11,7 @@ class HttpRequestChecker {
         std::string statusMessage;
         std::string target;
         std::string method;
+        std::string location;
         bool        checkNotAllowededChars();
         bool        checkUriLength();
         bool        checkRequestHttpMessage();
