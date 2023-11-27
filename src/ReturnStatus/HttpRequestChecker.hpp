@@ -4,7 +4,6 @@
 // #include "RequestData.hpp"
 class Config;
 class RequestData;
-
 class HttpRequestChecker {
     private:
         std::string statusCode;
@@ -26,6 +25,7 @@ class HttpRequestChecker {
         bool        CheckDeleteDirContent();
         bool        checkWriteAccessOnDir();
         Config      &config;
+        std::map<std::string, std::string> location;
     public:
         RequestData &requestData;
         HttpRequestChecker(RequestData &requestData, Config &config);
