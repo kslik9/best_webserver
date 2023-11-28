@@ -93,35 +93,23 @@ std::list<std::string>  extractRoutes(std::string stringRoute) {
 
 //check if there is any location match with the uri (target)
 bool    HttpRequestChecker::checkLocationMatchRequestUri() {
-    std::map<std::string, std::string> abstractLocation;
-    abstractLocation.insert(std::make_pair("autoindex", "on"));
-    abstractLocation.insert(std::make_pair("index", "index.html"));
-    abstractLocation.insert(std::make_pair("method", "GET"));
-    abstractLocation.insert(std::make_pair("redirect", "https://www.youtube.com/watch?v=Zgz8ybG6l-U"));
 
-
-    std::set<std::string> abstractLocationsFromConfig;
+    std::string confLocation;
     std::list<std::string> extractedRoutes;
     std::string stringRoute;
-
-    // test.insert("/");
-    // abstractLocationsFromConfig.insert("/");
-    abstractLocationsFromConfig.insert("/data");
-    abstractLocationsFromConfig.insert("/data/hello");
-    abstractLocationsFromConfig.insert("/images");
 
     stringRoute = getRouteStr(target);
     extractedRoutes = extractRoutes(stringRoute);
 
-
     //iterate until finding a match location
-    for (std::list<std::string>::iterator it = extractedRoutes.begin(); it != extractedRoutes.end(); ++it) {
-        for (std::set<std::string>::iterator itt = abstractLocationsFromConfig.begin(); itt != abstractLocationsFromConfig.end(); ++itt) {
-            if (*it == *itt)
+    for (std::list<std::string>::iterator extractedRoutesIt = extractedRoutes.begin(); extractedRoutesIt != extractedRoutes.end(); ++extractedRoutesIt) {
+        for (std::map<std::string, mp>::iterator locationsIt = config.srvConf[0].rout.begin(); locationsIt != config.srvConf[0].rout.end(); ++locationsIt) {
+            confLocation = trim(locationsIt->first);
+            if (*extractedRoutesIt == confLocation)
             {
                 //in this step if a route match, it will store the location <map>
-                std::cout << "wakayna al7bs: " << *it << std::endl;
-                this->location = abstractLocation;
+                std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
+                this->location = locationsIt->second;
                 return true;
             }
         }
@@ -131,7 +119,9 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
 
 bool    HttpRequestChecker::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
-    return true;
+    if (this->location["redirect"] != "none")
+        return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkMethodAllowed() {

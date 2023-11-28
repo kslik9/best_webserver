@@ -41,23 +41,15 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     
     //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) {
-        //create 404 Not Found
-        //this->statusCode = 404
-        //this->statusMessage = Not Found
-        //return Page
-        // std::cout << "not found a bb\n";
-        // return ;
-        // std::cout << this->config.srvConf[0].errorPages << "la\n";
-        
-        std::cout << "called\n";
+        std::cout << "not matched\n";
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     if (checkLocationHasRedirection()) {
-        //create 301 Moved Permanently
-        //this->statusCode = 301
-        //this->statusMessage = MOved Permanently
-        //return Page
+        std::cout << "redirected\n";
+        return new MovedPermanently(this->location["redirect"]);
     }
+
+    std::cout << "no\n";
 
     //check if the method allowed in location
     if (checkMethodAllowed()) {
