@@ -24,6 +24,7 @@
 #include <sys/select.h>
 #include <poll.h>
 #include <exception>
+#include <sys/stat.h>
 
 
 // OOP
@@ -32,8 +33,9 @@
 #include "../src/Server/Server.hpp"
 #include "../src/ReturnStatus/ReturnStatus.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
-#include "../src/ReturnStatus/HttpResponseMsgCreator.hpp"
 #include "../src/ReturnStatus/HttpRequestChecker.hpp"
+#include "../src/ReturnStatus/Response/NotFound404.hpp"
+
 
 
 
@@ -42,8 +44,8 @@
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_HTTP "static/http/"
-#define STATIC_404 "static/errors/404.html"
-#define STATIC_403 "static/errors/403.html"
+#define STATIC_404 "static/default_errors/404.html"
+#define STATIC_403 "static/default_errors/403.html"
 #define CLIENTS_COUNT 4000
 #define RESET_COLOR "\033[0m"
 #define BLUE_TEXT "\033[1;34m"
