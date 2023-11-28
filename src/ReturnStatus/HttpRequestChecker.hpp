@@ -17,7 +17,7 @@ class HttpRequestChecker {
         bool        checkRequestHttpMessage();
         bool        checkLocationMatchRequestUri();
         bool        checkLocationHasRedirection();
-        bool        checkMethodAllowed();
+        bool        checkMethodAllowed(std::string &allowedMethod);
         bool        checkContentExistsInRoot();
         bool        checkContentIsDir();
         bool        checkIndexFilesInDir();
