@@ -58,11 +58,10 @@ std::string get_mime_type(const std::string &fileName)
 
 
 //contructor
-NotFound404::NotFound404(std::string &targetp, std::string errorPath) : AResponseMessage(targetp) {
+NotFound404::NotFound404(std::string &targetp, std::string errorPath) {
     statusCode = "404";
     statusMessage = "Not Found";
     target = targetp;
-    struct stat buffer;
 
     //check if errorpage is exist
     if (!access(errorPath.c_str(), F_OK | R_OK))

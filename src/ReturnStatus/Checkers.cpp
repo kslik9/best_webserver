@@ -109,6 +109,8 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
     abstractLocationsFromConfig.insert("/data");
     abstractLocationsFromConfig.insert("/data/hello");
     abstractLocationsFromConfig.insert("/images");
+    abstractLocationsFromConfig.insert("/hello");
+
 
     stringRoute = getRouteStr(target);
     extractedRoutes = extractRoutes(stringRoute);
@@ -131,7 +133,9 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
 
 bool    HttpRequestChecker::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
-    return true;
+    if (!this->location["redirect"].empty())
+        return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkMethodAllowed() {
