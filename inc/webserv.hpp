@@ -37,7 +37,8 @@
 
 #include "../src/ReturnStatus/Response/AResponseMessage.hpp"
 #include "../src/ReturnStatus/Response/NotFound404.hpp"
-#include "../src/ReturnStatus/Response/MovedPermanently.hpp"
+#include "../src/ReturnStatus/Response/MovedPermanently301.hpp"
+#include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"
 
 
 
