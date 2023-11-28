@@ -5,8 +5,9 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
 				src/ReturnStatus/RequestData.cpp \
-				src/ReturnStatus/HttpResponseMsgCreator.cpp \
+				src/ReturnStatus/Response/NotFound404.cpp \
 				src/CGI/cgi.cpp
+# src/ReturnStatus/Response/HttpResponseMsgCreator.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 OBJS		:= $(addprefix obj/, $(OBJS))
