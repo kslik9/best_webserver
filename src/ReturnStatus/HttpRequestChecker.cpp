@@ -49,14 +49,12 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         // return ;
         // std::cout << this->config.srvConf[0].errorPages << "la\n";
         
-        std::cout << "called\n";
+        std::cout << "not matched\n";
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     if (checkLocationHasRedirection()) {
-        //create 301 Moved Permanently
-        //this->statusCode = 301
-        //this->statusMessage = MOved Permanently
-        //return Page
+        std::cout << "redirected\n";
+        return new MovedPermanently(this->location["redirect"]);
     }
 
     //check if the method allowed in location
