@@ -55,12 +55,13 @@ int whichMethAmI(std::string str)
 	}
 	return c;
 }
-void t_ry(std::string str, std::string &host, std::string name, int len, int flag)
+std::string t_ry(std::string str, std::string &host, std::string name, int len, int flag)
 {
 	int i = 0;
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
+	static std::string last = "none";
 	int howmuch_meth = whichMethAmI(str);
 	if(flag == 0)
 		meth = 0;
@@ -80,7 +81,7 @@ void t_ry(std::string str, std::string &host, std::string name, int len, int fla
 				if(meth > howmuch_meth)
 				{
 					host = "none";
-					return;
+					return "none";
 				}
 				else if(mindex == meth && name  == "method")
 					break;
@@ -90,26 +91,33 @@ void t_ry(std::string str, std::string &host, std::string name, int len, int fla
         }
         i++; 
     }
+	if(host == last)
+		host = "none";
+	last = host;
+	return host;
 }
-locate Config::get_info_for_loca(std::string str)
+mp Config::get_info_for_loca(std::string str)
 {
-	struct locate tm;
-	t_ry(str, tm.autoindex, "autoindex", 9, 1);
-	t_ry(str, tm.cgi_path, "cgi_path", 9, 1);
-	t_ry(str, tm.cgi_extension, "cgi_extension", 14, 1);
-	t_ry(str, tm.index, "index", 5, 1);
-	t_ry(str, tm.root, "root", 4, 1);
-	t_ry(str, tm.method, "method", 6, 1);
-	t_ry(str, tm.method1, "method", 6, 1);
-	t_ry(str, tm.method2, "method", 6, 1);
-	t_ry(str, tm.method3, "method", 6, 1);
-	t_ry(str, tm.redirect, "redirect", 9, 1);
-	t_ry(str, tm.redirect, "redirect", 9, 0);
+	mp tm;
+	std::string tmp = "none";
+	mp::iterator it;
+	tm["autoindex"] = t_ry(str, tmp, "autoindex", 9, 1);
+	tm["cgi_path"] = t_ry(str, tmp, "cgi_path", 9, 1);
+	tm["cgi_extension"] = t_ry(str, tmp, "cgi_extension", 14, 1);
+	tm["index"] = t_ry(str, tmp, "index", 5, 1);
+	tm["root"] = t_ry(str, tmp, "root", 4, 1);
+	tm["method1"] = t_ry(str, tmp, "method", 8, 1);
+	tm["method2"] = t_ry(str, tmp, "method", 8, 1);
+	tm["method3"] = t_ry(str, tmp, "method", 8, 1);
+	tm["method4"] = t_ry(str, tmp, "method", 8, 1);
+	tm["redirect"] = t_ry(str, tmp, "redirect", 9, 1);
+	tm["redirect"] = t_ry(str, tmp, "redirect", 8, 0);
 
 	return tm;
 }
 void Config::display_all(serv_conf srvConf)
 {
+	std::cout << "hey\n";
 	int i = 0;
 	while(i < this->servers_number)
 	{
@@ -121,21 +129,17 @@ void Config::display_all(serv_conf srvConf)
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
 		std::cout << "-------routes----------\n";
+		mp::iterator oi;
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				std::cout << "route name = is " << it->first ;
-				std::cout << " auto index =>" << it->second.autoindex ;
-				std::cout << " cgi path =>" << it->second.cgi_path ;
-				std::cout << " cgi extension =>" << it->second.cgi_extension ;
-				std::cout << " index =>" << it->second.index ;
-				std::cout << " root =>" << it->second.root ;
-				if(it->second.redirect[0])
-					std::cout << " redirect =>" << it->second.redirect ;
-				std::cout << " first method =>" << it->second.method ;
-				std::cout << " second method =>" << it->second.method1 ;
-				std::cout << " third method =>" << it->second.method2 ;
-				std::cout << " forth method =>" << it->second.method3 ;
+				std::cout <<"route =>" <<  it->first << " :\n" ;
+				oi = it->second.begin();
+				while(oi != it->second.end())
+				{
+					std::cout << oi->first << " => " << oi->second << " ";
+					*oi++;
+				}
 				*it++;
 				std::cout << std::endl;
 			}
