@@ -17,12 +17,14 @@ void    HttpRequestChecker::createHttpHeader() {
 
 
 //this will check the request and at the end it will create an http message and return it
-void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
+AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
+    std::map<std::string, std::string> abstractErrorPages;
+    abstractErrorPages["404"] = "errors/404.html";
+
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
         this->statusCode = "400";
         this->statusMessage = "Bad Request";
-        return;
     }
     if (checkUriLength()) {
         //create 414 Request-URI Too Long
@@ -45,8 +47,11 @@ void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         //return Page
         // std::cout << "not found a bb\n";
         // return ;
+        // std::cout << this->config.srvConf[0].errorPages << "la\n";
+        
+        std::cout << "called\n";
+        return new NotFound404(this->target, abstractErrorPages["404"]);
     }
-    return;
     if (checkLocationHasRedirection()) {
         //create 301 Moved Permanently
         //this->statusCode = 301
@@ -68,5 +73,6 @@ void    HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         handleGetMethod();
     }
 
+    return new NotFound404(this->target, abstractErrorPages["404"]);
     //return the created http response message
 }

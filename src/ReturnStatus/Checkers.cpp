@@ -105,7 +105,7 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
     std::string stringRoute;
 
     // test.insert("/");
-    abstractLocationsFromConfig.insert("/");
+    // abstractLocationsFromConfig.insert("/");
     abstractLocationsFromConfig.insert("/data");
     abstractLocationsFromConfig.insert("/data/hello");
     abstractLocationsFromConfig.insert("/images");

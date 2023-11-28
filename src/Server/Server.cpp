@@ -174,7 +174,7 @@ void Server::waitClients()
 						// std::string http_resp = buildHttpResponse(method, target);
 						std::string str_buffer(buffer);
 						std::string http_resp = buildHttpResponse(str_buffer);
-						// send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 						close(fds[i].fd);
 					}
 					delete[] buffer;
