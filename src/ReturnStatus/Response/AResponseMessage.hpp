@@ -31,3 +31,5 @@ class AResponseMessage {
         virtual ~AResponseMessage() {};
         virtual std::string createResponse() = 0;
 };
+
+std::string getCurrentTime();

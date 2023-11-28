@@ -112,7 +112,9 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
                 this->location = locationsIt->second;
                 return true;
             }
+            // std::cout << confLocation << "\n";
         }
+        break;
     }
     return false;
 }
@@ -124,9 +126,13 @@ bool    HttpRequestChecker::checkLocationHasRedirection() {
     return false;
 }
 
-bool    HttpRequestChecker::checkMethodAllowed() {
-    //check if the method is allowed or not in the location
-    return true;
+bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
+    if (location["method1"] == method || location["method2"] == method || location["method3"] == method)
+        return true;
+    allowedMethod += location["method1"] != "none" ? location["method1"]: "";
+    allowedMethod += location["method2"] != "none" ? ", " + location["method2"] : "";
+    allowedMethod += location["method3"] != "none" ? ", " + location["method3"] : "";
+    return false;
 }
 
 bool    HttpRequestChecker::checkContentExistsInRoot() {
