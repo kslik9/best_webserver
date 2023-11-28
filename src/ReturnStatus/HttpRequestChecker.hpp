@@ -4,6 +4,8 @@
 // #include "RequestData.hpp"
 class Config;
 class RequestData;
+class AResponseMessage;
+
 class HttpRequestChecker {
     private:
         std::string statusCode;
@@ -31,8 +33,9 @@ class HttpRequestChecker {
         HttpRequestChecker(RequestData &requestData, Config &config);
         std::string getStatusCode();
         void        createHttpHeader();
-        void        checkRequestAndReturnHttpMessage();
+        AResponseMessage    *checkRequestAndReturnHttpMessage();
         void        handleGetMethod();
         void        handlePostMethod();
         void        handleDeleteMethod();
 };
+
