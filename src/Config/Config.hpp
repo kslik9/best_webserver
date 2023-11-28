@@ -19,7 +19,7 @@ struct locate
 	std::string method3;
 };
 
-typedef std::map<std::string, locate > map_last;
+typedef std::map<std::string, mp > map_last;
 
 struct serv_conf
 {
@@ -29,6 +29,7 @@ struct serv_conf
 	std::string name;
 	long long clientBodyLimit;
 	mp routes; //dyali do not use it
+	mp rout2;
 	map_last rout;
 };
 
@@ -46,7 +47,7 @@ class Config
 		int servers_number;
 		unsigned int getPort() const;
 		void parseInfosStr(std::string name , int leng, std::string &host);
-		locate get_info_for_loca(std::string str);
+		mp get_info_for_loca(std::string str);
 		void parseInfosInt(std::string name , int leng, long long &host);
 		void parseLocation(int i);
 		std::string value_fo_loca(vec::iterator it);
