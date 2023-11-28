@@ -46,17 +46,14 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     }
     if (checkLocationHasRedirection()) {
         std::cout << "redirected\n";
-        return new MovedPermanently(this->location["redirect"]);
+        return new MovedPermanently301(this->location["redirect"]);
     }
 
-    std::cout << "no\n";
-
     //check if the method allowed in location
-    if (checkMethodAllowed()) {
-        //create 405 Method Not Allowed
-        //this->statusCode = 405
-        //this->statusMessage = Method Not Allowed
-        //return Page
+    std::string allowedMethods;
+    if (!checkMethodAllowed(allowedMethods)) {
+        std::cout << "not allowed hh\n";
+        return new MethodNotAllowed405(allowedMethods);
     }
 
     //now we check the request method
