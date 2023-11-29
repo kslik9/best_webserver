@@ -23,30 +23,27 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
                 //run cgi on requested file with GET request method
             }
             else {
-                return new OK200(this->resourcesWithPath);
+                return new OK200(this->resourcesWithPath, false);
             }
         }
         else {
             if (checkAutoIndexOn()) {
-                //return autoindex of the directory
-                //statusCode  = 200
-                //statusMessge = OK
+                std::cout << "autoindex abb\n";
+                return new OK200(this->resourcesWithPath, true);
             }
             else {
-                //create 403 Forbidden
-                //this->statusCode = 403
-                //this->statusMessage = Forbidden
-                //return errorPage
+                // return new OK200(this->resourcesWithPath, false);
             }
         }
     }
     else {
+        std::cout << "i am file " << this->resourcesWithPath << std::endl;
+
         if (checkLocationIncludesCgi()) {
             //run cgi on requested file with GET request method
         }
         else {
-            //create 200 OK
-            //return requested file
+            return new OK200(this->resourcesWithPath, false);
         }
     }
     return new NotFound404(this->target, abstractErrorPages["404"]);

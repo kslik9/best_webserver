@@ -10,6 +10,7 @@
 #include <fstream>
 #include <fcntl.h>
 #include <map>
+#include <dirent.h>
 
 
 // Consts
