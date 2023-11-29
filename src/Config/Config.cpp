@@ -133,7 +133,7 @@ void Config::display_all(serv_conf srvConf)
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				std::cout <<"route =>" <<  it->first << " :\n" ;
+				std::cout <<"route =>{" <<  it->first << "}:\n" ;
 				oi = it->second.begin();
 				while(oi != it->second.end())
 				{
@@ -146,6 +146,23 @@ void Config::display_all(serv_conf srvConf)
 		std::cout << "----------------------------------------------------------------------\n";
 		i++;
 	}
+}
+std::string get_name_good(std::string name)
+{
+	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
+	int c = 0;
+	for(int i = 0;i < name.length() + 1 ;i++)
+	{
+		if(name[i] == '/')
+			c++;
+	}
+	if(c > 1)
+	{
+		if(name[name.length() - 1] == '/')
+			name[name.length() - 1] = ' ';
+	}
+	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
+	return name;
 }
 void Config::parseLocation(int i)
 {
@@ -170,8 +187,9 @@ void Config::parseLocation(int i)
 	map_last::iterator iter = srvConf[0].rout.begin();
 	pop = srvConf[0].routes.begin();
 	while(pop != srvConf[0].routes.end())
-	{		
-		srvConf[0].rout[pop->first] = get_info_for_loca(pop->second);
+	{
+		tmp = get_name_good(pop->first);
+		srvConf[0].rout[tmp] = get_info_for_loca(pop->second);
 		pop++;
 	}	
 }
@@ -263,8 +281,8 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		// display_all(srvConf[0]);
-		// exit(0);
+		display_all(srvConf[0]);
+		exit(0);
 
 	}
 }
