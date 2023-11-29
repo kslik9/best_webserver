@@ -61,6 +61,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
+	host = "none";
 	static std::string last = "none";
 	int howmuch_meth = whichMethAmI(str);
 	if(flag == 0)
@@ -120,7 +121,14 @@ void Config::display_all(serv_conf srvConf)
 
 		std::cout << "the host is " << srvConf.host << std::endl;
 		std::cout << "the port is " << srvConf.port << std::endl;
-		std::cout << "the error page is " << srvConf.errorPages << std::endl;
+		std::cout << "the error pages is [";
+		mp::iterator p = srvConf.errorPages.begin();
+		while(p != srvConf.errorPages.end())
+		{
+			std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
+			*p++;
+		}
+		 std::cout << "]" <<std::endl;
 		std::cout << "the name is " << srvConf.name << std::endl;
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
@@ -259,6 +267,34 @@ void Config::filldata()
 		it++;
 	}
 }
+void Config::parse_error(int i)
+{
+	vec::iterator it = this->srvConf[i].my_data.begin();
+	std::string tmp;
+		std::string tmp2;
+
+	std::string str;
+	while(it != this->srvConf[i].my_data.end())
+	{
+		size_t k = 0;
+		str = *it;
+		str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
+		k = str.find("error", k);
+		if(k != std::string::npos)
+		{
+			std::cout << "dkhl\n";
+			tmp = str.substr(k + 5, 3);
+			tmp2 = str.substr(k + 8);
+			if(tmp2[tmp2.length() - 1] == ';')
+				tmp2[tmp2.length() - 1] = ' ';
+			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
+			this->srvConf[i].errorPages[tmp] = tmp2;
+			std::cout << tmp << "} {" << tmp2 << std::endl;
+		}
+		*it++;
+	}
+
+}
 void Config::parseConf()
 {
 	this->servers_number = how_mn_servers();
@@ -267,14 +303,13 @@ void Config::parseConf()
 	while(i < this->servers_number)
 	{
 		parseLocation(i);
+		parse_error(i);
 		parseInfosStr("host", 4, srvConf[i].host, i);
-		parseInfosStr("error", 5, srvConf[i].errorPages, i);
 		parseInfosStr("name", 4, srvConf[i].name, i);
 		parseInfosInt("listen", 6, srvConf[i].port, i);
 		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit, i);
 		i++;
 	}
-	// exit(0);
 }
 Config::Config(std::string conf)
 {
