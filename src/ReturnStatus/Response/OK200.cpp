@@ -55,13 +55,49 @@ std::string get_mime_type(const std::string &fileName)
     return "application/octet-stream"; // Default MIME type
 }
 
-OK200::OK200(std::string &resource, bool autoIndex) {
+OK200::OK200(std::string &resource) {
     this->statusCode = "200";
     this->statusMessage = "OK";
     this->resourcePath = resource;
     this->headers["Content-Type"] = get_mime_type(resource);
     this->headers["Date"] = getCurrentTime();
-    this->autoIndex = autoIndex;
+    this->autoIndex = false;
+}
+
+OK200::OK200(std::string &resource, bool autoIndex) {
+    this->statusCode = "200";
+    this->statusMessage = "OK";
+    this->resourcePath = resource;
+    this->headers["Content-Type"] = "text/html";
+    this->headers["Date"] = getCurrentTime();
+    this->autoIndex = true;
+}
+
+std::string OK200::getListing() {
+    std::string dir = this->resourcePath;
+    DIR *directory;
+    struct dirent   *entry;
+
+
+    if ((directory = opendir(dir.c_str())) != NULL) {
+        response << "<html>\n";
+        response << "<head><title>Index of " << this->resourcePath << "</title></head>\n";
+        response << "<body>\n";
+        response << "<pre>\n";
+        response << "<h1>Index of " << this->resourcePath << "</h1>\n";
+        while ((entry = readdir(directory)) != NULL) {
+            // std::cout << entry->d_name << std::endl;
+            response << "<a href=\"" << entry->d_name << "\">" << entry->d_name << "</a>\n";
+        }
+        response << "</pre>\n";
+        response << "</body>\n";
+        response << "</html>\n";
+        closedir(directory);
+    }
+    else {
+        std::cerr << "error\n";
+    }
+    return response.str();
 }
 
 std::string OK200::createResponse() {
@@ -74,18 +110,9 @@ std::string OK200::createResponse() {
     response << "\r\n";
 
     //create listing if autoIndexIsOn
-    // if (autoIndex) {
-    //     response << "<h1>hello there</h1>";
-    //     std::cout << "response " << this->resourcePath << std::endl;
-    //     //fetch all files and directories inside this->resourcePath
-    //     DIR *dir;
-    //     struct dirent *entry;
-
-    //     if ((dir = opendir(this->resourcePath.c_str())) != NULL) {
-
-    //     }
-    //     return response.str();
-    // }
+    if (autoIndex == true) {
+        return getListing();
+    }
     //create body if autoIndexIsOff
     std::ifstream file1(this->resourcePath, std::ios::binary);
     std::ostringstream fileContent;

@@ -5,7 +5,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
     abstractErrorPages["404"] = "errors/404.html";
 
     if(!checkContentExistsInRoot()) {
-        std::cout << "not found in root\n";
+        std::cout << "`" << location["root"] + this->resources << "` not exist in root\n";
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     
@@ -14,25 +14,27 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
         std::cout << this->resourcesWithPath << " is a dir\n";
         if (!checkDirIndedWithBackSlash()) {
             std::string targetWithBackSlash = this->target + "/";
-            std::cout << "not ended with Slash and will be forwaded to link with " << targetWithBackSlash << std::endl;
+            std::cout << "`" << targetWithBackSlash << "` not ended with /\n";
             return new MovedPermanently301(targetWithBackSlash);
         }
+        std::cout << "`" << this->target << "` ended with /\n";
         if (checkIndexFilesInDir()) {
-            std::cout << "kayn azzin\n";
+            std::cout << "index files: found\n";
             if (checkLocationIncludesCgi()) {
                 //run cgi on requested file with GET request method
             }
             else {
-                return new OK200(this->resourcesWithPath, false);
+                return new OK200(this->resourcesWithPath);
             }
         }
         else {
             if (checkAutoIndexOn()) {
-                std::cout << "autoindex abb\n";
+                std::cout << "autoindex: on\n";
                 return new OK200(this->resourcesWithPath, true);
             }
             else {
-                // return new OK200(this->resourcesWithPath, false);
+                std::cout << "autoindex: off\n";
+                return new Forbidden403();
             }
         }
     }
@@ -43,7 +45,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             //run cgi on requested file with GET request method
         }
         else {
-            return new OK200(this->resourcesWithPath, false);
+            return new OK200(this->resourcesWithPath);
         }
     }
     return new NotFound404(this->target, abstractErrorPages["404"]);
