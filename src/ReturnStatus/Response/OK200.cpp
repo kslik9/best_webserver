@@ -64,13 +64,14 @@ OK200::OK200(std::string &resource) {
     this->autoIndex = false;
 }
 
-OK200::OK200(std::string &resource, bool autoIndex) {
+OK200::OK200(std::string &resource, std::string const &url, bool autoIndex) {
     this->statusCode = "200";
     this->statusMessage = "OK";
     this->resourcePath = resource;
     this->headers["Content-Type"] = "text/html";
     this->headers["Date"] = getCurrentTime();
     this->autoIndex = true;
+    this->target = url;
 }
 
 std::string OK200::getListing() {
@@ -81,10 +82,10 @@ std::string OK200::getListing() {
 
     if ((directory = opendir(dir.c_str())) != NULL) {
         response << "<html>\n";
-        response << "<head><title>Index of " << this->resourcePath << "</title></head>\n";
+        response << "<head><title>Index of " << this->target << "</title></head>\n";
         response << "<body>\n";
         response << "<pre>\n";
-        response << "<h1>Index of " << this->resourcePath << "</h1>\n";
+        response << "<h1>Index of " << this->target << "</h1>\n";
         while ((entry = readdir(directory)) != NULL) {
             // std::cout << entry->d_name << std::endl;
             response << "<a href=\"" << entry->d_name << "\">" << entry->d_name << "</a>\n";
