@@ -1,7 +1,7 @@
 #pragma once
 #include "AResponseMessage.hpp"
 
-
+class AResponseMessage;
 
 class NotFound404 : public AResponseMessage  {
     public:

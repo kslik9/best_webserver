@@ -34,7 +34,11 @@
 #include "../src/ReturnStatus/ReturnStatus.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
 #include "../src/ReturnStatus/HttpRequestChecker.hpp"
+
+#include "../src/ReturnStatus/Response/AResponseMessage.hpp"
 #include "../src/ReturnStatus/Response/NotFound404.hpp"
+#include "../src/ReturnStatus/Response/MovedPermanently301.hpp"
+#include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"
 
 
 
