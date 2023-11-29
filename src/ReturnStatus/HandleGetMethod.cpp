@@ -18,12 +18,12 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             return new MovedPermanently301(targetWithBackSlash);
         }
         if (checkIndexFilesInDir()) {
+            std::cout << "kayn azzin\n";
             if (checkLocationIncludesCgi()) {
                 //run cgi on requested file with GET request method
             }
             else {
-                //create 200 OK
-                //return requested file
+                return new OK200(this->resourcesWithPath);
             }
         }
         else {
@@ -51,3 +51,5 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
     }
     return new NotFound404(this->target, abstractErrorPages["404"]);
 }
+
+

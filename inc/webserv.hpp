@@ -39,6 +39,7 @@
 #include "../src/ReturnStatus/Response/NotFound404.hpp"
 #include "../src/ReturnStatus/Response/MovedPermanently301.hpp"
 #include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"
+#include "../src/ReturnStatus/Response/OK200.hpp"
 
 
 

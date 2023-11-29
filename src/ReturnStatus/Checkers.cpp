@@ -145,6 +145,7 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
 //check if the content is exist in in root
 bool    HttpRequestChecker::checkContentExistsInRoot() {
     this->resourcesWithPath = location["root"] + this->resources;
+    // std::cout << "resources with path: " << resourcesWithPath << std::endl;
     // std::cout << "path: " << resourcesWithPath << std::endl;
     if (access(this->resourcesWithPath.c_str(), F_OK) == 0)
         // std::cout << "kayna a3shiri: " << resourcesWithPath << std::endl;
@@ -162,8 +163,22 @@ bool    HttpRequestChecker::checkContentIsDir() {
     return S_ISDIR(statBuf.st_mode);
 }
 
+//check if the directory has an index file
 bool    HttpRequestChecker::checkIndexFilesInDir() {
-    //check if the directory has an index file
+    //first check if there is index in conf
+        //in case is exist check if it's exist in dir
+        //else: check if there is index.html in directory
+    std::string indexFromConf = location["index"];
+    // std::cout << "[[" << this->resourcesWithPath + indexFromConf << "]]\n";
+    // std::cout << "checkIndexFilesInDir() -- " << this->resourcesWithPath + indexFromConf << std::endl;
+    //change resource path
+    if (!indexFromConf.empty()) {
+        if (access((this->resourcesWithPath + indexFromConf).c_str(), F_OK))
+            return false;
+    }
+    if (access((this->resourcesWithPath + "index.html").c_str(), F_OK))
+        return false;
+    this->resourcesWithPath = this->resourcesWithPath + indexFromConf;
     return true;
 }
 
@@ -174,7 +189,7 @@ bool    HttpRequestChecker::checkAutoIndexOn() {
 
 bool    HttpRequestChecker::checkLocationIncludesCgi() {
     //check if the location include cgi configurations
-    return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
