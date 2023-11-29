@@ -57,24 +57,34 @@ std::string get_mime_type(const std::string &fileName)
 }
 
 
+
 //contructor
-NotFound404::NotFound404(std::string &targetp, std::string errorPath) : AResponseMessage(targetp) {
+NotFound404::NotFound404(std::string &targetp, std::string errorPath) {
     statusCode = "404";
     statusMessage = "Not Found";
     target = targetp;
-    struct stat buffer;
+
+    //headers
+    headers["Date"] = getCurrentTime();
+    headers["Content-Type"] = "text/html";
 
     //check if errorpage is exist
     if (!access(errorPath.c_str(), F_OK | R_OK))
-
         this->errorPath = errorPath;
     else
         this->errorPath = STATIC_404;
+
+
+    
 }
 
+#include <ctime>
 std::string NotFound404::createResponse() {
+    
+
+    // std::cout << buffer;
+
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
-    headers["Content-Type"] = "text/html";
     std::map<std::string, std::string>::iterator it;
     response << startLine;
     for (it = headers.begin(); it != headers.end(); ++it)
