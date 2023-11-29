@@ -117,11 +117,7 @@ mp Config::get_info_for_loca(std::string str)
 }
 void Config::display_all(serv_conf srvConf)
 {
-	std::cout << "hey\n";
-	int i = 0;
-	while(i < this->servers_number)
-	{
-		std::cout << "server number {" << i << "}\n";
+
 		std::cout << "the host is " << srvConf.host << std::endl;
 		std::cout << "the port is " << srvConf.port << std::endl;
 		std::cout << "the error page is " << srvConf.errorPages << std::endl;
@@ -133,7 +129,7 @@ void Config::display_all(serv_conf srvConf)
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				std::cout <<"route =>" <<  it->first << " :\n" ;
+				std::cout <<"route =>{" <<  it->first << "}:\n" ;
 				oi = it->second.begin();
 				while(oi != it->second.end())
 				{
@@ -144,15 +140,30 @@ void Config::display_all(serv_conf srvConf)
 				std::cout << std::endl;
 			}
 		std::cout << "----------------------------------------------------------------------\n";
-		i++;
+}
+std::string get_name_good(std::string name)
+{
+	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
+	int c = 0;
+	for(int i = 0;i < name.length() + 1 ;i++)
+	{
+		if(name[i] == '/')
+			c++;
 	}
+	if(c > 1)
+	{
+		if(name[name.length() - 1] == '/')
+			name[name.length() - 1] = ' ';
+	}
+	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
+	return name;
 }
 void Config::parseLocation(int i)
 {
 	std::string tmp;
 	std::string value;
-	vec::iterator it = this->raw_data.begin();
-	while(it != this->raw_data.end())
+	vec::iterator it = this->srvConf[i].my_data.begin();
+	while(it != this->srvConf[i].my_data.end())
 	{
 		tmp = *it;
 		size_t loc = tmp.find("location");
@@ -162,45 +173,47 @@ void Config::parseLocation(int i)
 			tmp = tmp.substr(pos - 1);
 
 			value = value_fo_loca(it);
-			srvConf[0].routes[tmp] = value;
+			srvConf[i].routes[tmp] = value;
 		}
 		it++;
 	}
 	mp::iterator pop;
-	map_last::iterator iter = srvConf[0].rout.begin();
-	pop = srvConf[0].routes.begin();
-	while(pop != srvConf[0].routes.end())
-	{		
-		srvConf[0].rout[pop->first] = get_info_for_loca(pop->second);
+	map_last::iterator iter = srvConf[i].rout.begin();
+	pop = srvConf[i].routes.begin();
+	while(pop != srvConf[i].routes.end())
+	{
+		tmp = get_name_good(pop->first);
+		srvConf[i].rout[tmp] = get_info_for_loca(pop->second);
 		pop++;
 	}	
 }
-void Config::parseInfosStr(std::string name , int leng, std::string &host)
+void Config::parseInfosStr(std::string name , int leng, std::string &host, int j)
 {
-	vec::iterator it = this->raw_data.begin();
+	vec::iterator it = this->srvConf[j].my_data.begin();
 	std::string tmp;
-	while(it != this->raw_data.end())
+	int i = 0;
+	while(it != this->srvConf[j].my_data.end())
 	{
 		tmp = *it;
+		// std::cout << *it << std::endl;
 		size_t loc = tmp.find(name);
 		if(loc != std::string::npos)
 		{
-			tmp = tmp.substr(loc + leng );
-			host = tmp;
-			break;
+				tmp = tmp.substr(loc + leng );
+				host = tmp;
+				break;
 		}
+		// std::cout << i << std::endl;
 		it++;
 	}
 	std::replace(host.begin(), host.end(), ';', ' ');
 	host.erase(std::remove_if(host.begin(), host.end(), ::isspace), host.end());
-
-
 }
-void Config::parseInfosInt(std::string name , int leng, long long &host)
+void Config::parseInfosInt(std::string name , int leng, long long &host, int i)
 {
-	vec::iterator it = this->raw_data.begin();
+	vec::iterator it = this->srvConf[i].my_data.begin();
 	std::string tmp;
-	while(it != this->raw_data.end())
+	while(it != this->srvConf[i].my_data.end())
 	{
 		tmp = *it;
 		size_t loc = tmp.find(name);
@@ -226,31 +239,48 @@ int 	Config::how_mn_servers()
 		tmp.erase(std::remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
 		if(tmp == "server")
 			c++;
-
 		it++;
 	}
 	return c;
+}
+void Config::filldata()
+{
+	int i = 0;
+	int j = 0;
+	std::string tmp;
+	vec::iterator it = this->raw_data.begin();
+	while(it != this->raw_data.end())
+	{
+		tmp = *it;
+		if(tmp == "server")
+			j++;
+		i = j - 1;
+		this->srvConf[i].my_data.push_back(tmp);
+		it++;
+	}
 }
 void Config::parseConf()
 {
 	this->servers_number = how_mn_servers();
 	int i = 0;
+	filldata();
 	while(i < this->servers_number)
 	{
 		parseLocation(i);
-		parseInfosStr("host", 4, srvConf[i].host);
-		parseInfosStr("error", 5, srvConf[i].errorPages);
-		parseInfosStr("name", 4, srvConf[i].name);
-		parseInfosInt("listen", 6, srvConf[i].port);
-		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit);
+		parseInfosStr("host", 4, srvConf[i].host, i);
+		parseInfosStr("error", 5, srvConf[i].errorPages, i);
+		parseInfosStr("name", 4, srvConf[i].name, i);
+		parseInfosInt("listen", 6, srvConf[i].port, i);
+		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit, i);
 		i++;
 	}
-
+	// exit(0);
 }
 Config::Config(std::string conf)
 {
 	srvConf.resize(10);
 	this->port = 8080;
+	int i = 0;
 	std::fstream file(conf);
 	if (!file.is_open())
 	{
@@ -263,7 +293,11 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		// display_all(srvConf[0]);
+		// while(i < this->servers_number)
+		// {
+		// 	display_all(srvConf[i]);
+		// 	i++;
+		// }
 		// exit(0);
 
 	}

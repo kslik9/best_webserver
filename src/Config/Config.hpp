@@ -31,6 +31,7 @@ struct serv_conf
 	mp routes; //dyali do not use it
 	mp rout2;
 	map_last rout;
+	std::vector<std::string> my_data;
 };
 
 class Config
@@ -43,12 +44,13 @@ class Config
 		Config &operator=(Config const &rhs);
 		// 
 		int 	how_mn_servers();
+		void filldata();
 		void display_all(serv_conf srvConf);
 		int servers_number;
 		unsigned int getPort() const;
-		void parseInfosStr(std::string name , int leng, std::string &host);
+		void parseInfosStr(std::string name , int leng, std::string &host, int i);
 		mp get_info_for_loca(std::string str);
-		void parseInfosInt(std::string name , int leng, long long &host);
+		void parseInfosInt(std::string name , int leng, long long &host, int i);
 		void parseLocation(int i);
 		std::string value_fo_loca(vec::iterator it);
 		void parseConf();
