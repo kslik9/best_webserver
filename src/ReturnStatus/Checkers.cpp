@@ -144,18 +144,19 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
 
 //check if the content is exist in in root
 bool    HttpRequestChecker::checkContentExistsInRoot() {
-    this->resourcesWithPath = location["root"] + this->resources;
-    // std::cout << "resources with path: " << resourcesWithPath << std::endl;
-    // std::cout << "path: " << resourcesWithPath << std::endl;
-    if (access(this->resourcesWithPath.c_str(), F_OK) == 0)
-        // std::cout << "kayna a3shiri: " << resourcesWithPath << std::endl;
+    this->resourcesWithRoot = location["root"] + this->resources;
+    // std::cout << "rw: " << this->resourcesWithRoot << std::endl;
+    // std::cout << "r : " << this->resources << std::endl;
+    // std::cout << "ta: " << this->target << std::endl;
+
+    if (access(this->resourcesWithRoot.c_str(), F_OK) == 0)
         return true;
     return false;
 }
 
 bool    HttpRequestChecker::checkContentIsDir() {
     struct stat statBuf;
-    if (stat(this->resourcesWithPath.c_str(), &statBuf) != 0)
+    if (stat(this->resourcesWithRoot.c_str(), &statBuf) != 0)
     {
         std::cout << "error in stat\n";
         return false;
@@ -169,18 +170,22 @@ bool    HttpRequestChecker::checkIndexFilesInDir() {
         //in case is exist check if it's exist in dir
         //else: check if there is index.html in directory
     std::string indexFromConf = location["index"];
-    std::cout << "index: " << indexFromConf << std::endl;
-    // std::cout << "[[" << this->resourcesWithPath + indexFromConf << "]]\n";
-    // std::cout << "checkIndexFilesInDir() -- " << this->resourcesWithPath + indexFromConf << std::endl;
+    // std::cout << "index: " << indexFromConf << std::endl;
+    // std::cout << "[[" << this->resourcesWithRoot + indexFromConf << "]]\n";
+    // std::cout << "checkIndexFilesInDir() -- " << this->resourcesWithRoot + indexFromConf << std::endl;
     //change resource path
-    if (!indexFromConf.empty()) {
-        if (access((this->resourcesWithPath + indexFromConf).c_str(), F_OK))
+    if (!indexFromConf.empty() && indexFromConf != "off" && indexFromConf != "on") {
+        if (access((this->resourcesWithRoot + indexFromConf).c_str(), F_OK))
             return false;
+        this->resourcesWithRoot = this->resourcesWithRoot + indexFromConf;
+        return true;
     }
-    if (access((this->resourcesWithPath + "index.html").c_str(), F_OK))
-        return false;
-    this->resourcesWithPath = this->resourcesWithPath + indexFromConf;
-    return true;
+    if (!access((this->resourcesWithRoot + "index.html").c_str(), F_OK))
+    {
+        this->resourcesWithRoot = this->resourcesWithRoot + "index.html";
+        return true;
+    }
+    return false;
 }
 
 //check if autoindex file is on
@@ -194,5 +199,5 @@ bool    HttpRequestChecker::checkLocationIncludesCgi() {
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
-    return this->resourcesWithPath.at(this->resourcesWithPath.length() - 1) == '/';
+    return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
