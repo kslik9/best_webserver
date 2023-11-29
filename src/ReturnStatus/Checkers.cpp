@@ -169,7 +169,7 @@ bool    HttpRequestChecker::checkIndexFilesInDir() {
         //in case is exist check if it's exist in dir
         //else: check if there is index.html in directory
     std::string indexFromConf = location["index"];
-    std::cout << "index: " << indexFromConf << std::endl;
+    // std::cout << "index: " << indexFromConf << std::endl;
     // std::cout << "[[" << this->resourcesWithPath + indexFromConf << "]]\n";
     // std::cout << "checkIndexFilesInDir() -- " << this->resourcesWithPath + indexFromConf << std::endl;
     //change resource path
