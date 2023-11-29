@@ -41,7 +41,7 @@ bool isFile(std::string const &file) {
     return file.find(".") != std::string::npos ? true : false;
 }
 
-std::string getRouteStr(std::string &url) {
+std::string getRouteStr(std::string url) {
     int pos = 0;
     url = url.substr(1);
     std::string route = "/";
@@ -108,26 +108,30 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
             if (*extractedRoutesIt == confLocation)
             {
                 //in this step if a route match, it will store the location <map>
-                std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
+                // // std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
                 this->location = locationsIt->second;
+                // //this determine the resources
+                this->resources = this->target.substr(confLocation.length());
+                // std::cout << resources << "p\n";
                 return true;
             }
-            // std::cout << confLocation << "\n";
         }
-        break;
+        // break;
+        std::cout << "\n";
     }
     return false;
 }
 
 bool    HttpRequestChecker::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
-    if (this->location["redirect"] != "none")
+    // std::cout << location["redirect"] << "----\n";
+    if (!this->location["redirect"].empty() && this->location["redirect"] != "none")
         return true;
     return false;
 }
 
 bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
-    if (location["method1"] == method || location["method2"] == method || location["method3"] == method)
+    if (location["method1"] == method || location["method2"] == method || location["method3"] == method || method == "HEAD")
         return true;
     allowedMethod += location["method1"] != "none" ? location["method1"]: "";
     allowedMethod += location["method2"] != "none" ? ", " + location["method2"] : "";
@@ -135,14 +139,27 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
     return false;
 }
 
+
+
+
+//check if the content is exist in in root
 bool    HttpRequestChecker::checkContentExistsInRoot() {
-    //check if the content is exist in in root
-    return true;
+    this->resourcesWithPath = location["root"] + this->resources;
+    // std::cout << "path: " << resourcesWithPath << std::endl;
+    if (access(this->resourcesWithPath.c_str(), F_OK) == 0)
+        // std::cout << "kayna a3shiri: " << resourcesWithPath << std::endl;
+        return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkContentIsDir() {
-    //check if the content is dir
-    return true;
+    struct stat statBuf;
+    if (stat(this->resourcesWithPath.c_str(), &statBuf) != 0)
+    {
+        std::cout << "error in stat\n";
+        return false;
+    }
+    return S_ISDIR(statBuf.st_mode);
 }
 
 bool    HttpRequestChecker::checkIndexFilesInDir() {
@@ -161,5 +178,5 @@ bool    HttpRequestChecker::checkLocationIncludesCgi() {
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
-    return true;
+    return this->resourcesWithPath.at(this->resourcesWithPath.length() - 1) == '/';
 }

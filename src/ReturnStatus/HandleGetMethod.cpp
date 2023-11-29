@@ -1,19 +1,21 @@
 #include "HttpRequestChecker.hpp"
 
-void HttpRequestChecker::handleGetMethod() {
-    std::cout << this->target << std::endl;
-    if(!checkContentExistsInRoot()) {
-        //create 404 Not Found
-        //this->statusCode = 404
-        //this->statusMessage = Not Found
-        //return Page
-    }
+AResponseMessage    *HttpRequestChecker::handleGetMethod() {
+    std::map<std::string, std::string> abstractErrorPages;
+    abstractErrorPages["404"] = "errors/404.html";
 
-    //we check if the uri is dir (has '/' at end)
+    if(!checkContentExistsInRoot()) {
+        std::cout << "not found in root\n";
+        return new NotFound404(this->target, abstractErrorPages["404"]);
+    }
+    
+    //we check if the uri is dir or file
     if (checkContentIsDir()) {
+        std::cout << this->resourcesWithPath << " is a dir\n";
         if (!checkDirIndedWithBackSlash()) {
-            //creeate 301 redirection to request uri with '/' at the end
-            //return;
+            std::string targetWithBackSlash = this->target + "/";
+            std::cout << "not ended with Slash and will be forwaded to link with " << targetWithBackSlash << std::endl;
+            return new MovedPermanently301(targetWithBackSlash);
         }
         if (checkIndexFilesInDir()) {
             if (checkLocationIncludesCgi()) {
@@ -47,4 +49,5 @@ void HttpRequestChecker::handleGetMethod() {
             //return requested file
         }
     }
+    return new NotFound404(this->target, abstractErrorPages["404"]);
 }
