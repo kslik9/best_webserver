@@ -9,6 +9,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/MovedPermanently301.cpp \
 				src/ReturnStatus/Response/MethodNotAllowed405.cpp \
 				src/ReturnStatus/Response/OK200.cpp \
+				src/ReturnStatus/Response/Forbidden403.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \
 				src/CGI/cgi.cpp
 
