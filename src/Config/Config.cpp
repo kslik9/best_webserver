@@ -71,6 +71,8 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
     while (i < str.length()) 
 	{
         k = str.find(name, k);
+		if(str[k - 1] != ' ' || str[k + name.length()] != ' ')
+			return host;
         if (k != std::string::npos) 
 		{
             size_t j = str.find(";", k); 
@@ -94,7 +96,8 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
     }
 	if(host == last)
 		host = "none";
-	last = host;
+	else
+		last = host;
 	return host;
 }
 mp Config::get_info_for_loca(std::string str)
@@ -328,12 +331,12 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		// while(i < this->servers_number)
-		// {
-		// 	display_all(srvConf[i]);
-		// 	i++;
-		// }
-		// exit(0);
+		while(i < this->servers_number)
+		{
+			display_all(srvConf[i]);
+			i++;
+		}
+		exit(0);
 
 	}
 }
