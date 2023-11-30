@@ -285,9 +285,8 @@ void Config::parse_error(int i)
 		k = str.find("error", k);
 		if(k != std::string::npos)
 		{
-			std::cout << "dkhl\n";
 			tmp = str.substr(k + 5, 3);
-			tmp2 = str.substr(k + 8);
+			tmp2 = str.substr(k + (str.length() - k));
 			if(tmp2[tmp2.length() - 1] == ';')
 				tmp2[tmp2.length() - 1] = ' ';
 			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
@@ -309,7 +308,7 @@ void Config::parseConf()
 		parse_error(i);
 		parseInfosStr("host", 4, srvConf[i].host, i);
 		parseInfosStr("name", 4, srvConf[i].name, i);
-		parseInfosInt("listen", 6, srvConf[i].port, i);
+		parseInfosInt("port", 6, srvConf[i].port, i);
 		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit, i);
 		i++;
 	}

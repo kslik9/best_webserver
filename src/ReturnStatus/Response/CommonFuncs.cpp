@@ -6,6 +6,6 @@ std::string getCurrentTime() {
 
     char buffer[80];
     std::strftime(buffer, 80, "%a, %d %b %Y %H:%M:%S GMT", timeInfo);
-    std::cout << "time " << buffer;
+    // std::cout << "time " << buffer;
     return buffer;
 }
