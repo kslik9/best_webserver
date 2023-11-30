@@ -140,7 +140,7 @@ void Config::display_all(ServConf srvConf)
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				std::cout <<"route =>{" <<  it->first << "}:\n" ;
+				// std::cout <<"route =>{" <<  it->first << "}:\n" ;
 				oi = it->second.begin();
 				while(oi != it->second.end())
 				{
@@ -291,7 +291,7 @@ void Config::parse_error(int i)
 				tmp2[tmp2.length() - 1] = ' ';
 			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
-			std::cout << tmp << "} {" << tmp2 << std::endl;
+			// std::cout << tmp << "} {" << tmp2 << std::endl;
 		}
 		*it++;
 	}
@@ -330,12 +330,12 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		while(i < this->servers_number)
-		{
-			display_all(srvConf[i]);
-			i++;
-		}
-		exit(0);
+		// while(i < this->servers_number)
+		// {
+		// 	display_all(srvConf[i]);
+		// 	i++;
+		// }
+		// exit(0);
 
 	}
 }
