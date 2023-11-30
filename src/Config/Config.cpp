@@ -119,7 +119,7 @@ mp Config::get_info_for_loca(std::string str)
 
 	return tm;
 }
-void Config::display_all(serv_conf srvConf)
+void Config::display_all(ServConf srvConf)
 {
 
 		std::cout << "the host is " << srvConf.host << std::endl;
