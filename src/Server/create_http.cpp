@@ -124,7 +124,7 @@ std::string Server::buildHttpResponse(std::string requestStr)
     HttpRequestChecker hm(request, config);
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
-    // delete createdResponse;
+    delete createdResponse;
 
 
     return responseMessage;

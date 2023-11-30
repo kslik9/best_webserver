@@ -12,6 +12,8 @@ class HttpRequestChecker {
         std::string statusMessage;
         std::string target;
         std::string method;
+        std::string resources;
+        std::string resourcesWithRoot;
         bool        checkNotAllowededChars();
         bool        checkUriLength();
         bool        checkRequestHttpMessage();
@@ -34,7 +36,7 @@ class HttpRequestChecker {
         std::string getStatusCode();
         void        createHttpHeader();
         AResponseMessage    *checkRequestAndReturnHttpMessage();
-        void        handleGetMethod();
+        AResponseMessage    *handleGetMethod();
         void        handlePostMethod();
         void        handleDeleteMethod();
 };

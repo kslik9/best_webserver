@@ -14,8 +14,6 @@ void    HttpRequestChecker::createHttpHeader() {
 }
 
 
-
-
 //this will check the request and at the end it will create an http message and return it
 AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     std::map<std::string, std::string> abstractErrorPages;
@@ -52,14 +50,15 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     //check if the method allowed in location
     std::string allowedMethods;
     if (!checkMethodAllowed(allowedMethods)) {
-        std::cout << "not allowed hh\n";
+        std::cout << "not allowed hh" << location["root"] << "-" << std::endl;
         return new MethodNotAllowed405(allowedMethods);
     }
 
+
     //now we check the request method
     //////////////////////////////// GET ///////////////////////////
-    if (method == "GET") {
-        handleGetMethod();
+    if (method == "GET" || method == "HEAD") {
+        return handleGetMethod();
     }
 
     return new NotFound404(this->target, abstractErrorPages["404"]);

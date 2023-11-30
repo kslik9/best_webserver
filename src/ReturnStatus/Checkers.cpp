@@ -41,7 +41,7 @@ bool isFile(std::string const &file) {
     return file.find(".") != std::string::npos ? true : false;
 }
 
-std::string getRouteStr(std::string &url) {
+std::string getRouteStr(std::string url) {
     int pos = 0;
     url = url.substr(1);
     std::string route = "/";
@@ -108,26 +108,30 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
             if (*extractedRoutesIt == confLocation)
             {
                 //in this step if a route match, it will store the location <map>
-                std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
+                // // std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
                 this->location = locationsIt->second;
+                // //this determine the resources
+                this->resources = this->target.substr(confLocation.length());
+                // std::cout << resources << "p\n";
                 return true;
             }
-            // std::cout << confLocation << "\n";
         }
-        break;
+        // break;
+        std::cout << "\n";
     }
     return false;
 }
 
 bool    HttpRequestChecker::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
-    if (this->location["redirect"] != "none")
+    // std::cout << location["redirect"] << "----\n";
+    if (!this->location["redirect"].empty() && this->location["redirect"] != "none")
         return true;
     return false;
 }
 
 bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
-    if (location["method1"] == method || location["method2"] == method || location["method3"] == method)
+    if (location["method1"] == method || location["method2"] == method || location["method3"] == method || method == "HEAD")
         return true;
     allowedMethod += location["method1"] != "none" ? location["method1"]: "";
     allowedMethod += location["method2"] != "none" ? ", " + location["method2"] : "";
@@ -135,31 +139,65 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
     return false;
 }
 
+
+
+
+//check if the content is exist in in root
 bool    HttpRequestChecker::checkContentExistsInRoot() {
-    //check if the content is exist in in root
-    return true;
+    this->resourcesWithRoot = location["root"] + this->resources;
+    // std::cout << "rw: " << this->resourcesWithRoot << std::endl;
+    // std::cout << "r : " << this->resources << std::endl;
+    // std::cout << "ta: " << this->target << std::endl;
+
+    if (access(this->resourcesWithRoot.c_str(), F_OK) == 0)
+        return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkContentIsDir() {
-    //check if the content is dir
-    return true;
+    struct stat statBuf;
+    if (stat(this->resourcesWithRoot.c_str(), &statBuf) != 0)
+    {
+        std::cout << "error in stat\n";
+        return false;
+    }
+    return S_ISDIR(statBuf.st_mode);
 }
 
+//check if the directory has an index file
 bool    HttpRequestChecker::checkIndexFilesInDir() {
-    //check if the directory has an index file
-    return true;
+    //first check if there is index in conf
+        //in case is exist check if it's exist in dir
+        //else: check if there is index.html in directory
+    std::string indexFromConf = location["index"];
+    // std::cout << "index: " << indexFromConf << std::endl;
+    // std::cout << "[[" << this->resourcesWithRoot + indexFromConf << "]]\n";
+    // std::cout << "checkIndexFilesInDir() -- " << this->resourcesWithRoot + indexFromConf << std::endl;
+    //change resource path
+    if (!indexFromConf.empty() && indexFromConf != "off" && indexFromConf != "on") {
+        if (access((this->resourcesWithRoot + indexFromConf).c_str(), F_OK))
+            return false;
+        this->resourcesWithRoot = this->resourcesWithRoot + indexFromConf;
+        return true;
+    }
+    if (!access((this->resourcesWithRoot + "index.html").c_str(), F_OK))
+    {
+        this->resourcesWithRoot = this->resourcesWithRoot + "index.html";
+        return true;
+    }
+    return false;
 }
 
+//check if autoindex file is on
 bool    HttpRequestChecker::checkAutoIndexOn() {
-    //check if the index file is on
-    return true;
+    return location["autoindex"] == "on";
 }
 
 bool    HttpRequestChecker::checkLocationIncludesCgi() {
     //check if the location include cgi configurations
-    return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
-    return true;
+    return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
