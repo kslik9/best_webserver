@@ -55,47 +55,49 @@ void	setNonBlocking(int socketFd) {
 // }
 
 void Server::start() {
-	int opt = 1;
-	this->socketFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (socketFd < 0)
-	{
-		perror("socket() failed");
-		exit(EXIT_FAILURE);
-	}
-	//setnonblocking
-	setNonBlocking(this->socketFd);
-	
+	for (int i = 0; i < config.servers_number; i++) {
+		int opt = 1;
+		this->socketFd = socket(AF_INET, SOCK_STREAM, 0);
+		if (socketFd < 0)
+		{
+			perror("socket() failed");
+			exit(EXIT_FAILURE);
+		}
+		//setnonblocking
+		setNonBlocking(this->socketFd);
+		
 
-	if (this->socketFd < 0)
-	{
-		logger.Log(ERROR, "Error creating server socket");
-		throw std::runtime_error("Error creating server socket");
+		if (this->socketFd < 0)
+		{
+			logger.Log(ERROR, "Error creating server socket");
+			throw std::runtime_error("Error creating server socket");
+		}
+		// this solves the error of binding by reusing address
+		if (setsockopt(this->socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+		{
+			logger.Log(ERROR, "Error of binding by reusing address");
+			throw std::runtime_error("Error of binding by reusing address");
+		}
+		// binding socket with address 0.0.0.0:8080
+		this->server_address.sin_family = AF_INET;
+		this->server_address.sin_port = htons(config.srvConf[i].port);
+		this->server_address.sin_addr.s_addr = INADDR_ANY;
+		if (bind(this->socketFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
+		{
+			logger.Log(ERROR, "Error binding server socket");
+			throw std::runtime_error("Error binding server socket");
+		}
+		// listen on 0.0.0.0:8080
+		if (listen(this->socketFd, CLIENTS_COUNT) < 0)
+		{
+			logger.Log(ERROR, "Error listening on socket");
+			throw std::runtime_error("Error listening on socket");
+		}
+		// -----------------------------------------------------
+		std::cout << "Server is listening on "
+				<< "http://0.0.0.0"
+				<< ":" << this->config.getPort() << std::endl;
 	}
-	// this solves the error of binding by reusing address
-	if (setsockopt(this->socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-	{
-		logger.Log(ERROR, "Error of binding by reusing address");
-		throw std::runtime_error("Error of binding by reusing address");
-	}
-	// binding socket with address 0.0.0.0:8080
-	this->server_address.sin_family = AF_INET;
-	this->server_address.sin_port = htons(config.getPort());
-	this->server_address.sin_addr.s_addr = INADDR_ANY;
-	if (bind(this->socketFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
-	{
-		logger.Log(ERROR, "Error binding server socket");
-		throw std::runtime_error("Error binding server socket");
-	}
-	// listen on 0.0.0.0:8080
-	if (listen(this->socketFd, CLIENTS_COUNT) < 0)
-	{
-		logger.Log(ERROR, "Error listening on socket");
-		throw std::runtime_error("Error listening on socket");
-	}
-	// -----------------------------------------------------
-	std::cout << "Server is listening on "
-			  << "http://0.0.0.0"
-			  << ":" << this->config.getPort() << std::endl;
 }
 
 
@@ -163,15 +165,6 @@ void Server::waitClients()
 					}
 					else
 					{
-
-						// std::string str_buffer(buffer), target, method;
-						// int pos = str_buffer.find(" ");
-						// // -----------------------------------------------------
-						// parse_request(str_buffer, method, target);
-						// // std::cout << "[" << str_buffer << "]" << std::endl;
-						
-						// // -----------------------------------------------------
-						// std::string http_resp = buildHttpResponse(method, target);
 						std::string str_buffer(buffer);
 						std::string http_resp = buildHttpResponse(str_buffer);
 						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
