@@ -125,13 +125,13 @@ void Config::display_all(serv_conf srvConf)
 		std::cout << "the host is " << srvConf.host << std::endl;
 		std::cout << "the port is " << srvConf.port << std::endl;
 		std::cout << "the error pages is [";
-		mp::iterator p = srvConf.errorPages.begin();
-		while(p != srvConf.errorPages.end())
-		{
-			std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
-			*p++;
-		}
-		 std::cout << "]" <<std::endl;
+		// mp::iterator p = srvConf.errorPages.begin();
+		// while(p != srvConf.errorPages.end())
+		// {
+		// 	std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
+		// 	*p++;
+		// }
+		// std::cout << "]" <<std::endl;
 		std::cout << "the name is " << srvConf.name << std::endl;
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
@@ -291,7 +291,7 @@ void Config::parse_error(int i)
 				tmp2[tmp2.length() - 1] = ' ';
 			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
-			std::cout << tmp << "} {" << tmp2 << std::endl;
+			// std::cout << tmp << "} {" << tmp2 << std::endl;
 		}
 		*it++;
 	}
@@ -330,12 +330,12 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		while(i < this->servers_number)
-		{
-			display_all(srvConf[i]);
-			i++;
-		}
-		exit(0);
+		// while(i < this->servers_number)
+		// {
+		// 	display_all(srvConf[i]);
+		// 	i++;
+		// }
+		// exit(0);
 
 	}
 }

@@ -28,7 +28,7 @@ struct serv_conf
 	mp errorPages;
 	std::string name;
 	long long clientBodyLimit;
-	mp routes; //dyali do not use it
+	mp routes; 
 	mp rout2;
 	map_last rout;
 	std::vector<std::string> my_data;
