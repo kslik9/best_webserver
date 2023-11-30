@@ -25,7 +25,7 @@ struct serv_conf
 {
 	std::string host;
 	long long port;
-	std::string errorPages;
+	mp errorPages;
 	std::string name;
 	long long clientBodyLimit;
 	mp routes; //dyali do not use it
@@ -47,6 +47,7 @@ class Config
 		void filldata();
 		void display_all(serv_conf srvConf);
 		int servers_number;
+		void parse_error(int i);
 		unsigned int getPort() const;
 		void parseInfosStr(std::string name , int leng, std::string &host, int i);
 		mp get_info_for_loca(std::string str);
