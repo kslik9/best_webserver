@@ -285,17 +285,18 @@ void Config::parse_error(int i)
 		k = str.find("error", k);
 		if(k != std::string::npos)
 		{
+			if(k + 8 > str.length())
+				break;
 			tmp = str.substr(k + 5, 3);
-			tmp2 = str.substr(k + (str.length() - k));
+			tmp2 = str.substr(k + 8);
 			if(tmp2[tmp2.length() - 1] == ';')
 				tmp2[tmp2.length() - 1] = ' ';
+			std::cout << tmp2 << std::endl;
 			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
-			std::cout << tmp << "} {" << tmp2 << std::endl;
 		}
 		*it++;
 	}
-
 }
 void Config::parseConf()
 {
