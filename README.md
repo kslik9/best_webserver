@@ -32,10 +32,10 @@ Welcome to the Webserv project, a part of the 42 cursus! This project is a hands
    - [x] Create a socket.
    - [x] Bind it to an IP and port.
    - [x] Listen for incoming connections.
-   - [ ] Accept connections.
-   - [ ] Receive and send data through the socket.
-   - [ ] Parse incoming HTTP requests.
-   - [ ] Handle different request methods (GET, POST, etc.).
+   - [x] Accept connections.
+   - [x] Receive and send data through the socket.
+   - [x] Parse incoming HTTP requests.
+   - [x] Handle different request methods (GET, POST, etc.).
    - [ ] Create and send HTTP responses (status line, headers, body).
    - [ ] Handle persistent connections, if desired (Keep-Alive).
    - [ ] Implement necessary error handling for invalid requests.
