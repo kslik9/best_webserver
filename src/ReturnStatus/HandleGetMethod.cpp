@@ -7,17 +7,17 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
 
 
     if(!checkContentExistsInRoot()) {
-        std::cout << "`" << this->resourcesWithRoot << "` doesn't exist in root\n";
+        std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << "\n";
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     
-    std::cout << "`" << this->resourcesWithRoot << "` exists in root\n";
+    std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << "\n";
     //we check if the uri is dir or file
     if (checkContentIsDir()) {
         std::cout << this->resourcesWithRoot << " is a dir\n";
         if (!checkDirIndedWithBackSlash()) {
             std::string targetWithBackSlash = this->target + "/";
-            std::cout << "`" << targetWithBackSlash << "` not ended with /\n";
+            std::cout << RED_TEXT << "`" << targetWithBackSlash << "` not ended with /" << RESET_COLOR << "\n";
             return new MovedPermanently301(targetWithBackSlash);
         }
         std::cout << "`" << this->target << "` ended with /\n";
