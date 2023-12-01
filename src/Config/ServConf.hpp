@@ -4,6 +4,7 @@
 #include "Config.hpp"
 #include <map>
 #include <vector>
+#include <set>
 
 typedef std::vector<std::string> vec;
 typedef std::map<std::string, std::string> mp;
@@ -14,7 +15,7 @@ class ServConf
     public:
         ServConf();
         std::string host;
-        long long port;
+        std::set<std::string> ports;
         mp errorPages;
         std::string name;
         long long clientBodyLimit;

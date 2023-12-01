@@ -2,6 +2,7 @@
 #define CONFIG_HPP
 #include "ServConf.hpp"
 #include "webserv.hpp"
+#include <set>
 class ServConf;
 
 typedef std::vector<std::string> vec;
@@ -23,10 +24,6 @@ struct locate
 
 typedef std::map<std::string, mp > map_last;
 
-// struct serv_conf
-// {
-	
-// };
 
 class Config
 {
@@ -34,6 +31,7 @@ class Config
 		Config();
 		Config(Config const &src);
 		Config(std::string conf);
+		void parsePort(int i);
 		~Config();
 		Config &operator=(Config const &rhs);
 		// 
