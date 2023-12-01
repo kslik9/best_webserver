@@ -40,64 +40,77 @@ void	setNonBlocking(int socketFd) {
 	fcntl(socketFd, F_SETFL, flags);
 }
 
-// void parse_request(const std::string &request, std::string &method, std::string &target) {
-// 	try
-// 	{
-// 		std::istringstream iss(request);
-// 		iss >> method >> target;
-// 	}
-// 	catch (const std::exception &e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 		method = "GET";
-// 		target = "/";
-// 	}
-// }
+
+#include <iostream>
+#include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <unistd.h>
+
+void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
+	memset((char *)&this->serverAddress, 0, sizeof(this->serverAddress));
+	this->serverAddress.sin_family = AF_INET;
+	this->serverAddress.sin_port = htons(port);
+
+	in_addr_t ip = inet_addr(hostName.c_str());
+	if (ip == INADDR_NONE) {
+		std::cerr << "Invalid Ip Address " << hostName << std::endl;
+	}
+	this->serverAddress.sin_addr.s_addr = ip;
+	
+}
 
 void Server::start() {
 	int	serverSocketFd;
-	for (int i = 0; i < config.servers_number; i++) {
-		int opt = 1;
-		// serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
-		// this->serverSocketsFd[i] = socket(AF_INET, SOCK_STREAM, 0);
-		this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
-		if (this->serverSocketsFd[i] < 0)
-		{
-			perror("socket() failed");
-			exit(EXIT_FAILURE);
+	unsigned short	port;
+	std::string hostName;
+	std::set<std::string>::iterator portsIt;
+	struct hostent *hostnm;
+	struct sockaddr_in server;
+	int opt = 1;
+
+	// hostnm = gethostbyname();
+
+	for (int i = 0; i < config.srvConf.size(); i++) {
+		portsIt = config.srvConf[i].ports.begin();
+		for (portsIt = config.srvConf[i].ports.begin(); portsIt != config.srvConf[i].ports.end(); portsIt++) {
+
+
+			// this->portsAndHosts.insert(std::make_pair(*portsIt, config.srvConf[i].host));
+			port = std::stoi(*portsIt);
+			hostName = config.srvConf[i].host;
+			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
+			if (this->serverSocketsFd[i] < 0) {
+				logger.Log(ERROR, "Error creating server socket");
+				throw std::runtime_error("Error creating server socket");
+			}
+
+			// 	//setnonblocking
+			setNonBlocking(this->serverSocketsFd[i]);
+
+			// this solves the error of binding by reusing address
+			if (setsockopt(this->serverSocketsFd[i], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+				logger.Log(ERROR, "Error of binding by reusing address");
+				throw std::runtime_error("Error of binding by reusing address");
+			}
+
+			// binding socket with address server_name on a port
+			setServerAddress(port, hostName);
+
+
+			if (bind(this->serverSocketsFd[i], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0) {
+				logger.Log(ERROR, "Error binding server socket");
+				throw std::runtime_error("Error binding server socket");
+			}
+
+			// listen for incoming connections
+			if (listen(this->serverSocketsFd[i], CLIENTS_COUNT) < 0) {
+				logger.Log(ERROR, "Error listening on socket");
+				throw std::runtime_error("Error listening on socket");
+			}
+			std::cout << GREEN_TEXT << "server listening on port " << port << RESET_COLOR << std::endl;
 		}
-		//setnonblocking
-		setNonBlocking(this->serverSocketsFd[i]);
-		if (this->serverSocketsFd[i] < 0)
-		{
-			logger.Log(ERROR, "Error creating server socket");
-			throw std::runtime_error("Error creating server socket");
-		}
-		// this solves the error of binding by reusing address
-		if (setsockopt(this->serverSocketsFd[i], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-		{
-			logger.Log(ERROR, "Error of binding by reusing address");
-			throw std::runtime_error("Error of binding by reusing address");
-		}
-		// binding socket with address 0.0.0.0:8080
-		this->server_address.sin_family = AF_INET;
-		this->server_address.sin_port = htons(config.srvConf[i].port);
-		this->server_address.sin_addr.s_addr = INADDR_ANY;
-		if (bind(this->serverSocketsFd[i], (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
-		{
-			logger.Log(ERROR, "Error binding server socket");
-			throw std::runtime_error("Error binding server socket");
-		}
-		// listen on 0.0.0.0:8080
-		if (listen(this->serverSocketsFd[i], CLIENTS_COUNT) < 0)
-		{
-			logger.Log(ERROR, "Error listening on socket");
-			throw std::runtime_error("Error listening on socket");
-		}
-		// -----------------------------------------------------
-		std::cout << "Server is listening on "
-				<< "http://0.0.0.0"
-				<< ":" << this->config.srvConf[i].port << std::endl;
 	}
 }
 
@@ -205,7 +218,7 @@ Config Server::getConfig() const {
 }
 
 sockaddr_in Server::getServer_address() const {
-	return this->server_address;
+	return this->serverAddress;
 }
 
 /* ************************************************************************** */

@@ -7,12 +7,37 @@
 #include <netinet/in.h>
 #include <errno.h>
 
+#include <sys/wait.h>
+
+// IO
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <cstring>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fstream>
+#include <memory>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <arpa/inet.h>
+// 
+#include <map>
+#include <vector>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <poll.h>
+#include <exception>
+#include <sys/stat.h>
+
 #define SERVER_PORT  12345
 
 #define TRUE             1
 #define FALSE            0
 
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
   int    len, rc, on = 1;
   int    listen_sd = -1, new_sd = -1;
