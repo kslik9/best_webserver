@@ -49,15 +49,20 @@ void	setNonBlocking(int socketFd) {
 #include <unistd.h>
 
 void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
-	memset((char *)&this->serverAddress, 0, sizeof(this->serverAddress));
-	this->serverAddress.sin_family = AF_INET;
-	this->serverAddress.sin_port = htons(port);
-
-	in_addr_t ip = inet_addr(hostName.c_str());
-	if (ip == INADDR_NONE) {
-		std::cerr << "Invalid Ip Address " << hostName << std::endl;
-	}
-	this->serverAddress.sin_addr.s_addr = ip;
+	std::cout << "port: " << port << " hostname: " << hostName << std::endl;
+	// memset((char *)&this->serverAddress, 0, sizeof(this->serverAddress));
+	// this->serverAddress.sin_family = AF_INET;
+	// this->serverAddress.sin_port = htons(port);
+	// addrinfo *result;
+	// addrinfo exp;
+	// getaddrinfo(hostName, port, &exp, &result);
+	// this->serverAddress.sin_addr = 0;
+	// in_addr_t ip = inet_addr(hostName.c_str());
+	// if (ip == INADDR_NONE) {
+	// 	std::cerr << "Invalid Ip Address " << hostName << std::endl;
+	// }
+	// this->serverAddress.sin_addr.s_addr = ip;
+	
 	
 }
 
@@ -97,7 +102,7 @@ void Server::start() {
 
 			// binding socket with address server_name on a port
 			setServerAddress(port, hostName);
-
+			continue;
 
 			if (bind(this->serverSocketsFd[i], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0) {
 				logger.Log(ERROR, "Error binding server socket");
