@@ -4,6 +4,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/HttpRequestChecker.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
+				src/ReturnStatus/HandlePostMethod.cpp \
 				src/ReturnStatus/RequestData.cpp \
 				src/ReturnStatus/Response/NotFound404.cpp \
 				src/ReturnStatus/Response/MovedPermanently301.cpp \
