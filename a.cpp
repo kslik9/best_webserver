@@ -12,7 +12,7 @@
 #include <arpa/inet.h>
 
 int main() {
-    const char *dom = "www.goodgle.codm";
+    const char *dom = "localhost";
     struct addrinfo hints, *res, *p;
     int status;
 
@@ -25,7 +25,8 @@ int main() {
         exit(0);
     }
 
-    for (p = res; p != nullptr; p = p->ai_next) {
+    // for (p = res; p != nullptr; p = p->ai_next) {
+        p = res;
         std::cout << "lo\n";
         void *addr;
         char ipstr[INET6_ADDRSTRLEN];
@@ -35,7 +36,7 @@ int main() {
 
         inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
         std::cout << "IP Address: " << ipstr << std::endl;
-    }
+    // }
 
 
 }
