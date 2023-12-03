@@ -15,7 +15,7 @@ class ServConf
     public:
         ServConf();
         std::string host;
-        std::set<std::string> ports;
+        std::set<int> ports;
         mp errorPages;
         std::string name;
         long long clientBodyLimit;
