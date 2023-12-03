@@ -7,22 +7,22 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
 
 
     if(!checkContentExistsInRoot()) {
-        std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << "\n";
+        std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     
-    std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << "\n";
+    std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << std::endl;
     //we check if the uri is dir or file
     if (checkContentIsDir()) {
-        std::cout << this->resourcesWithRoot << " is a dir\n";
+        std::cout << BLUE_TEXT << this->resourcesWithRoot << " is a dir" << RESET_COLOR << std::endl;
         if (!checkDirIndedWithBackSlash()) {
             std::string targetWithBackSlash = this->target + "/";
-            std::cout << RED_TEXT << "`" << targetWithBackSlash << "` not ended with /" << RESET_COLOR << "\n";
+            std::cout << RED_TEXT << "`" << targetWithBackSlash << "` not ended with /" << RESET_COLOR << std::endl;
             return new MovedPermanently301(targetWithBackSlash);
         }
-        std::cout << "`" << this->target << "` ended with /\n";
+        std::cout << GREEN_TEXT << "`" << this->target << "` ended with /" << RESET_COLOR << std::endl;;
         if (checkIndexFilesInDir()) {
-            std::cout << "index files found: " << this->resourcesWithRoot << std::endl;
+            std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
                 //run cgi on requested file with GET request method
             }
@@ -32,19 +32,19 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
         }
 
         else {
-            std::cout << "index files not found: " << this->resourcesWithRoot << std::endl;
+            std::cout << RED_TEXT << "index files not found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
             if (checkAutoIndexOn()) {
-                std::cout << "autoindex: on\n";
+                std::cout << GREEN_TEXT << "autoindex: on" << RESET_COLOR << std::endl;
                 return new OK200(this->resourcesWithRoot, this->target, true);
             }
             else {
-                std::cout << "autoindex: off\n";
+                std::cout << GREEN_TEXT << "autoindex: off" << RESET_COLOR << std::endl;
                 return new Forbidden403(abstractErrorPages["403"]);
             }
         }
     }
     else {
-        std::cout << "`" << this->resourcesWithRoot << "` is a file\n";
+        std::cout << BLUE_TEXT << "`" << this->resourcesWithRoot << "` is a file" << RESET_COLOR << std::endl;
         if (checkLocationIncludesCgi()) {
             //run cgi on requested file with GET request method
         }

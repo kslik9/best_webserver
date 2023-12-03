@@ -39,18 +39,18 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     
     //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) {
-        std::cout << "not matched\n";
+        std::cout << RED_TEXT << "not matched" << RESET_COLOR << std::endl;
         return new NotFound404(this->target, abstractErrorPages["404"]);
     }
     if (checkLocationHasRedirection()) {
-        std::cout << "redirected\n";
+        std::cout << BLUE_TEXT << "redirected" << RESET_COLOR << std::endl;
         return new MovedPermanently301(this->location["redirect"]);
     }
 
     //check if the method allowed in location
     std::string allowedMethods;
     if (!checkMethodAllowed(allowedMethods)) {
-        std::cout << "not allowed hh" << location["root"] << "-" << std::endl;
+        std::cout << RED_TEXT << "method not allowed hh" << location["root"] << RESET_COLOR << std::endl;
         return new MethodNotAllowed405(allowedMethods);
     }
 
