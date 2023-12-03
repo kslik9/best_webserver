@@ -41,27 +41,7 @@ void	setNonBlocking(int socketFd) {
 }
 
 
-#include <iostream>
-#include <cstring>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-
 void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
-	// std::cout << "port: " << port << "  hostname: " << hostName << std::endl;
-	// memset((char *)&this->serverAddress, 0, sizeof(this->serverAddress));
-	// this->serverAddress.sin_family = AF_INET;
-	// this->serverAddress.sin_port = htons(port);
-	// addrinfo *result;
-	// addrinfo exp;
-	// getaddrinfo(hostName, port, &exp, &result);
-	// this->serverAddress.sin_addr = 0;
-	// in_addr_t ip = inet_addr(hostName.c_str());
-	// if (ip == INADDR_NONE) {
-	// 	std::cerr << "Invalid Ip Address " << hostName << std::endl;
-	// }
-
 	struct addrinfo hints;
 	struct addrinfo *res;
 	struct addrinfo *p;
@@ -81,10 +61,7 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	this->serverAddress.sin_port = htons(port);
 	this->serverAddress.sin_addr = ip->sin_addr;
 
-	std::cout << "la\n";
-
 	freeaddrinfo(res);
-	
 }
 
 void Server::start() {
@@ -95,46 +72,55 @@ void Server::start() {
 	struct hostent *hostnm;
 	struct sockaddr_in server;
 	int opt = 1;
-
+	int socketIndex = 0;
 
 	for (int i = 0; i < config.how_mn_servers(); i++) {
-		portsIt = config.srvConf[i].ports.begin();
 		for (portsIt = config.srvConf[i].ports.begin(); portsIt != config.srvConf[i].ports.end(); portsIt++) {
-			// std::cout << "hostname: " << hostName << " port " << port << std::endl;
-			hostName = config.srvConf[i].name;
 			port = *portsIt;
-
-			//create socket
+			hostName = config.srvConf[i].name;
+			
+			int opt = 1;
 			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
-			if (this->serverSocketsFd[i] < 0) {
-				logger.Log(ERROR, "Error creating server socket");
-				throw std::runtime_error("Error creating server socket");
+			if (this->serverSocketsFd[socketIndex] < 0) {
+				perror("socket() failed");
+				exit(EXIT_FAILURE);
 			}
 
-					// 	//setnonblocking
-			setNonBlocking(this->serverSocketsFd[i]);
+			//setnonblocking
+			setNonBlocking(this->serverSocketsFd[socketIndex]);
+			if (this->serverSocketsFd[i] < 0) {
+			logger.Log(ERROR, "Error creating server socket");
+			throw std::runtime_error("Error creating server socket");
+			}
 
 			// this solves the error of binding by reusing address
-			if (setsockopt(this->serverSocketsFd[i], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-				logger.Log(ERROR, "Error of binding by reusing address");
-				throw std::runtime_error("Error of binding by reusing address");
+			if (setsockopt(this->serverSocketsFd[socketIndex], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+			logger.Log(ERROR, "Error of binding by reusing address");
+			throw std::runtime_error("Error of binding by reusing address");
 			}
 
-			// binding socket with address server_name on a port
+			//set server address info
 			setServerAddress(port, hostName);
-			// continue;
 
-			if (bind(this->serverSocketsFd[i], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0) {
+			//bind socket
+			if (bind(this->serverSocketsFd[socketIndex], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0)
+			{
 				logger.Log(ERROR, "Error binding server socket");
 				throw std::runtime_error("Error binding server socket");
 			}
 
-			// listen for incoming connections
-			if (listen(this->serverSocketsFd[i], CLIENTS_COUNT) < 0) {
+			// listen on
+			if (listen(this->serverSocketsFd[socketIndex], CLIENTS_COUNT) < 0)
+			{
 				logger.Log(ERROR, "Error listening on socket");
-				throw std::runtime_error("Error listening on socket");
+				throw std::runtime_error("Error listening on socket port " + std::to_string(port));
 			}
-			std::cout << GREEN_TEXT << "server listening on port " << port << RESET_COLOR << std::endl;
+			// -----------------------------------------------------
+			std::cout << GREEN_TEXT << "Server is listening on "
+					<< hostName
+					<< ":" << port << RESET_COLOR << std::endl;
+
+			socketIndex++;
 		}
 	}
 }
