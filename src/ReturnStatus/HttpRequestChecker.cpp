@@ -57,9 +57,10 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
 
     //now we check the request method
     //////////////////////////////// GET ///////////////////////////
-    if (method == "GET" || method == "HEAD") {
+    if (method == "GET" || method == "HEAD")
         return handleGetMethod();
-    }
+    else if (method == "POST")
+        return handlePostMethod();
 
     return new NotFound404(this->target, abstractErrorPages["404"]);
     //return the created http response message

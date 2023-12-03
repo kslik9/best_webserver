@@ -201,3 +201,9 @@ bool    HttpRequestChecker::checkLocationIncludesCgi() {
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
     return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
+
+
+
+bool    HttpRequestChecker::checkLocationSupportUpload() {
+    return false;
+}

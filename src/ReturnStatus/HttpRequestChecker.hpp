@@ -28,6 +28,7 @@ class HttpRequestChecker {
         bool        checkDirIndedWithBackSlash();
         bool        CheckDeleteDirContent();
         bool        checkWriteAccessOnDir();
+        bool        checkLocationSupportUpload();
         Config      &config;
         std::map<std::string, std::string> location;
     public:
@@ -35,9 +36,10 @@ class HttpRequestChecker {
         HttpRequestChecker(RequestData &requestData, Config &config);
         std::string getStatusCode();
         void        createHttpHeader();
+        
         AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
-        void        handlePostMethod();
-        void        handleDeleteMethod();
+        AResponseMessage    *handlePostMethod();
+        void                handleDeleteMethod();
 };
 

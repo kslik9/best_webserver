@@ -38,7 +38,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
                 return new OK200(this->resourcesWithRoot, this->target, true);
             }
             else {
-                std::cout << GREEN_TEXT << "autoindex: off" << RESET_COLOR << std::endl;
+                std::cout << RED_TEXT << "autoindex: off" << RESET_COLOR << std::endl;
                 return new Forbidden403(abstractErrorPages["403"]);
             }
         }
