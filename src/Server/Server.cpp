@@ -49,7 +49,7 @@ void	setNonBlocking(int socketFd) {
 #include <unistd.h>
 
 void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
-	std::cout << "port: " << port << " hostname: " << hostName << std::endl;
+	// std::cout << "port: " << port << "  hostname: " << hostName << std::endl;
 	// memset((char *)&this->serverAddress, 0, sizeof(this->serverAddress));
 	// this->serverAddress.sin_family = AF_INET;
 	// this->serverAddress.sin_port = htons(port);
@@ -61,8 +61,29 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	// if (ip == INADDR_NONE) {
 	// 	std::cerr << "Invalid Ip Address " << hostName << std::endl;
 	// }
-	// this->serverAddress.sin_addr.s_addr = ip;
+
+	struct addrinfo hints;
+	struct addrinfo *res;
+	struct addrinfo *p;
+	const char *portCharPtr = std::to_string(port).c_str();
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	if (getaddrinfo(hostName.c_str(), portCharPtr, &hints, &res) != 0) {
+		std::cout << "getaddrifo() error" << std::endl;
+		return;
+	}
 	
+	struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
+
+	this->serverAddress.sin_family = AF_INET;
+	this->serverAddress.sin_port = htons(port);
+	this->serverAddress.sin_addr = ip->sin_addr;
+
+	std::cout << "la\n";
+
+	freeaddrinfo(res);
 	
 }
 
@@ -70,28 +91,27 @@ void Server::start() {
 	int	serverSocketFd;
 	unsigned short	port;
 	std::string hostName;
-	std::set<std::string>::iterator portsIt;
+	std::set<int>::iterator portsIt;
 	struct hostent *hostnm;
 	struct sockaddr_in server;
 	int opt = 1;
 
-	// hostnm = gethostbyname();
 
-	for (int i = 0; i < config.srvConf.size(); i++) {
+	for (int i = 0; i < config.how_mn_servers(); i++) {
 		portsIt = config.srvConf[i].ports.begin();
 		for (portsIt = config.srvConf[i].ports.begin(); portsIt != config.srvConf[i].ports.end(); portsIt++) {
+			// std::cout << "hostname: " << hostName << " port " << port << std::endl;
+			hostName = config.srvConf[i].name;
+			port = *portsIt;
 
-
-			// this->portsAndHosts.insert(std::make_pair(*portsIt, config.srvConf[i].host));
-			port = std::stoi(*portsIt);
-			hostName = config.srvConf[i].host;
+			//create socket
 			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
 			if (this->serverSocketsFd[i] < 0) {
 				logger.Log(ERROR, "Error creating server socket");
 				throw std::runtime_error("Error creating server socket");
 			}
 
-			// 	//setnonblocking
+					// 	//setnonblocking
 			setNonBlocking(this->serverSocketsFd[i]);
 
 			// this solves the error of binding by reusing address
@@ -102,7 +122,7 @@ void Server::start() {
 
 			// binding socket with address server_name on a port
 			setServerAddress(port, hostName);
-			continue;
+			// continue;
 
 			if (bind(this->serverSocketsFd[i], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0) {
 				logger.Log(ERROR, "Error binding server socket");
