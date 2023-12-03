@@ -129,7 +129,7 @@ void Config::display_all(ServConf srvConf)
 	
 		std::cout << "the host is " << srvConf.host << std::endl;
 		std::cout << "the ports is ";
-		std::set<std::string>::iterator po = srvConf.ports.begin();
+		std::set<int>::iterator po = srvConf.ports.begin();
 		while(po != srvConf.ports.end())
 		{
 			std::cout << *po << " ";
@@ -319,6 +319,7 @@ void Config::parsePort(int i)
 {
 	vec::iterator it = this->srvConf[i].my_data.begin();
 	std::string tmp;
+	int p;
 	size_t k;
 	std::string port;
 	while(it != this->srvConf[i].my_data.end())
@@ -329,12 +330,11 @@ void Config::parsePort(int i)
 		{
 			port = tmp.substr(k +4);
 			reframe(port);
-			this->srvConf[i].ports.insert(port);
+			p = std::atof(port.c_str());
+			this->srvConf[i].ports.insert(p);
 		}
 		it++;
 	}
-
-	
 }
 void Config::parseConf()
 {
