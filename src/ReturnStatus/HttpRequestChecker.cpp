@@ -61,7 +61,8 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         return handleGetMethod();
     else if (method == "POST")
         return handlePostMethod();
+    else if (method == "DELETE")
+        return handleDeleteMethod();
 
-    return new NotFound404(this->target, abstractErrorPages["404"]);
-    //return the created http response message
+    return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
 }

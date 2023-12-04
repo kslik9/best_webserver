@@ -42,6 +42,6 @@ class HttpRequestChecker {
         AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
-        void                handleDeleteMethod();
+        AResponseMessage    *handleDeleteMethod();
 };
 

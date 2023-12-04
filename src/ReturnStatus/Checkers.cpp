@@ -207,3 +207,11 @@ bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
 bool    HttpRequestChecker::checkLocationSupportUpload() {
     return false;
 }
+
+bool    HttpRequestChecker::CheckDeleteDirContent() {
+    return false;
+}
+
+bool    HttpRequestChecker::checkWriteAccessOnDir() {
+    return false;
+}

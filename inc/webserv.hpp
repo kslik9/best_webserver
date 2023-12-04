@@ -53,6 +53,7 @@
 #define STATIC_HTTP "static/http/"
 #define STATIC_404 "static/default_errors/404.html"
 #define STATIC_403 "static/default_errors/403.html"
+#define STATIC_409 "static/default_errors/409.html"
 #define CLIENTS_COUNT 4000
 #define RESET_COLOR "\033[0m"
 #define BLUE_TEXT "\033[1;34m"
