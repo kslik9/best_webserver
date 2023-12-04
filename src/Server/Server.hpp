@@ -23,7 +23,7 @@ class Server
 		unsigned int getSocketFd() const;
 		Config getConfig() const;
 		sockaddr_in getServer_address() const;
-		std::string buildHttpResponse(std::string request);
+		std::string buildHttpResponse(std::string &request);
 		Server &operator=(Server const &rhs);
 };
 
