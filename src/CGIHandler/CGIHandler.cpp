@@ -104,16 +104,18 @@ std::string CGIHandler::process()
 
 void CGIHandler::init_env(RequestData request)
 {
+	std::cout << "req: [" << request << "]\n";
+	// exit(1);
 	this->env_vec.push_back(("REQUEST_URI=" + request.getUri()).c_str());	 // + request.getPath().substr(0, request.getPath().find_last_of("/")));
 	this->env_vec.push_back("DOCUMENT_URI=");	 // + request.getPath() + request.getQueryString());
 	this->env_vec.push_back("SCRIPT_NAME=/index.php");	 // +  request.getPath());
-	this->env_vec.push_back("SCRIPT_FILENAME=/Users/ylabrahm/Desktop/webserv/php/index.php"); // + response.get_full_path());
+	this->env_vec.push_back("SCRIPT_FILENAME=/Users/aessaoud/Desktop/webserv/php/index.php"); // + response.get_full_path());
 	this->env_vec.push_back("PATH_TRANSLATED="); // + response.get_full_path());
 	this->env_vec.push_back("QUERY_STRING=");	 // + request.getQueryString());
 	this->env_vec.push_back("SERVER_NAME=0.0.0.0");
 	this->env_vec.push_back("SERVER_PORT=8081");	// + std::to_string(request.getPort()));
 	this->env_vec.push_back(("REQUEST_METHOD=" + request.getMethod()).c_str()); // + request.getMethod());
-	this->env_vec.push_back("DOCUMENT_ROOT=/Users/ylabrahm/Desktop/webserv/php");	// + response.get_root());
+	this->env_vec.push_back("DOCUMENT_ROOT=/Users/aessaoud/Desktop/webserv/php");	// + response.get_root());
 	this->env_vec.push_back("GETAWAY_INTERFACE=CGI/1.1");
 	this->env_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	this->env_vec.push_back("REDIRECT_STATUS=200");
