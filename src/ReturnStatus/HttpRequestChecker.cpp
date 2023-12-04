@@ -1,6 +1,6 @@
 #include "HttpRequestChecker.hpp"
 
-HttpRequestChecker::HttpRequestChecker(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
+HttpRequestChecker::HttpRequestChecker(RequestData &requestData, ServConf &servConf) : requestData(requestData), config(servConf) {
     this->target = requestData.getUri();
     this->method = requestData.getMethod();
 }

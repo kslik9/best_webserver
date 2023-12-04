@@ -112,16 +112,18 @@ bool LocationIncludesCgi() {
 
 // #include "HttpMessage.hpp"
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
-std::string Server::buildHttpResponse(std::string requestStr)
+std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 {
     int         fileStat;
 
+    // std::cout << "socket index: " << socketIndex << std::endl;
+
     //request data
-    RequestData request(requestStr);
-    AResponseMessage *createdResponse;
-    std::string responseMessage;
+    RequestData         request(requestStr);
+    AResponseMessage    *createdResponse;
+    std::string         responseMessage;
     //http request checker
-    HttpRequestChecker hm(request, config);
+    HttpRequestChecker  hm(request, conf.at(socketIndex));
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
     delete createdResponse;
