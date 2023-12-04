@@ -43,6 +43,9 @@
 #include "../src/ReturnStatus/Response/Forbidden403.hpp"
 #include "../src/ReturnStatus/Response/OK200.hpp"
 
+// 
+#include "../src/CGIHandler/CGIHandler.hpp"
+
 
 
 
@@ -59,12 +62,15 @@
 #define BLUE_TEXT "\033[1;34m"
 #define RED_TEXT "\033[1;31m"
 #define GREEN_TEXT "\033[1;32m"
+// 
+#define CGI_BIN "cgi-bin/php-cgi"
+
 
 class ReturnStatus;
 // Function prototypes
 void ft_handle_client(int client_fd);
 std::string buildHttpResponse(std::string &method, std::string &target, ReturnStatus &rs);
-void parse_request(const std::string &request, std::string &method, std::string &target);
+void parse_request(const std::string &request, std::string &method, std::string &target, std::string &httpVersion);
 int CreateServerSocket();
 int waitClients(int serverSocket);
 
