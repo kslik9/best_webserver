@@ -4,6 +4,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/HttpRequestChecker.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
+				src/ReturnStatus/HandlePostMethod.cpp \
 				src/ReturnStatus/RequestData.cpp \
 				src/ReturnStatus/Response/NotFound404.cpp \
 				src/ReturnStatus/Response/MovedPermanently301.cpp \
@@ -11,15 +12,16 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/OK200.cpp \
 				src/ReturnStatus/Response/Forbidden403.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \
-				src/CGI/cgi.cpp
+				src/CGI/cgi.cpp \
+				src/Config/ServConf.cpp 
 
 OBJS		:= $(SRCS:.cpp=.o)
 OBJS		:= $(addprefix obj/, $(OBJS))
 
 CC 			= c++
 RM			= rm -f
-# CFLAGS		= -std=c++98 -fsanitize=address #-Wall -Wextra -Werror 
-CFLAGS      =
+# CFLAGS		= -std=c++98 -fsanitize=address
+# CFLAGS		=
 NAME		= webserv
 INCLUDE		= -Iinc/
 

@@ -63,6 +63,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 	static int meth = 0;
 	host = "none";
 	static std::string last = "none";
+	size_t j;
 	int howmuch_meth = whichMethAmI(str);
 	if(flag == 0)
 		meth = 0;
@@ -70,12 +71,16 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 		meth++;
     while (i < str.length()) 
 	{
-        k = str.find(name, k);
-		if(str[k - 1] != ' ' || str[k + name.length()] != ' ')
-			return host;
+		if(k < str.length())
+		{
+			k = str.find(name, k);
+			// if(str[k - 1] != ' ' || str[name.length() - k] != ' ')
+			// 	return host;
+		}
         if (k != std::string::npos) 
 		{
-            size_t j = str.find(";", k); 
+			if(k < str.length())
+            	j = str.find(";", k); 
             if (j != std::string::npos) 
 			{
                 host = str.substr(k + len, j - (k + len));
@@ -119,11 +124,18 @@ mp Config::get_info_for_loca(std::string str)
 
 	return tm;
 }
-void Config::display_all(serv_conf srvConf)
+void Config::display_all(ServConf srvConf)
 {
-
+	
 		std::cout << "the host is " << srvConf.host << std::endl;
-		std::cout << "the port is " << srvConf.port << std::endl;
+		std::cout << "the ports is ";
+		std::set<int>::iterator po = srvConf.ports.begin();
+		while(po != srvConf.ports.end())
+		{
+			std::cout << *po << " ";
+			++po;
+		}
+		std::cout << std::endl;
 		std::cout << "the error pages is [";
 		// mp::iterator p = srvConf.errorPages.begin();
 		// while(p != srvConf.errorPages.end())
@@ -140,7 +152,7 @@ void Config::display_all(serv_conf srvConf)
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				std::cout <<"route =>{" <<  it->first << "}:\n" ;
+				// std::cout <<"route =>{" <<  it->first << "}:\n" ;
 				oi = it->second.begin();
 				while(oi != it->second.end())
 				{
@@ -274,7 +286,7 @@ void Config::parse_error(int i)
 {
 	vec::iterator it = this->srvConf[i].my_data.begin();
 	std::string tmp;
-		std::string tmp2;
+	std::string tmp2;
 
 	std::string str;
 	while(it != this->srvConf[i].my_data.end())
@@ -285,17 +297,44 @@ void Config::parse_error(int i)
 		k = str.find("error", k);
 		if(k != std::string::npos)
 		{
+			if(k + 8 > str.length())
+				break;
 			tmp = str.substr(k + 5, 3);
-			tmp2 = str.substr(k + (str.length() - k));
+			tmp2 = str.substr(k + 8);
 			if(tmp2[tmp2.length() - 1] == ';')
 				tmp2[tmp2.length() - 1] = ' ';
 			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
-			// std::cout << tmp << "} {" << tmp2 << std::endl;
 		}
 		*it++;
 	}
-
+}
+void reframe(std::string &port)
+{
+	if(port[port.length() - 1] == ';')
+		port[port.length() - 1] = ' ';
+	port.erase(std::remove_if(port.begin(), port.end(), ::isspace), port.end());
+}
+void Config::parsePort(int i)
+{
+	vec::iterator it = this->srvConf[i].my_data.begin();
+	std::string tmp;
+	int p;
+	size_t k;
+	std::string port;
+	while(it != this->srvConf[i].my_data.end())
+	{
+		tmp = *it;
+		k = tmp.find("port");
+		if(k != std::string::npos)
+		{
+			port = tmp.substr(k +4);
+			reframe(port);
+			p = std::atof(port.c_str());
+			this->srvConf[i].ports.insert(p);
+		}
+		it++;
+	}
 }
 void Config::parseConf()
 {
@@ -308,7 +347,7 @@ void Config::parseConf()
 		parse_error(i);
 		parseInfosStr("host", 4, srvConf[i].host, i);
 		parseInfosStr("name", 4, srvConf[i].name, i);
-		parseInfosInt("port", 6, srvConf[i].port, i);
+		parsePort(i);
 		parseInfosInt("body_size", 10, srvConf[i].clientBodyLimit, i);
 		i++;
 	}
@@ -377,3 +416,4 @@ unsigned int Config::getPort() const
 }
 
 /* ************************************************************************** */
+
