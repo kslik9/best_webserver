@@ -25,6 +25,7 @@
 #include <poll.h>
 #include <exception>
 #include <sys/stat.h>
+#include <netdb.h>
 
 
 // OOP

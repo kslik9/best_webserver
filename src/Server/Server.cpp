@@ -40,170 +40,196 @@ void	setNonBlocking(int socketFd) {
 	fcntl(socketFd, F_SETFL, flags);
 }
 
-// void parse_request(const std::string &request, std::string &method, std::string &target) {
-// 	try
-// 	{
-// 		std::istringstream iss(request);
-// 		iss >> method >> target;
-// 	}
-// 	catch (const std::exception &e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 		method = "GET";
-// 		target = "/";
-// 	}
-// }
 
-void Server::start() {
-	int opt = 1;
-	this->socketFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (socketFd < 0)
-	{
-		perror("socket() failed");
-		exit(EXIT_FAILURE);
+void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
+	struct addrinfo hints;
+	struct addrinfo *res;
+	struct addrinfo *p;
+	const char *portCharPtr = std::to_string(port).c_str();
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	if (getaddrinfo(hostName.c_str(), portCharPtr, &hints, &res) != 0) {
+		std::cout << "getaddrifo() error" << std::endl;
+		return;
 	}
-	//setnonblocking
-	setNonBlocking(this->socketFd);
 	
+	struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
 
-	if (this->socketFd < 0)
-	{
-		logger.Log(ERROR, "Error creating server socket");
-		throw std::runtime_error("Error creating server socket");
-	}
-	// this solves the error of binding by reusing address
-	if (setsockopt(this->socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-	{
-		logger.Log(ERROR, "Error of binding by reusing address");
-		throw std::runtime_error("Error of binding by reusing address");
-	}
-	// binding socket with address 0.0.0.0:8080
-	this->server_address.sin_family = AF_INET;
-	this->server_address.sin_port = htons(config.getPort());
-	this->server_address.sin_addr.s_addr = INADDR_ANY;
-	if (bind(this->socketFd, (struct sockaddr *)&this->server_address, sizeof(this->server_address)) < 0)
-	{
-		logger.Log(ERROR, "Error binding server socket");
-		throw std::runtime_error("Error binding server socket");
-	}
-	// listen on 0.0.0.0:8080
-	if (listen(this->socketFd, CLIENTS_COUNT) < 0)
-	{
-		logger.Log(ERROR, "Error listening on socket");
-		throw std::runtime_error("Error listening on socket");
-	}
-	// -----------------------------------------------------
-	std::cout << "Server is listening on "
-			  << "http://0.0.0.0"
-			  << ":" << this->config.getPort() << std::endl;
+	this->serverAddress.sin_family = AF_INET;
+	this->serverAddress.sin_port = htons(port);
+	this->serverAddress.sin_addr = ip->sin_addr;
+
+	freeaddrinfo(res);
 }
 
+void Server::start() {
+	int	serverSocketFd;
+	unsigned short	port;
+	std::string hostName;
+	std::set<int>::iterator portsIt;
+	struct hostent *hostnm;
+	struct sockaddr_in server;
+	int opt = 1;
+	int socketIndex = 0;
+
+	for (int i = 0; i < config.how_mn_servers(); i++) {
+		for (portsIt = config.srvConf[i].ports.begin(); portsIt != config.srvConf[i].ports.end(); portsIt++) {
+			port = *portsIt;
+			hostName = config.srvConf[i].name;
+			
+			int opt = 1;
+			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
+			if (this->serverSocketsFd[socketIndex] < 0) {
+				perror("socket() failed");
+				exit(EXIT_FAILURE);
+			}
+
+			//setnonblocking
+			setNonBlocking(this->serverSocketsFd[socketIndex]);
+			if (this->serverSocketsFd[i] < 0) {
+			logger.Log(ERROR, "Error creating server socket");
+			throw std::runtime_error("Error creating server socket");
+			}
+
+			// this solves the error of binding by reusing address
+			if (setsockopt(this->serverSocketsFd[socketIndex], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
+			logger.Log(ERROR, "Error of binding by reusing address");
+			throw std::runtime_error("Error of binding by reusing address");
+			}
+
+			//set server address info
+			setServerAddress(port, hostName);
+
+			//bind socket
+			if (bind(this->serverSocketsFd[socketIndex], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0)
+			{
+				logger.Log(ERROR, "Error binding server socket");
+				throw std::runtime_error("Error binding server socket");
+			}
+
+			// listen on
+			if (listen(this->serverSocketsFd[socketIndex], CLIENTS_COUNT) < 0)
+			{
+				logger.Log(ERROR, "Error listening on socket");
+				throw std::runtime_error("Error listening on socket port " + std::to_string(port));
+			}
+			// -----------------------------------------------------
+			std::cout << GREEN_TEXT << "Server is listening on "
+					<< hostName
+					<< ":" << port << RESET_COLOR << std::endl;
+
+			socketIndex++;
+		}
+	}
+}
 
 void Server::waitClients()
 {
-	//return status
-	// ReturnStatus rs;
+	int closeConnection;
+	std::vector<struct pollfd> fds;
+	int rc;
+	int endServer = false;
+	int clientSd = -1;
+	struct pollfd tempPollFd;
 
-	// std::map<std::string, locate>::iterator it = config.srvConf.rout.begin();
-	// std::cout << it->first << std::endl;
-	// std::cout << it->second.autoindex << std::endl;
+	//init pollfds fds with server sockets
+	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
+		tempPollFd.fd = serverSocketsFd[i];
+		tempPollFd.events = POLLIN;
+		fds.push_back(tempPollFd);
+	}
 
-	
-	struct pollfd fds[CLIENTS_COUNT + 1];
-	fds[0].fd = this->socketFd;
-	fds[0].events = POLLIN | POLLPRI;
-	this->activeClients = 0;
-	// -----------------------------------------------------
-	// fill all fds with 0
-	for (int i = 1; i < CLIENTS_COUNT; i++)
-		fds[i].fd = 0;
-	// -----------------------------------------------------
-	while (true)
-	{
-		int activity = poll(fds, CLIENTS_COUNT, 0);
-		if (activity < -1)
-			std::cout << "Error : L:36" << std::endl;
-		else
-		{
-			// check if a client tryin to connect and add it to pollfd list
-			if (fds[0].revents & POLLIN)
+
+	while (endServer == false) {
+		rc = poll(&fds[0], fds.size(), 3000);
+		if (rc < 0) {
+			std::cout << "poll() error\n";
+		}
+		for (int i = 0; i < fds.size(); i++) {
+			//loop to find descriptors that return POLLIN
+			//then determine if it's listening or active connection
+			if (fds[i].revents == 0)
+				continue;
+			if (fds[i].revents != POLLIN) {
+				std::cout << "revents error\n";
+				endServer = true;
+				break;
+			}
+
+			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
-				struct sockaddr_in client_addr;
-				socklen_t client_addr_len = sizeof(client_addr);
-				int clientSocket = accept(this->socketFd, (struct sockaddr *)&client_addr, &client_addr_len);
-				
-				//set the client socket as non blocking
-				setNonBlocking(clientSocket);
-				for (int i = 1; i < CLIENTS_COUNT; i++)
-				{
-					if (fds[i].fd == 0)
+				//this is a listening socket and it's redable
+					struct sockaddr_in client_addr;
+					socklen_t client_addr_len = sizeof(client_addr);
+					clientSd = accept(fds[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
+					if (clientSd < 0)
 					{
-						fds[i].fd = clientSocket;
-						fds[i].events = POLLIN | POLLPRI;
-						this->activeClients++;
-						std::cout << "new connection!! socket fd is " << clientSocket << " - " << inet_ntoa(client_addr.sin_addr) << std::endl;
+						std::cerr << "accept() failed\n";
+						endServer = true;
 						break;
 					}
-				}
+					//add new incoming connection to the pollfd
+					std::cout << "new incoming connection " << clientSd << std::endl;
+					tempPollFd.fd = clientSd;
+					tempPollFd.events = POLLIN;
+					fds.push_back(tempPollFd);
 			}
-			
-			// check data from clients
-			for (int i = 1; i < CLIENTS_COUNT; i++) {
-				if (fds[i].fd > 0 && (fds[i].revents & POLLIN)) {
-					char *buffer = new char[BUFFER_SIZE];
-					ssize_t bytes_received = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
-					if (bytes_received < 0 || bytes_received == 0)
-					{
-						std::cout << "fd " << fds[i].fd << " removed\n";
-						close(fds[i].fd);
-						fds[i].fd = 0;
-						fds[i].events = 0;
-						fds[i].revents = 0;
-						this->activeClients--;
-					}
-					else
-					{
 
-						// std::string str_buffer(buffer), target, method;
-						// int pos = str_buffer.find(" ");
-						// // -----------------------------------------------------
-						// parse_request(str_buffer, method, target);
-						// // std::cout << "[" << str_buffer << "]" << std::endl;
-						
-						// // -----------------------------------------------------
-						// std::string http_resp = buildHttpResponse(method, target);
-						std::string str_buffer(buffer);
-						std::string http_resp = buildHttpResponse(str_buffer);
-						send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-						close(fds[i].fd);
+			//not a listening socket and it's readable
+			else {
+				std::cout << "fd " << fds[i].fd << " is readable" << std::endl;
+				closeConnection = false;
+				while (true) {
+					char *buffer = new char[BUFFER_SIZE];
+					ssize_t bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
+					if (bytesReceived < 0) {
+						std::cout << "recv() failed\n";
+						closeConnection = true;
+						break;
 					}
+					if (bytesReceived == 0) {
+						std::cout << "connection closed\n";
+						closeConnection = true;
+						delete[] buffer;
+						break;
+					}
+					std::cout << "bytes received: " << bytesReceived << std::endl;
+
+					std::string str_buffer(buffer);
+					std::string http_resp = buildHttpResponse(str_buffer);
+					//send response to client
+					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+					if (rc < 0) {
+						std::cerr << "send() failed\n";
+						closeConnection = true;
+						break;
+					}
+					// close(fds[i].fd);
+					closeConnection = true;
 					delete[] buffer;
 				}
-				
+				if (closeConnection) {
+					close(fds[i].fd);
+					fds[i].fd = -1;
+				}
 			}
 		}
 	}
-
-	close(this->socketFd);
 }
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
-unsigned int Server::getSocketFd() const
-{
-	return this->socketFd;
-}
 
-Config Server::getConfig() const
-{
+Config Server::getConfig() const {
 	return this->config;
 }
 
-sockaddr_in Server::getServer_address() const
-{
-	return this->server_address;
+sockaddr_in Server::getServer_address() const {
+	return this->serverAddress;
 }
 
 /* ************************************************************************** */
