@@ -89,6 +89,8 @@ void Server::start(Config &mainConf) {
 
 			//setnonblocking
 			setNonBlocking(this->serverSocketsFd[socketIndex]);
+
+			
 			if (this->serverSocketsFd[i] < 0) {
 			logger.Log(ERROR, "Error creating server socket");
 			throw std::runtime_error("Error creating server socket");
@@ -167,22 +169,22 @@ void Server::waitClients()
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
 				//this is a listening socket and it's redable
-					struct sockaddr_in client_addr;
-					socklen_t client_addr_len = sizeof(client_addr);
-					clientSd = accept(fds[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
-					if (clientSd < 0)
-					{
-						std::cerr << "accept() failed\n";
-						endServer = true;
-						break;
-					}
-					//add new incoming connection to the pollfd
-					std::cout << "new incoming connection " << clientSd << std::endl;
-					tempPollFd.fd = clientSd;
-					tempPollFd.events = POLLIN;
-					fds.push_back(tempPollFd);
+				struct sockaddr_in client_addr;
+				socklen_t client_addr_len = sizeof(client_addr);
+				clientSd = accept(fds[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
+				if (clientSd < 0)
+				{
+					std::cerr << "accept() failed\n";
+					endServer = true;
+					break;
+				}
+				//add new incoming connection to the pollfd
+				std::cout << "new incoming connection " << clientSd << std::endl;
+				tempPollFd.fd = clientSd;
+				tempPollFd.events = POLLIN;
+				fds.push_back(tempPollFd);
 
-					currentPortInex =  i;
+				currentPortInex =  i;
 			}
 
 			//not a listening socket and it's readable
@@ -218,10 +220,10 @@ void Server::waitClients()
 					closeConnection = true;
 					delete[] buffer;
 				}
-				if (closeConnection) {
-					close(fds[i].fd);
-					fds[i].fd = -1;
-				}
+				// if (closeConnection) {
+				// 	close(fds[i].fd);
+				// 	fds[i].fd = -1;
+				// }
 			}
 		}
 	}

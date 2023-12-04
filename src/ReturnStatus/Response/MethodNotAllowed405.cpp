@@ -1,11 +1,16 @@
 #include "MethodNotAllowed405.hpp"
 
-MethodNotAllowed405::MethodNotAllowed405(std::string &allowedMethods) {
+MethodNotAllowed405::MethodNotAllowed405(std::string &allowedMethods, std::string &errorPath) {
     this->statusCode = "405";
     this->statusMessage = "Method Not Allowed";
     this->headers["Allow"] = allowedMethods;
     this->headers["Content-Type"] = "text/html";
     this->headers["Date"] = getCurrentTime();
+
+    if (!access(errorPath.c_str(), F_OK | R_OK))
+        this->errorPath = errorPath;
+    else
+        this->errorPath = STATIC_404;
 }
 
 std::string MethodNotAllowed405::createResponse() {
@@ -16,6 +21,11 @@ std::string MethodNotAllowed405::createResponse() {
         response << it->first << ": " << it->second << "\r\n";
     response << "\r\n";
 
-    response << "<h1>Method Not Allowed</h1>";
+    //create body
+    std::ifstream file1(this->errorPath, std::ios::binary);
+    std::ostringstream fileContent;
+    fileContent << file1.rdbuf();
+    response << fileContent.str();
+    
     return response.str();
 }
