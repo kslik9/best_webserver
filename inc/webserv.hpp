@@ -64,6 +64,7 @@
 #define GREEN_TEXT "\033[1;32m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
+#define ROOT_FOLDER "/Users/ylabrahm/Desktop/webserv/var/www/html"
 
 
 class ReturnStatus;
