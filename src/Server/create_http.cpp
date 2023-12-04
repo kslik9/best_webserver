@@ -129,8 +129,18 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 
     // std::cout << "socket index: " << socketIndex << std::endl;
 
+
+
+
     //request data
     RequestData         request(requestStr);
+
+    CGIHandler  handler(request);
+
+    std::string c = handler.process();
+    std::cout << c << std::endl;
+    return "NULL";
+
     AResponseMessage    *createdResponse;
     std::string         responseMessage;
     //http request checker
