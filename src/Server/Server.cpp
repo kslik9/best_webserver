@@ -220,10 +220,10 @@ void Server::waitClients()
 					closeConnection = true;
 					delete[] buffer;
 				}
-				// if (closeConnection) {
-				// 	close(fds[i].fd);
-				// 	fds[i].fd = -1;
-				// }
+				if (closeConnection) {
+					close(fds[i].fd);
+					fds[i].fd = -1;
+				}
 			}
 		}
 	}
