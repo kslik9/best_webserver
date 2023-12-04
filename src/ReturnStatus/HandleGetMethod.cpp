@@ -1,14 +1,9 @@
 #include "HttpRequestChecker.hpp"
 
 AResponseMessage    *HttpRequestChecker::handleGetMethod() {
-    std::map<std::string, std::string> abstractErrorPages;
-    abstractErrorPages["404"] = "errors/404.html";
-    abstractErrorPages["403"] = "errors/403.html";
-
-
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
-        return new NotFound404(this->target, abstractErrorPages["404"]);
+        return new NotFound404(this->target, this->config.errorPages["404"]);
     }
     
     std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << std::endl;
@@ -39,7 +34,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             }
             else {
                 std::cout << RED_TEXT << "autoindex: off" << RESET_COLOR << std::endl;
-                return new Forbidden403(abstractErrorPages["403"]);
+                return new Forbidden403(this->config.errorPages["403"]);
             }
         }
     }
@@ -52,7 +47,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             return new OK200(this->resourcesWithRoot);
         }
     }
-    return new NotFound404(this->target, abstractErrorPages["404"]);
+    return new NotFound404(this->target, this->config.errorPages["400"]);
 }
 
 

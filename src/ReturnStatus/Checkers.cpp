@@ -103,7 +103,7 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
 
     //iterate until finding a match location
     for (std::list<std::string>::iterator extractedRoutesIt = extractedRoutes.begin(); extractedRoutesIt != extractedRoutes.end(); ++extractedRoutesIt) {
-        for (std::map<std::string, mp>::iterator locationsIt = config.srvConf[0].rout.begin(); locationsIt != config.srvConf[0].rout.end(); ++locationsIt) {
+        for (std::map<std::string, mp>::iterator locationsIt = config.rout.begin(); locationsIt != config.rout.end(); ++locationsIt) {
             confLocation = trim(locationsIt->first);
             if (*extractedRoutesIt == confLocation)
             {
@@ -205,5 +205,13 @@ bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
 
 
 bool    HttpRequestChecker::checkLocationSupportUpload() {
+    return false;
+}
+
+bool    HttpRequestChecker::CheckDeleteDirContent() {
+    return false;
+}
+
+bool    HttpRequestChecker::checkWriteAccessOnDir() {
     return false;
 }

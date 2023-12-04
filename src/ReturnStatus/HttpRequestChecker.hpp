@@ -2,9 +2,10 @@
 #include "webserv.hpp"
 
 // #include "RequestData.hpp"
-class Config;
+// class Config;
 class RequestData;
 class AResponseMessage;
+class   ServConf;
 
 class HttpRequestChecker {
     private:
@@ -29,17 +30,18 @@ class HttpRequestChecker {
         bool        CheckDeleteDirContent();
         bool        checkWriteAccessOnDir();
         bool        checkLocationSupportUpload();
-        Config      &config;
+        // Config      &config;
+        ServConf    &config;
         std::map<std::string, std::string> location;
     public:
         RequestData &requestData;
-        HttpRequestChecker(RequestData &requestData, Config &config);
+        HttpRequestChecker(RequestData &requestData, ServConf &servConf);
         std::string getStatusCode();
         void        createHttpHeader();
         
         AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
-        void                handleDeleteMethod();
+        AResponseMessage    *handleDeleteMethod();
 };
 

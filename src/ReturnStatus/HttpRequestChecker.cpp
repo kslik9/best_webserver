@@ -1,6 +1,6 @@
 #include "HttpRequestChecker.hpp"
 
-HttpRequestChecker::HttpRequestChecker(RequestData &requestData, Config &config) : requestData(requestData), config(config) {
+HttpRequestChecker::HttpRequestChecker(RequestData &requestData, ServConf &servConf) : requestData(requestData), config(servConf) {
     this->target = requestData.getUri();
     this->method = requestData.getMethod();
 }
@@ -39,8 +39,8 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     
     //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) {
-        std::cout << RED_TEXT << "not matched" << RESET_COLOR << std::endl;
-        return new NotFound404(this->target, abstractErrorPages["404"]);
+        std::cout << RED_TEXT << "Not matched" << RESET_COLOR << std::endl;
+        return new NotFound404(this->target, this->config.errorPages["404"]);
     }
     if (checkLocationHasRedirection()) {
         std::cout << BLUE_TEXT << "redirected" << RESET_COLOR << std::endl;
@@ -51,7 +51,7 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     std::string allowedMethods;
     if (!checkMethodAllowed(allowedMethods)) {
         std::cout << RED_TEXT << "method not allowed hh" << location["root"] << RESET_COLOR << std::endl;
-        return new MethodNotAllowed405(allowedMethods);
+        return new MethodNotAllowed405(allowedMethods, this->config.errorPages["405"]);
     }
 
 
@@ -61,7 +61,8 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
         return handleGetMethod();
     else if (method == "POST")
         return handlePostMethod();
+    else if (method == "DELETE")
+        return handleDeleteMethod();
 
-    return new NotFound404(this->target, abstractErrorPages["404"]);
-    //return the created http response message
+    return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
 }

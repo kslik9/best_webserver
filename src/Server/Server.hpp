@@ -2,28 +2,25 @@
 #define SERVER_HPP
 
 #include "webserv.hpp"
-// #include "../ReturnStatus/ReturnStatus.hpp"
 
-class Config;
-class HttpMessageChecker;
+class	HttpMessageChecker;
+class	ServConf;
+class	Config;
 
-// #include <multimap>
 class Server
 {
 	private:
-		Config								&config;
-		sockaddr_in							serverAddress;
-		std::vector<int>					serverSocketsFd;
+		sockaddr_in								serverAddress;
+		std::vector<int>						serverSocketsFd;
 		std::multimap<std::string, std::string>	portsAndHosts;
+		std::vector<ServConf>					conf;
 	public:
-		Server(Config &config);
-		Server(Server const &src);
+		Server();
 		~Server();
-		void start();
+		void start(Config &mainConf);
 		void waitClients();
-		Config getConfig() const;
 		sockaddr_in getServer_address() const;
-		std::string buildHttpResponse(std::string &request);
+		std::string buildHttpResponse(int socketIndex, std::string request);
 		Server &operator=(Server const &rhs);
 		void	setServerAddress(unsigned short &port, std::string &hostName);
 };
