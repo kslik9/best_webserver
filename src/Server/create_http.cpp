@@ -110,14 +110,31 @@ bool LocationIncludesCgi() {
 }
 
 
+// --------------------------------------------
+// POST /upload.php HTTP/1.1
+// Host: localhost:8080
+// User-Agent: curl/7.64.1
+// Accept: */*
+// Content-Length: 27
+// Content-Type: application/x-www-form-urlencoded
+// 
+// param1=value1&param2=value2
+// --------------------------------------------
+
 // #include "HttpMessage.hpp"
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
-std::string Server::buildHttpResponse(std::string requestStr)
+std::string Server::buildHttpResponse(std::string &requestStr)
 {
-    int         fileStat;
-
+    int fileStat;
     //request data
     RequestData request(requestStr);
+    // 
+    std::cout << request << std::endl;
+    CGIHandler handler(request);
+    std::string resp = handler.process();
+    std::cout << resp << std::endl;
+    exit(1);
+    // 
     AResponseMessage *createdResponse;
     std::string responseMessage;
     //http request checker
@@ -125,15 +142,10 @@ std::string Server::buildHttpResponse(std::string requestStr)
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
     delete createdResponse;
-
-
     return responseMessage;
-
+    // 
     //after checking the request we create a response
     // HttpResponseMsgCreator response(request);
-
-
-
     // if (target == "/")
     //     target = "index.html";
     // std::string mime_type = get_mime_type(target), response;

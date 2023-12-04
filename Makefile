@@ -11,7 +11,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/OK200.cpp \
 				src/ReturnStatus/Response/Forbidden403.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \
-				src/CGI/cgi.cpp \
+				src/CGI/cgi.cpp src/CGIHandler/CGIHandler.cpp \
 				src/Config/ServConf.cpp 
 
 OBJS		:= $(SRCS:.cpp=.o)
