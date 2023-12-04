@@ -1,7 +1,10 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
-
+#include "ServConf.hpp"
 #include "webserv.hpp"
+#include <set>
+class ServConf;
+
 typedef std::vector<std::string> vec;
 typedef std::map<std::string, std::string> mp;
 
@@ -21,18 +24,6 @@ struct locate
 
 typedef std::map<std::string, mp > map_last;
 
-struct serv_conf
-{
-	std::string host;
-	long long port;
-	mp errorPages;
-	std::string name;
-	long long clientBodyLimit;
-	mp routes; 
-	mp rout2;
-	map_last rout;
-	std::vector<std::string> my_data;
-};
 
 class Config
 {
@@ -40,12 +31,13 @@ class Config
 		Config();
 		Config(Config const &src);
 		Config(std::string conf);
+		void parsePort(int i);
 		~Config();
 		Config &operator=(Config const &rhs);
 		// 
 		int 	how_mn_servers();
 		void filldata();
-		void display_all(serv_conf srvConf);
+		void display_all(ServConf srvConf);
 		int servers_number;
 		void parse_error(int i);
 		unsigned int getPort() const;
@@ -55,7 +47,7 @@ class Config
 		void parseLocation(int i);
 		std::string value_fo_loca(vec::iterator it);
 		void parseConf();
-		std::vector<serv_conf> srvConf; 
+		std::vector<ServConf> srvConf; 
 	private:
 		static const int arr = 10;
 		std::vector<std::string> raw_data;
