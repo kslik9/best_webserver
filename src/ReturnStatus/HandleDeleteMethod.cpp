@@ -1,17 +1,16 @@
 #include "HttpRequestChecker.hpp"
 
-void HttpRequestChecker::handleDeleteMethod() {
+AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
 
     if(!checkContentExistsInRoot()) {
-        //create 404 Not Found
-        //this->statusCode = 404
-        //this->statusMessage = Not Found
-        //return
+        std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
+        return new NotFound404(this->target, this->config.errorPages["404"]);
     }
 
-    //we check if the uri is dir (has '/' at end)
+    std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << std::endl;
+    //we check if the uri is dir
     if (checkContentIsDir()) {
-
+        std::cout << BLUE_TEXT << this->resourcesWithRoot << " is a dir" << RESET_COLOR << std::endl;
         if (!checkDirIndedWithBackSlash()) {
             //creeate 409 conflict
             //return;
@@ -56,4 +55,6 @@ void HttpRequestChecker::handleDeleteMethod() {
             //204 No Content
         }
     }
+
+    return new NotFound404(this->target, this->config.errorPages["404"]);
 }

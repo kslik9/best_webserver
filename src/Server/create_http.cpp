@@ -123,55 +123,20 @@ bool LocationIncludesCgi() {
 
 // #include "HttpMessage.hpp"
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
-std::string Server::buildHttpResponse(std::string &requestStr)
+std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 {
-    int fileStat;
+    int         fileStat;
+
+    // std::cout << "socket index: " << socketIndex << std::endl;
+
     //request data
-    RequestData request(requestStr);
-    // 
-    std::cout << request << std::endl;
-    CGIHandler handler(request);
-    std::string resp = handler.process();
-    std::cout << resp << std::endl;
-    exit(1);
-    // 
-    AResponseMessage *createdResponse;
-    std::string responseMessage;
+    RequestData         request(requestStr);
+    AResponseMessage    *createdResponse;
+    std::string         responseMessage;
     //http request checker
-    HttpRequestChecker hm(request, config);
+    HttpRequestChecker  hm(request, conf.at(socketIndex));
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
     delete createdResponse;
     return responseMessage;
-    // 
-    //after checking the request we create a response
-    // HttpResponseMsgCreator response(request);
-    // if (target == "/")
-    //     target = "index.html";
-    // std::string mime_type = get_mime_type(target), response;
-    // std::stringstream header;
-    // header << "HTTP/1.1 200 OK\r\n"
-    //        << "Content-Type: " << mime_type << "\r\n"
-    //        << "\r\n";
-    // response = header.str();
-    // fileStat = access((STATIC_HTTP + target).c_str(), F_OK);
-
-    // HttpMessage.createHttpHeader();
-
-    // checkRequestAndReturnHttpMessage(method, target);
-
-    // if (access((STATIC_HTTP + target).c_str(), F_OK))
-        // return rs.notFound_404();
-    // else if (access((STATIC_HTTP + target).c_str(), R_OK))
-    //     return rs.forbidden_403();
-    // //open the file
-    // std::ifstream file((STATIC_HTTP + target).c_str(), std::ios::binary);
-    // if (!file.is_open())
-    //     return rs.notFound_404();
-    // std::ostringstream fileContent;
-    // fileContent << file.rdbuf();
-    // response += fileContent.str();
-    // response += execute_php("php/index.php"); // CGI
-    std::string responsee;
-    return responsee;
 }

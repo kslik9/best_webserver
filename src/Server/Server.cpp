@@ -4,21 +4,21 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Server::Server(const Server &src) : config(src.config)
-{
+Server::Server() {
+
 }
 
-Server::Server(Config &config) : config(config)
-{
-	std::cout << "Config loaded at the server" << std::endl;
-}
+
+
 
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
 
-Server::~Server()
-{
+Server::~Server() {
+	conf.clear();
+	serverSocketsFd.clear();
+	portsAndHosts.clear();
 }
 
 /*
@@ -51,7 +51,7 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 	if (getaddrinfo(hostName.c_str(), portCharPtr, &hints, &res) != 0) {
-		std::cout << "getaddrifo() error" << std::endl;
+		std::cout << "getaddrinfo() error" << std::endl;
 		return;
 	}
 	
@@ -64,7 +64,7 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	freeaddrinfo(res);
 }
 
-void Server::start() {
+void Server::start(Config &mainConf) {
 	int	serverSocketFd;
 	unsigned short	port;
 	std::string hostName;
@@ -74,10 +74,11 @@ void Server::start() {
 	int opt = 1;
 	int socketIndex = 0;
 
-	for (int i = 0; i < config.how_mn_servers(); i++) {
-		for (portsIt = config.srvConf[i].ports.begin(); portsIt != config.srvConf[i].ports.end(); portsIt++) {
+	for (int i = 0; i < mainConf.how_mn_servers(); i++) {
+		// std::cout << "conf: " << mainConf.srvConf.at(i).name << std::endl;
+		for (portsIt = mainConf.srvConf[i].ports.begin(); portsIt != mainConf.srvConf[i].ports.end(); portsIt++) {
 			port = *portsIt;
-			hostName = config.srvConf[i].name;
+			hostName = mainConf.srvConf[i].name;
 			
 			int opt = 1;
 			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
@@ -88,6 +89,8 @@ void Server::start() {
 
 			//setnonblocking
 			setNonBlocking(this->serverSocketsFd[socketIndex]);
+
+			
 			if (this->serverSocketsFd[i] < 0) {
 			logger.Log(ERROR, "Error creating server socket");
 			throw std::runtime_error("Error creating server socket");
@@ -115,6 +118,10 @@ void Server::start() {
 				logger.Log(ERROR, "Error listening on socket");
 				throw std::runtime_error("Error listening on socket port " + std::to_string(port));
 			}
+
+			//include serv conf to each socket
+			conf.push_back(mainConf.srvConf[i]);
+
 			// -----------------------------------------------------
 			std::cout << GREEN_TEXT << "Server is listening on "
 					<< hostName
@@ -130,9 +137,10 @@ void Server::waitClients()
 	int closeConnection;
 	std::vector<struct pollfd> fds;
 	int rc;
+	struct pollfd 	tempPollFd;
+	int				currentPortInex;
 	int endServer = false;
 	int clientSd = -1;
-	struct pollfd tempPollFd;
 
 	//init pollfds fds with server sockets
 	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
@@ -161,20 +169,22 @@ void Server::waitClients()
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
 				//this is a listening socket and it's redable
-					struct sockaddr_in client_addr;
-					socklen_t client_addr_len = sizeof(client_addr);
-					clientSd = accept(fds[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
-					if (clientSd < 0)
-					{
-						std::cerr << "accept() failed\n";
-						endServer = true;
-						break;
-					}
-					//add new incoming connection to the pollfd
-					std::cout << "new incoming connection " << clientSd << std::endl;
-					tempPollFd.fd = clientSd;
-					tempPollFd.events = POLLIN;
-					fds.push_back(tempPollFd);
+				struct sockaddr_in client_addr;
+				socklen_t client_addr_len = sizeof(client_addr);
+				clientSd = accept(fds[i].fd, (struct sockaddr *)&client_addr, &client_addr_len);
+				if (clientSd < 0)
+				{
+					std::cerr << "accept() failed\n";
+					endServer = true;
+					break;
+				}
+				//add new incoming connection to the pollfd
+				std::cout << "new incoming connection " << clientSd << std::endl;
+				tempPollFd.fd = clientSd;
+				tempPollFd.events = POLLIN;
+				fds.push_back(tempPollFd);
+
+				currentPortInex =  i;
 			}
 
 			//not a listening socket and it's readable
@@ -198,7 +208,7 @@ void Server::waitClients()
 					std::cout << "bytes received: " << bytesReceived << std::endl;
 
 					std::string str_buffer(buffer);
-					std::string http_resp = buildHttpResponse(str_buffer);
+					std::string http_resp = buildHttpResponse(currentPortInex, str_buffer);
 					//send response to client
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					if (rc < 0) {
@@ -223,10 +233,6 @@ void Server::waitClients()
 ** --------------------------------- ACCESSOR ---------------------------------
 */
 
-
-Config Server::getConfig() const {
-	return this->config;
-}
 
 sockaddr_in Server::getServer_address() const {
 	return this->serverAddress;

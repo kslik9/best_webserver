@@ -15,8 +15,8 @@ int main(int argc, char const *argv[])
         }
         Config config(argv[1]);
 
-        Server server(config);
-        server.start();
+        Server server;
+        server.start(config);
         server.waitClients();
         
     }

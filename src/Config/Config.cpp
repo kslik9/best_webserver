@@ -137,13 +137,13 @@ void Config::display_all(ServConf srvConf)
 		}
 		std::cout << std::endl;
 		std::cout << "the error pages is [";
-		mp::iterator p = srvConf.errorPages.begin();
-		while(p != srvConf.errorPages.end())
-		{
-			std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
-			*p++;
-		}
-		 std::cout << "]" <<std::endl;
+		// mp::iterator p = srvConf.errorPages.begin();
+		// while(p != srvConf.errorPages.end())
+		// {
+		// 	std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
+		// 	*p++;
+		// }
+		// std::cout << "]" <<std::endl;
 		std::cout << "the name is " << srvConf.name << std::endl;
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
