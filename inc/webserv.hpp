@@ -47,10 +47,6 @@
 #include "../src/CGIHandler/CGIHandler.hpp"
 
 
-
-
-
- 
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_HTTP "static/http/"
@@ -65,7 +61,7 @@
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
 #define ROOT_FOLDER "/Users/ylabrahm/Desktop/webserv/var/www/html"
-
+#define PATH "/Users/ylabrahm/goinfre/homebrew/bin:/Users/ylabrahm/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
 
 class ReturnStatus;
 // Function prototypes
