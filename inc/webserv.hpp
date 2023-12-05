@@ -41,6 +41,9 @@
 #include "../src/ReturnStatus/Response/MovedPermanently301.hpp"
 #include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"
 #include "../src/ReturnStatus/Response/Forbidden403.hpp"
+#include "../src/ReturnStatus/Response/Conflict409.hpp"
+#include "../src/ReturnStatus/Response/NoContent204.hpp"
+#include "../src/ReturnStatus/Response/InternalServerError500.hpp"
 #include "../src/ReturnStatus/Response/OK200.hpp"
 
 // 
@@ -50,9 +53,7 @@
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_HTTP "static/http/"
-#define STATIC_404 "static/default_errors/404.html"
-#define STATIC_403 "static/default_errors/403.html"
-#define STATIC_409 "static/default_errors/409.html"
+
 #define CLIENTS_COUNT 4000
 #define RESET_COLOR "\033[0m"
 #define BLUE_TEXT "\033[1;34m"
@@ -60,8 +61,8 @@
 #define GREEN_TEXT "\033[1;32m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
-#define ROOT_FOLDER "/Users/ylabrahm/Desktop/webserv/var/www/html"
-#define PATH "/Users/ylabrahm/goinfre/homebrew/bin:/Users/ylabrahm/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
+#define ROOT_FOLDER "/Users/aessaoud/Desktop/webserv/var/www/html"
+#define PATH "/Users/aessaoud/goinfre/homebrew/bin:/Users/aessaoud/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
 
 class ReturnStatus;
 // Function prototypes

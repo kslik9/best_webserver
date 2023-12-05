@@ -1,19 +1,19 @@
-#include "MethodNotAllowed405.hpp"
+#include "NoContent204.hpp"
 
-MethodNotAllowed405::MethodNotAllowed405(std::string &allowedMethods, std::string &errorPath) {
-    this->statusCode = "405";
-    this->statusMessage = "Method Not Allowed";
-    this->headers["Allow"] = allowedMethods;
-    this->headers["Content-Type"] = "text/html";
+NoContent204::NoContent204(std::string &errorPath) {
+    this->statusCode = "204";
+    this->statusMessage = "No Content";
     this->headers["Date"] = getCurrentTime();
+    this->headers["Content-Type"] = "text/plain";
+
 
     if (!access(errorPath.c_str(), F_OK | R_OK))
         this->errorPath = errorPath;
     else
-        this->errorPath = STATIC_405;
+        this->errorPath = STATIC_204;
 }
 
-std::string MethodNotAllowed405::createResponse() {
+std::string NoContent204::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;
     response << startLine;
@@ -26,6 +26,5 @@ std::string MethodNotAllowed405::createResponse() {
     std::ostringstream fileContent;
     fileContent << file1.rdbuf();
     response << fileContent.str();
-    
     return response.str();
 }

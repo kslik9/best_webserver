@@ -50,7 +50,7 @@ AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
     //check if the method allowed in location
     std::string allowedMethods;
     if (!checkMethodAllowed(allowedMethods)) {
-        std::cout << RED_TEXT << "method not allowed hh" << location["root"] << RESET_COLOR << std::endl;
+        std::cout << RED_TEXT << "method not allowed hh " << location["root"] << RESET_COLOR << std::endl;
         return new MethodNotAllowed405(allowedMethods, this->config.errorPages["405"]);
     }
 
