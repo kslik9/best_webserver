@@ -92,8 +92,8 @@ void Server::start(Config &mainConf) {
 
 			
 			if (this->serverSocketsFd[i] < 0) {
-			logger.Log(ERROR, "Error creating server socket");
-			throw std::runtime_error("Error creating server socket");
+				logger.Log(ERROR, "Error creating server socket");
+				throw std::runtime_error("Error creating server socket");
 			}
 
 			// this solves the error of binding by reusing address
@@ -180,6 +180,7 @@ void Server::waitClients()
 				}
 				//add new incoming connection to the pollfd
 				std::cout << "new incoming connection " << clientSd << std::endl;
+				// setNonBlocking(clientSd);
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);

@@ -12,31 +12,39 @@ AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
     if (checkContentIsDir()) {
         std::cout << BLUE_TEXT << this->resourcesWithRoot << " is a dir" << RESET_COLOR << std::endl;
         if (!checkDirIndedWithBackSlash()) {
-            //creeate 409 conflict
-            //return;
+            std::cout << GREEN_TEXT << this->resourcesWithRoot << " Not ended with /" << RESET_COLOR << std::endl;
+            return new Conflict409(this->config.errorPages["409"]);
         }
         else {
-            //location includes cgi
+            std::cout << RED_TEXT << this->resourcesWithRoot << " ended with /" << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
+                std::cout << GREEN_TEXT << "location icnludes cgi" << RESET_COLOR << std::endl;
                 if (!checkIndexFilesInDir()) {
-                    //create 403 Forbidden
+                    std::cout << RED_TEXT << "no index file on dir" << RESET_COLOR << std::endl;
+                    return new Forbidden403(this->config.errorPages["403"]);
                 }
                 else {
+                    std::cout << GREEN_TEXT << "there is index file on dir" << RESET_COLOR << std::endl;
                     //run cgi on requested file with DELETE request_method
                 }
             }
             //location doesn't include cgi
             else {
-                if (CheckDeleteDirContent()) {
-                    //create 205 No Content
+                std::cout << RED_TEXT << "location doesn't include cgi" << RESET_COLOR << std::endl;
+                if (deleteDirContent()) {
+                    std::cout << GREEN_TEXT << "content on dir deleted" << RESET_COLOR << std::endl;
+                    return new NoContent204(this->config.errorPages["204"]);
                 }
                 //in case of unable to clear the folder content
                 else {
-                    if (checkWriteAccessOnDir()) {
-                        //create Internal Server Error
+                    std::cout << RED_TEXT << "unable to clear dir" << RESET_COLOR << std::endl;
+                    if (!checkWriteAccessOnDir()) {
+                        std::cout << RED_TEXT << "write access is not allowed" << RESET_COLOR << std::endl;
+                        return new Forbidden403(this->config.errorPages["403"]);
                     }
                     else {
-                        //create 403 Forbidden
+                        std::cout << GREEN_TEXT << "write access is allowed" << RESET_COLOR << std::endl;
+                        return new InternalServerError500(this->config.errorPages["500"]);
                     }
                 }
 
@@ -46,13 +54,14 @@ AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
     }
     //we request a file here
     else {
+        std::cout << BLUE_TEXT << this->resourcesWithRoot << " is a dir" << RESET_COLOR << std::endl;
         if (checkLocationIncludesCgi()) {
             //run cgi on requested file with DELETE request method
         }
         //requested location doesn't have cgi
         else {
-            //delete the file
-            //204 No Content
+            deleteFile();
+            return new NoContent204(this->config.errorPages["204"]);
         }
     }
 

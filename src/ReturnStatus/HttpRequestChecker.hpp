@@ -27,12 +27,12 @@ class HttpRequestChecker {
         bool        checkAutoIndexOn();
         bool        checkLocationIncludesCgi();
         bool        checkDirIndedWithBackSlash();
-        bool        CheckDeleteDirContent();
+        bool        deleteDirContent();
         bool        checkWriteAccessOnDir();
         bool        checkLocationSupportUpload();
-        // Config      &config;
         ServConf    &config;
         std::map<std::string, std::string> location;
+        bool        deleteFile();
     public:
         RequestData &requestData;
         HttpRequestChecker(RequestData &requestData, ServConf &servConf);
