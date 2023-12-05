@@ -195,7 +195,7 @@ bool    HttpRequestChecker::checkAutoIndexOn() {
 
 bool    HttpRequestChecker::checkLocationIncludesCgi() {
     //check if the location include cgi configurations
-    return false;
+    return true;
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
