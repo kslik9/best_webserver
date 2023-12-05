@@ -208,10 +208,15 @@ bool    HttpRequestChecker::checkLocationSupportUpload() {
     return false;
 }
 
-bool    HttpRequestChecker::CheckDeleteDirContent() {
-    return false;
+bool    HttpRequestChecker::deleteDirContent() {
+    std::cout << this->resourcesWithRoot << "d" << std::endl;
+    return true;
 }
 
 bool    HttpRequestChecker::checkWriteAccessOnDir() {
     return false;
+}
+
+bool    HttpRequestChecker::deleteFile() {
+    return true;
 }

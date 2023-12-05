@@ -15,10 +15,13 @@
 
 // Consts
 #define BUFFER_SIZE (1024 * 1024) // 1MB
+#define STATIC_204 "static/default_errors/204.html"
 #define STATIC_403 "static/default_errors/403.html"
 #define STATIC_404 "static/default_errors/404.html"
 #define STATIC_405 "static/default_errors/405.html"
 #define STATIC_409 "static/default_errors/409.html"
+#define STATIC_500 "static/default_errors/500.html"
+
 
 class AResponseMessage {
     protected:

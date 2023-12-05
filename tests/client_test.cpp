@@ -7,6 +7,7 @@ int sendRequest()
 {
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
+    static int i = 0;
     std::string message = "GET / HTTP/1.1\r\nHost: 0.0.0.0:8080\r\nConnection: close\r\n\r\n";
     char buffer[1024] = {0};
 
@@ -38,7 +39,7 @@ int sendRequest()
 int main() 
 {
     fork();
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 2; i++)
     {
         sendRequest();
         // system("curl localhost:8080");
