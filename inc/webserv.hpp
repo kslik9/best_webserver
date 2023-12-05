@@ -45,6 +45,8 @@
 #include "../src/ReturnStatus/Response/NoContent204.hpp"
 #include "../src/ReturnStatus/Response/InternalServerError500.hpp"
 #include "../src/ReturnStatus/Response/OK200.hpp"
+#include "../src/ReturnStatus/Response/ResponseFromCgi.hpp"
+
 
 // 
 #include "../src/CGIHandler/CGIHandler.hpp"
@@ -61,18 +63,7 @@
 #define GREEN_TEXT "\033[1;32m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
-#define ROOT_FOLDER "/Users/aessaoud/Desktop/webserv/var/www/html"
+// #define ROOT_FOLDER "/Users/aessaoud/Desktop/projects/webserv/var/www/html"
 #define PATH "/Users/aessaoud/goinfre/homebrew/bin:/Users/aessaoud/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
 
 class ReturnStatus;
-// Function prototypes
-void ft_handle_client(int client_fd);
-std::string buildHttpResponse(std::string &method, std::string &target, ReturnStatus &rs);
-void parse_request(const std::string &request, std::string &method, std::string &target, std::string &httpVersion);
-int CreateServerSocket();
-int waitClients(int serverSocket);
-
-std::string execute_php(std::string file);
-
-// global variables
-

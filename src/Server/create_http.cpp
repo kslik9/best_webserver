@@ -143,7 +143,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     // return php_resp;
     // 
     AResponseMessage *createdResponse;
-    std::string responseMessage;
+    std::string     responseMessage;
     //http request checker
     HttpRequestChecker  hm(request, conf.at(socketIndex));
     createdResponse = hm.checkRequestAndReturnHttpMessage();
