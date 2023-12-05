@@ -1,5 +1,5 @@
 #include "Server.hpp"
-
+#include <cerrno>
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
@@ -187,6 +187,7 @@ void Server::waitClients()
 				currentPortInex =  i;
 			}
 
+			// if (pollfd[i].revents & POLLOUT)
 			//not a listening socket and it's readable
 			else {
 				std::cout << "fd " << fds[i].fd << " is readable" << std::endl;
@@ -195,7 +196,7 @@ void Server::waitClients()
 					char *buffer = new char[BUFFER_SIZE];
 					ssize_t bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
 					if (bytesReceived < 0) {
-						std::cout << "recv() failed\n";
+						// std::cout << "recv() failed\n";
 						closeConnection = true;
 						break;
 					}
