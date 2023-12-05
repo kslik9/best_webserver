@@ -12,11 +12,12 @@ AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
     if (checkContentIsDir()) {
         std::cout << BLUE_TEXT << this->resourcesWithRoot << " is a dir" << RESET_COLOR << std::endl;
         if (!checkDirIndedWithBackSlash()) {
-            //creeate 409 conflict
-            //return;
+            std::cout << GREEN_TEXT << this->resourcesWithRoot << " Not ended with /" << RESET_COLOR << std::endl;
+            return new Conflict409(this->config.errorPages["409"]);
         }
         else {
             //location includes cgi
+            std::cout << RED_TEXT << this->resourcesWithRoot << " is not ended with /" << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
                 if (!checkIndexFilesInDir()) {
                     //create 403 Forbidden

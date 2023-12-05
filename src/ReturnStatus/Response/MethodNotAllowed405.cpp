@@ -10,7 +10,7 @@ MethodNotAllowed405::MethodNotAllowed405(std::string &allowedMethods, std::strin
     if (!access(errorPath.c_str(), F_OK | R_OK))
         this->errorPath = errorPath;
     else
-        this->errorPath = STATIC_404;
+        this->errorPath = STATIC_405;
 }
 
 std::string MethodNotAllowed405::createResponse() {
