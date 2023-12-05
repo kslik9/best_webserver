@@ -23,6 +23,7 @@ public:
 	void init_env(RequestData request);
 	// 
 private:
+	std::map<std::string, std::string> keyValue;
 	std::vector<const char *> env_vec;
 };
 

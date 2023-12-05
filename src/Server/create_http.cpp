@@ -123,20 +123,30 @@ bool LocationIncludesCgi() {
 
 // #include "HttpMessage.hpp"
 // std::string Server::buildHttpResponse(std::string &method, std::string &target)
+
 std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 {
     int         fileStat;
+    std::string php_resp;
 
-    // std::cout << "socket index: " << socketIndex << std::endl;
-
-    //request data
-    RequestData         request(requestStr);
-    AResponseMessage    *createdResponse;
-    std::string         responseMessage;
-    //http request checker
-    HttpRequestChecker  hm(request, conf.at(socketIndex));
-    createdResponse = hm.checkRequestAndReturnHttpMessage();
-    responseMessage = createdResponse->createResponse();
-    delete createdResponse;
-    return responseMessage;
+    // ------------------------------------------
+    php_resp += "HTTP/1.1 200 OK\r\n";
+    php_resp += "Content-Type: text/html\r\n";
+    // ------------------------------------------
+    RequestData request(requestStr);
+    // 
+    // system("clear");
+    std::cout << "------------------------------------------------------\n";
+    CGIHandler handler(request);
+    std::string resp = handler.process();
+    php_resp += resp;
+    return php_resp;
+    // 
+    // AResponseMessage *createdResponse;
+    // std::string responseMessage;
+    // //http request checker
+    // HttpRequestChecker  hm(request, conf.at(socketIndex));
+    // createdResponse = hm.checkRequestAndReturnHttpMessage();
+    // responseMessage = createdResponse->createResponse();
+    // delete createdResponse;
 }
