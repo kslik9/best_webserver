@@ -41,7 +41,8 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
     else {
         std::cout << BLUE_TEXT << "`" << this->resourcesWithRoot << "` is a file" << RESET_COLOR << std::endl;
         if (checkLocationIncludesCgi()) {
-            //run cgi on requested file with GET request method
+            std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+            return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
             return new OK200(this->resourcesWithRoot);
