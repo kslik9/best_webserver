@@ -3,11 +3,11 @@
 
 #include "webserv.hpp"
 
-typedef struct
-{
-    std::string path;
-    std::ifstream *file_stream;
-} php_script;
+// typedef struct
+// {
+//     std::string path;
+//     std::ifstream *file_stream;
+// } php_script;
 
 class CGIHandler
 {

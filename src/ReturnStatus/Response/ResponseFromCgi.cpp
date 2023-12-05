@@ -1,9 +1,12 @@
 #include "ResponseFromCgi.hpp"
 
-void    ResponseFromCgi::init_env(RequestData request) {
+void    ResponseFromCgi::init_env(RequestData request, std::string const &root) {
     // URI: /blog/post/index.php
 	std::cout << "\n-----------------------------------------------------\n";
-	std::string targetFile, folder, root_folderStr(ROOT_FOLDER);
+
+
+	// std::string targetFile, folder, root_folderStr(ROOT_FOLDER);
+	std::string targetFile, folder, root_folderStr(root);
 	size_t lastSlashPos = request.getUri().rfind('/');
 	if (lastSlashPos != std::string::npos) {
 		folder = request.getUri().substr(0, lastSlashPos);
@@ -17,7 +20,7 @@ void    ResponseFromCgi::init_env(RequestData request) {
 	this->keyValue["SCRIPT_FILENAME"] = root_folderStr + "/" + request.getUri();
 	this->keyValue["REQUEST_METHOD"] = request.getMethod();
 	this->keyValue["DOCUMENT_ROOT"] = root_folderStr;
-	this->keyValue["PATH"] = PATH;
+	// this->keyValue["PATH"] = PATH;
 	this->keyValue["SERVER_NAME"] = "0.0.0.0";
 	this->keyValue["SERVER_PORT"] = "8081";
 	this->keyValue["GETAWAY_INTERFACE"] = "CGI/1.1";
@@ -32,8 +35,8 @@ void    ResponseFromCgi::init_env(RequestData request) {
 	this->keyValue["QUERY_STRING"] = "";
 }
 
-ResponseFromCgi::ResponseFromCgi(RequestData &rq) : rq(rq)  {
-    this->init_env(rq);
+ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root) : rq(rq)  {
+    this->init_env(rq, root);
     this->headers["Content-Type"] = "text/html";
     this->headers["Date"] = getCurrentTime();
     this->statusCode = "200";
@@ -132,6 +135,5 @@ std::string ResponseFromCgi::createResponse() {
     
     std::string php_resp = this->process();
     response << php_resp;
-
-    return response.str();
+    return response.str(); 
 }

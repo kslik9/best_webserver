@@ -144,7 +144,7 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
 
 //check if the content is exist in in root
 bool    HttpRequestChecker::checkContentExistsInRoot() {
-    this->resourcesWithRoot = location["root"] + this->resources;
+    this->resourcesWithRoot = this->location["root"] + this->resources;
     // std::cout << "rw: " << this->resourcesWithRoot << std::endl;
     // std::cout << "r : " << this->resources << std::endl;
     // std::cout << "ta: " << this->target << std::endl;
