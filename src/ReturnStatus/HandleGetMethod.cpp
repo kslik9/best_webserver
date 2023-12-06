@@ -1,6 +1,6 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handleGetMethod() {
+AResponseMessage    *HttpRequestFlow::handleGetMethod() {
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
         return new NotFound404(this->target, this->config.errorPages["404"]);

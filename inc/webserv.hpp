@@ -34,7 +34,7 @@
 #include "../src/Server/Server.hpp"
 #include "../src/ReturnStatus/ReturnStatus.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
-#include "../src/ReturnStatus/HttpRequestChecker.hpp"
+#include "../src/ReturnStatus/HttpRequestFlow.hpp"
 
 #include "../src/ReturnStatus/Response/AResponseMessage.hpp"
 #include "../src/ReturnStatus/Response/NotFound404.hpp"

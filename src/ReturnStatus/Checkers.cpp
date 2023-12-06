@@ -1,6 +1,6 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-bool    HttpRequestChecker::checkNotAllowededChars() {
+bool    HttpRequestFlow::checkNotAllowededChars() {
     std::string allowedChars  = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 	unsigned int	targetLen = target.length();
 
@@ -11,13 +11,13 @@ bool    HttpRequestChecker::checkNotAllowededChars() {
 	return false;
 }
 
-bool    HttpRequestChecker::checkUriLength() {
+bool    HttpRequestFlow::checkUriLength() {
     if (target.length() > 2048)
 		return true;
 	return false;
 }
 
-bool    HttpRequestChecker::checkRequestHttpMessage() {
+bool    HttpRequestFlow::checkRequestHttpMessage() {
     //check if the request body is larger than cliant max body size in config file
     return false;
 }
@@ -92,7 +92,7 @@ std::list<std::string>  extractRoutes(std::string stringRoute) {
 }
 
 //check if there is any location match with the uri (target)
-bool    HttpRequestChecker::checkLocationMatchRequestUri() {
+bool    HttpRequestFlow::checkLocationMatchRequestUri() {
 
     std::string confLocation;
     std::list<std::string> extractedRoutes;
@@ -122,7 +122,7 @@ bool    HttpRequestChecker::checkLocationMatchRequestUri() {
     return false;
 }
 
-bool    HttpRequestChecker::checkLocationHasRedirection() {
+bool    HttpRequestFlow::checkLocationHasRedirection() {
     //check if the location have a redirection like return 301 /home/index.html
     // std::cout << location["redirect"] << "----\n";
     if (!this->location["redirect"].empty() && this->location["redirect"] != "none")
@@ -130,7 +130,7 @@ bool    HttpRequestChecker::checkLocationHasRedirection() {
     return false;
 }
 
-bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
+bool    HttpRequestFlow::checkMethodAllowed(std::string &allowedMethod) {
     if (location["method1"] == method || location["method2"] == method || location["method3"] == method || method == "HEAD")
         return true;
     allowedMethod += location["method1"] != "none" ? location["method1"]: "";
@@ -143,7 +143,7 @@ bool    HttpRequestChecker::checkMethodAllowed(std::string &allowedMethod) {
 
 
 //check if the content is exist in in root
-bool    HttpRequestChecker::checkContentExistsInRoot() {
+bool    HttpRequestFlow::checkContentExistsInRoot() {
     this->resourcesWithRoot = this->location["root"] + this->resources;
     // std::cout << "rw: " << this->resourcesWithRoot << std::endl;
     // std::cout << "r : " << this->resources << std::endl;
@@ -154,7 +154,7 @@ bool    HttpRequestChecker::checkContentExistsInRoot() {
     return false;
 }
 
-bool    HttpRequestChecker::checkContentIsDir() {
+bool    HttpRequestFlow::checkContentIsDir() {
     struct stat statBuf;
     if (stat(this->resourcesWithRoot.c_str(), &statBuf) != 0)
     {
@@ -165,7 +165,7 @@ bool    HttpRequestChecker::checkContentIsDir() {
 }
 
 //check if the directory has an index file
-bool    HttpRequestChecker::checkIndexFilesInDir() {
+bool    HttpRequestFlow::checkIndexFilesInDir() {
     //first check if there is index in conf
         //in case is exist check if it's exist in dir
         //else: check if there is index.html in directory
@@ -189,11 +189,11 @@ bool    HttpRequestChecker::checkIndexFilesInDir() {
 }
 
 //check if autoindex file is on
-bool    HttpRequestChecker::checkAutoIndexOn() {
+bool    HttpRequestFlow::checkAutoIndexOn() {
     return location["autoindex"] == "on";
 }
 
-bool    HttpRequestChecker::checkLocationIncludesCgi() {
+bool    HttpRequestFlow::checkLocationIncludesCgi() {
     
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
@@ -202,25 +202,25 @@ bool    HttpRequestChecker::checkLocationIncludesCgi() {
     return false;
 }
 
-bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
+bool    HttpRequestFlow::checkDirIndedWithBackSlash() {
     return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
 
 
 
-bool    HttpRequestChecker::checkLocationSupportUpload() {
+bool    HttpRequestFlow::checkLocationSupportUpload() {
     return false;
 }
 
-bool    HttpRequestChecker::deleteDirContent() {
+bool    HttpRequestFlow::deleteDirContent() {
     std::cout << this->resourcesWithRoot << "d" << std::endl;
     return true;
 }
 
-bool    HttpRequestChecker::checkWriteAccessOnDir() {
+bool    HttpRequestFlow::checkWriteAccessOnDir() {
     return false;
 }
 
-bool    HttpRequestChecker::deleteFile() {
+bool    HttpRequestFlow::deleteFile() {
     return true;
 }
