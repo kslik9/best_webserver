@@ -39,3 +39,4 @@ class AResponseMessage {
 };
 
 std::string getCurrentTime();
+std::string get_mime_type(const std::string &fileName);
