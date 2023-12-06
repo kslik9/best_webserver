@@ -109,10 +109,10 @@ std::string ResponseFromCgi::process() {
 		char buffer[4096];
 		ssize_t bytes_read;
 		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
-			// std::cout << "[[" << output.str() << "]]" << std::endl;
 			output.write(buffer, bytes_read);
+			std::cout << "[[" << output.str() << "]]" << std::endl;
 		}
-		std::cout << "[[" << output.str() << "]]\n";
+		// std::cout << "[[" << output.str() << "]]\n";
 		// output.write("\r\n", 2);
 		close(pipe_fd[0]);
 		int status;
@@ -125,38 +125,17 @@ std::string ResponseFromCgi::process() {
 
 
 std::string ResponseFromCgi::createResponse() {
-    // startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
+    startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
 
-    // std::map<std::string, std::string>::iterator it;
-    // response << startLine;
-    // // for (it = headers.begin(); it != headers.end(); ++it)
-    // //     response << it->first << ": " << it->second << "\r\n";
-    // // response << "\r\n";
-    // // response << "\r\n";
-    
-    // std::string php_resp = this->process();
-    // response << php_resp;
-    // return response.str(); 
-
-
-
-	int         fileStat;
-    std::string php_resp;
-
-    // ------------------------------------------
-    php_resp += "HTTP/1.1 200 OK\r\n";
-    // php_resp += "Content-Type: text/html\r\n";
-	std::map<std::string, std::string>::iterator it;
-    // response << startLine;
+    std::map<std::string, std::string>::iterator it;
+    response << startLine;
     // for (it = headers.begin(); it != headers.end(); ++it)
-    //     php_resp += (it->first + ": " + it->second + "\r\n");
-	// php_resp += "\r\n";
-    // // ------------------------------------------
-    // RequestData request(requestStr);
-    // 
-    // system("clear");
-    // std::cout << "------------------------------------------------------\n";
-    std::string resp = this->process();
-    php_resp += resp;
-    return php_resp;
+    //     response << it->first << ": " << it->second << "\r\n";
+    // response << "\r\n";
+    // response << "\r\n";
+    
+    std::string php_resp = this->process();
+    response << php_resp;
+    return response.str(); 
+
 }
