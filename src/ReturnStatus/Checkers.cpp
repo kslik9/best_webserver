@@ -194,7 +194,6 @@ bool    HttpRequestFlow::checkAutoIndexOn() {
 }
 
 bool    HttpRequestFlow::checkLocationIncludesCgi() {
-    
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
     if (this->location["cgi_extension"] != "none" && this->location["cgi_extension"] == ".php")
@@ -205,8 +204,6 @@ bool    HttpRequestFlow::checkLocationIncludesCgi() {
 bool    HttpRequestFlow::checkDirIndedWithBackSlash() {
     return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
-
-
 
 bool    HttpRequestFlow::checkLocationSupportUpload() {
     return false;

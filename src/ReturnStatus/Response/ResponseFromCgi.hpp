@@ -10,7 +10,6 @@ typedef struct
 
 class ResponseFromCgi : public AResponseMessage {
     private:
-        RequestData &rq;
         std::map<std::string, std::string> keyValue;
 	    std::vector<const char *> env_vec;
         void init_env(RequestData request, std::string const &root);
