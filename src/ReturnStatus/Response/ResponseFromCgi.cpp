@@ -2,7 +2,7 @@
 
 void    ResponseFromCgi::init_env(RequestData request, std::string const &root) {
     // URI: /blog/post/index.php
-	std::cout << "\n-----------------------------------------------------\n";
+	// std::cout << "\n-----------------------------------------------------\n";
 
 
 	// std::string targetFile, folder, root_folderStr(ROOT_FOLDER);
@@ -12,9 +12,9 @@ void    ResponseFromCgi::init_env(RequestData request, std::string const &root) 
 		folder = request.getUri().substr(0, lastSlashPos);
 		targetFile = request.getUri().substr(lastSlashPos + 1);
 	}
-	std::cout << "target: " << targetFile << "\n";
-	std::cout << "folder: " << folder << "\n";
-	std::cout << "\n\n\n-----------------------------------------------------\n";
+	// std::cout << "target: " << targetFile << "\n";
+	// std::cout << "folder: " << folder << "\n";
+	// std::cout << "\n\n\n-----------------------------------------------------\n";
 	this->keyValue["DOCUMENT_URI"] = folder;
 	this->keyValue["SCRIPT_NAME"] = "/" + targetFile;
 	this->keyValue["SCRIPT_FILENAME"] = root_folderStr + "/" + request.getUri();
@@ -35,7 +35,7 @@ void    ResponseFromCgi::init_env(RequestData request, std::string const &root) 
 	this->keyValue["QUERY_STRING"] = "";
 }
 
-ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root) : rq(rq)  {
+ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root) {
     this->init_env(rq, root);
     this->headers["Content-Type"] = get_mime_type(root);
     this->headers["Date"] = getCurrentTime();
@@ -92,8 +92,8 @@ std::string ResponseFromCgi::process() {
 	}
 	if (child_pid == 0) {
 		char **envs = mapToArr(this->keyValue);
-		for (size_t i = 0; envs[i]; i++)
-			std::cout << i << ":" << envs[i] << "\n";
+		// for (size_t i = 0; envs[i]; i++)
+		// 	std::cout << i << ":" << envs[i] << "\n";
 		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[1]);
@@ -110,7 +110,7 @@ std::string ResponseFromCgi::process() {
 		ssize_t bytes_read;
 		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
 			output.write(buffer, bytes_read);
-			std::cout << "[[" << output.str() << "]]" << std::endl;
+			// std::cout << "[[" << output.str() << "]]" << std::endl;
 		}
 		// std::cout << "[[" << output.str() << "]]\n";
 		// output.write("\r\n", 2);
