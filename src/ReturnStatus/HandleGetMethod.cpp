@@ -19,9 +19,11 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
         if (checkIndexFilesInDir()) {
             std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
-                //run cgi on requested file with GET request method
+                std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+                return new ResponseFromCgi(this->requestData, this->location["root"]);
             }
             else {
+                std::cout << GREEN_TEXT << "file served" << RESET_COLOR << std::endl;
                 return new OK200(this->resourcesWithRoot);
             }
         }
@@ -45,6 +47,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
+            std::cout << GREEN_TEXT << "file served" << RESET_COLOR << std::endl;
             return new OK200(this->resourcesWithRoot);
         }
     }

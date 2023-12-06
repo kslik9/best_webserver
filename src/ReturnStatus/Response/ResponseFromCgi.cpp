@@ -37,7 +37,7 @@ void    ResponseFromCgi::init_env(RequestData request, std::string const &root) 
 
 ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root) : rq(rq)  {
     this->init_env(rq, root);
-    this->headers["Content-Type"] = "text/html";
+    this->headers["Content-Type"] = get_mime_type(root);
     this->headers["Date"] = getCurrentTime();
     this->statusCode = "200";
     this->statusMessage = "OK";
@@ -77,23 +77,20 @@ std::string ResponseFromCgi::process() {
 	php_args.push_back(src.path.c_str());
 	php_args.push_back(NULL);
 	int pipe_fd[2];
-	if (pipe(pipe_fd) == -1)
-	{
+	if (pipe(pipe_fd) == -1) {
 		std::cerr << "Error creating pipe" << std::endl;
 		delete src.file_stream;
 		return "delete";
 	}
 	pid_t child_pid = fork();
-	if (child_pid == -1)
-	{
+	if (child_pid == -1) {
 		std::cerr << "Error forking the process" << std::endl;
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		delete src.file_stream;
 		return "delete";
 	}
-	if (child_pid == 0)
-	{
+	if (child_pid == 0) {
 		char **envs = mapToArr(this->keyValue);
 		for (size_t i = 0; envs[i]; i++)
 			std::cout << i << ":" << envs[i] << "\n";
@@ -106,14 +103,17 @@ std::string ResponseFromCgi::process() {
 			exit(EXIT_FAILURE);
 		}
 	}
-	else
-	{
+	else {
 		close(pipe_fd[1]);
 		std::stringstream output;
 		char buffer[4096];
 		ssize_t bytes_read;
-		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0)
+		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+			// std::cout << "[[" << output.str() << "]]" << std::endl;
 			output.write(buffer, bytes_read);
+		}
+		std::cout << "[[" << output.str() << "]]\n";
+		// output.write("\r\n", 2);
 		close(pipe_fd[0]);
 		int status;
 		waitpid(child_pid, &status, 0);
@@ -125,15 +125,38 @@ std::string ResponseFromCgi::process() {
 
 
 std::string ResponseFromCgi::createResponse() {
-    startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
+    // startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
 
-    std::map<std::string, std::string>::iterator it;
-    response << startLine;
-    for (it = headers.begin(); it != headers.end(); ++it)
-        response << it->first << ": " << it->second << "\r\n";
-    response << "\r\n";
+    // std::map<std::string, std::string>::iterator it;
+    // response << startLine;
+    // // for (it = headers.begin(); it != headers.end(); ++it)
+    // //     response << it->first << ": " << it->second << "\r\n";
+    // // response << "\r\n";
+    // // response << "\r\n";
     
-    std::string php_resp = this->process();
-    response << php_resp;
-    return response.str(); 
+    // std::string php_resp = this->process();
+    // response << php_resp;
+    // return response.str(); 
+
+
+
+	int         fileStat;
+    std::string php_resp;
+
+    // ------------------------------------------
+    php_resp += "HTTP/1.1 200 OK\r\n";
+    // php_resp += "Content-Type: text/html\r\n";
+	std::map<std::string, std::string>::iterator it;
+    // response << startLine;
+    // for (it = headers.begin(); it != headers.end(); ++it)
+    //     php_resp += (it->first + ": " + it->second + "\r\n");
+	// php_resp += "\r\n";
+    // // ------------------------------------------
+    // RequestData request(requestStr);
+    // 
+    // system("clear");
+    // std::cout << "------------------------------------------------------\n";
+    std::string resp = this->process();
+    php_resp += resp;
+    return php_resp;
 }
