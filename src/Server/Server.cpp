@@ -160,11 +160,11 @@ void Server::waitClients()
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
 				continue;
-			if (fds[i].revents != POLLIN) {
-				std::cout << "revents error\n";
-				endServer = true;
-				break;
-			}
+			// if (fds[i].revents != POLLIN) {
+			// 	std::cout << "revents error\n";
+			// 	endServer = true;
+			// 	break;
+			// }
 
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{

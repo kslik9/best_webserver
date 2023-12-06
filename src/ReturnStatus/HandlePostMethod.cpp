@@ -26,30 +26,28 @@ AResponseMessage    *HttpRequestChecker::handlePostMethod() {
         if (checkIndexFilesInDir()) {
             std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
-                //run cgi on requested file with GET request method
+                std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+                return new ResponseFromCgi(this->requestData, this->location["root"]);
             }
             else {
-                //create 403 Forbidden
-                //return requested file
-                
+                std::cout << RED_TEXT << "cgi doensn't exist in location" << RESET_COLOR << std::endl;
+                return new Forbidden403(this->config.errorPages["403"]);
             }
         }
         else {
             std::cout << RED_TEXT << "index files not found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
-            std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
-
+            return new Forbidden403(this->config.errorPages["403"]);
         }
     }
     //we request a file here
     else {
         if (checkLocationIncludesCgi()) {
-            //run cgi on requested file with POST request method
+            std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+            return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
-            //create 403 Forbidden
-            //this->statusCode = 403
-            //this->statusMessage = Forbidden
-            //return errorPage
+            std::cout << RED_TEXT << "cgi doesn't exist in location" << RESET_COLOR << std::endl;
+            return new Forbidden403(this->config.errorPages["403"]);
         }
     }
 
