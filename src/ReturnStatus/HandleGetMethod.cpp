@@ -47,6 +47,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
+            std::cout << RED_TEXT << "cgi doesn't exist in location or resource not ended with .php" << RESET_COLOR << std::endl;
             std::cout << GREEN_TEXT << "file served" << RESET_COLOR << std::endl;
             return new OK200(this->resourcesWithRoot);
         }

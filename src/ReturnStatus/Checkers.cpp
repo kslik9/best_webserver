@@ -194,8 +194,12 @@ bool    HttpRequestChecker::checkAutoIndexOn() {
 }
 
 bool    HttpRequestChecker::checkLocationIncludesCgi() {
-    //check if the location include cgi configurations
-    return true;
+    
+    if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
+        return false;
+    if (this->location["cgi_extension"] != "none" && this->location["cgi_extension"] == ".php")
+        return true;
+    return false;
 }
 
 bool    HttpRequestChecker::checkDirIndedWithBackSlash() {
