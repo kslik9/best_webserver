@@ -1,6 +1,6 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handlePostMethod() {
+AResponseMessage    *HttpRequestFlow::handlePostMethod() {
  
     //check if location support upload
     if(checkLocationSupportUpload()) {
@@ -50,7 +50,6 @@ AResponseMessage    *HttpRequestChecker::handlePostMethod() {
             return new Forbidden403(this->config.errorPages["403"]);
         }
     }
-
     std::cout << "end\n";
     return new NotFound404(this->target, this->config.errorPages["404"]);
 }

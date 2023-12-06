@@ -38,7 +38,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     AResponseMessage *createdResponse;
     std::string     responseMessage;
     //http request checker
-    HttpRequestChecker  hm(request, conf.at(socketIndex));
+    HttpRequestFlow  hm(request, conf.at(socketIndex));
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
     delete createdResponse;

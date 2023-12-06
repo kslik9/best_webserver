@@ -1,21 +1,21 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-HttpRequestChecker::HttpRequestChecker(RequestData &requestData, ServConf &servConf) : requestData(requestData), config(servConf) {
+HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) : requestData(requestData), config(servConf) {
     this->target = requestData.getUri();
     this->method = requestData.getMethod();
 }
 
-std::string HttpRequestChecker::getStatusCode() {
+std::string HttpRequestFlow::getStatusCode() {
     return this->statusCode;
 }
 
-void    HttpRequestChecker::createHttpHeader() {
+void    HttpRequestFlow::createHttpHeader() {
     
 }
 
 
 //this will check the request and at the end it will create an http message and return it
-AResponseMessage *HttpRequestChecker::checkRequestAndReturnHttpMessage() {
+AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
     std::map<std::string, std::string> abstractErrorPages;
     abstractErrorPages["404"] = "errors/404.html";
 

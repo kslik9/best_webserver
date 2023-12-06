@@ -1,6 +1,6 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
+AResponseMessage    *HttpRequestFlow::handleDeleteMethod() {
 
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
