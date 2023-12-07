@@ -59,18 +59,19 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_port = htons(port);
-	this->serverAddress.sin_addr = ip->sin_addr;
+	// this->serverAddress.sin_addr = ip->sin_addr;
+	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 	freeaddrinfo(res);
 }
 
 void Server::start(Config &mainConf) {
-	int	serverSocketFd;
-	unsigned short	port;
-	std::string hostName;
-	std::set<int>::iterator portsIt;
-	struct hostent *hostnm;
-	struct sockaddr_in server;
+	int						serverSocketFd;
+	unsigned short			port;
+	std::string				hostName;
+	std::set<int>::iterator	portsIt;
+	struct hostent			*hostnm;
+	struct sockaddr_in		server;
 	int opt = 1;
 	int socketIndex = 0;
 
@@ -132,15 +133,23 @@ void Server::start(Config &mainConf) {
 	}
 }
 
+void data_read(std::string &req, int bytesREceived) {
+	std::cout << "req: " << req << std::endl;
+	std::cout << bytesREceived << std::endl;
+}
+
 void Server::waitClients()
 {
-	int closeConnection;
-	std::vector<struct pollfd> fds;
-	int rc;
-	struct pollfd 	tempPollFd;
-	int				currentPortInex;
+	int							closeConnection;
+	std::vector<struct pollfd>	fds;
+	int							rc;
+	struct pollfd				tempPollFd;
+	int							currentPortInex;
+	char 						buffer[BUFFER_SIZE];
 	int endServer = false;
 	int clientSd = -1;
+	std::string http_resp;
+
 
 	//init pollfds fds with server sockets
 	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
@@ -148,7 +157,6 @@ void Server::waitClients()
 		tempPollFd.events = POLLIN;
 		fds.push_back(tempPollFd);
 	}
-
 
 	while (endServer == false) {
 		rc = poll(&fds[0], fds.size(), 3000);
@@ -160,11 +168,11 @@ void Server::waitClients()
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
 				continue;
-			// if (fds[i].revents != POLLIN) {
-			// 	std::cout << "revents error\n";
-			// 	endServer = true;
-			// 	break;
-			// }
+			if (fds[i].revents != POLLIN) {
+				std::cout << "revents error\n";
+				endServer = true;
+				break;
+			}
 
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
@@ -193,9 +201,23 @@ void Server::waitClients()
 			else {
 				std::cout << "fd " << fds[i].fd << " is readable" << std::endl;
 				closeConnection = false;
+				ssize_t bytesReceived;
 				while (true) {
-					char *buffer = new char[BUFFER_SIZE];
-					ssize_t bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
+					// buffer = new char[BUFFER_SIZE];
+					// -------
+					/*
+						br = 150
+						
+						line GET /index HTTP
+						headers...
+						content-lenght: 100 + 50
+						headers...
+						headers...
+						/r/n
+						body
+					*/
+					// -------
+					bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
 					if (bytesReceived < 0) {
 						// std::cout << "recv() failed\n";
 						closeConnection = true;
@@ -204,27 +226,31 @@ void Server::waitClients()
 					if (bytesReceived == 0) {
 						std::cout << "connection closed\n";
 						closeConnection = true;
-						delete[] buffer;
+						// delete[] buffer;
 						break;
 					}
 					std::cout << "bytes received: " << bytesReceived << std::endl;
 
 					std::string str_buffer(buffer);
-					std::string http_resp = buildHttpResponse(currentPortInex, str_buffer);
+					data_read(str_buffer, bytesReceived);
+					http_resp = buildHttpResponse(currentPortInex, str_buffer);
+					// http_resp = buildHttpResponse(currentPortInex, buffer);
 					//send response to client
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+					// rc = send(fd[i].fd)
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
 						closeConnection = true;
 						break;
 					}
 					// close(fds[i].fd);
-					closeConnection = true;
-					delete[] buffer;
+					// closeConnection = true;
+					// delete[] buffer;
 				}
 				if (closeConnection) {
 					close(fds[i].fd);
 					fds[i].fd = -1;
+
 				}
 			}
 		}

@@ -2,6 +2,8 @@
 
 void parse_request(const std::string request, std::string &method, std::string &target, std::string &httpVersion, std::string &body, std::map<std::string, std::string> &headers)
 {
+	// target = "/kslik.php";
+	// method = "POST";
 	try
 	{
 		int i = 0;
