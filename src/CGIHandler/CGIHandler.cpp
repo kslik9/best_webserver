@@ -1,15 +1,5 @@
 #include "CGIHandler.hpp"
 
-// _extention(""),
-// _cgi_path(""),
-// _methods(std::vector<std::string>()),
-// _envp(NULL),
-// _argv(NULL),
-// _cgi_response_file(""),
-// _status(""),
-// _header(""),
-// _FILEINLINE("") {}
-
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */

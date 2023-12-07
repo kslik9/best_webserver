@@ -51,7 +51,7 @@
 
 
 // Consts
-#define BUFFER_SIZE (1024 * 1024) // 1MB
+#define BUFFER_SIZE 10264576 // 10MB
 #define STATIC_HTTP "static/http/"
 
 #define CLIENTS_COUNT 4000
@@ -68,7 +68,7 @@ class ReturnStatus;
 // Function prototypes
 void ft_handle_client(int client_fd);
 std::string buildHttpResponse(std::string &method, std::string &target, ReturnStatus &rs);
-void parse_request(const std::string &request, std::string &method, std::string &target, std::string &httpVersion);
+void parse_request(std::string &request,std::string &method, std::string &target, std::string &httpVersion, std::string &body, std::map<std::string, std::string> &headers);
 int CreateServerSocket();
 int waitClients(int serverSocket);
 
