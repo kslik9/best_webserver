@@ -1,6 +1,7 @@
 #include "HttpRequestFlow.hpp"
 
 AResponseMessage    *HttpRequestFlow::handleGetMethod() {
+    std::cout << BLUE_TEXT << "GET METHOD" << RESET_COLOR << std::endl;
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
         return new NotFound404(this->target, this->config.errorPages["404"]);
