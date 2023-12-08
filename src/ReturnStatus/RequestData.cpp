@@ -1,61 +1,95 @@
 #include "RequestData.hpp"
 
-void parse_request(const std::string request, std::string &method, std::string &target, std::string &httpVersion, std::string &body, std::map<std::string, std::string> &headers)
+void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
 {
-	// target = "/kslik.php";
-	// method = "POST";
-	try
+	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
-		int i = 0;
-		std::istringstream iss(request);
-		// Parse request line
-		// Parse headers
-		std::string line;
-		while (std::getline(iss, line) && line != "\r")
-		{
-			// std::cout << line << std::endl;
-			if (i == 0)
-			{
-				std::stringstream liss(line);
-				liss >> method >> target >> httpVersion;
-			}
-			else
-			{
-				size_t colonPos = line.find(':');
-				if (colonPos != std::string::npos)
-				{
-					std::string key = line.substr(0, colonPos);
-					std::string value = line.substr(colonPos + 1);
-					value.erase(0, value.find_first_not_of(" \t"));
-					headers[key] = value;
-				}
-			}
-			++i;
-		}
-		// Parse body
-		int posofrn = iss.str().find_last_of("\r\n");
-		if (posofrn != std::string::npos)
-		{
-			std::cout << "founded!\n";
-			body = iss.str().substr(posofrn);
-		}
-		// body = iss.str().substr(iss.tellg());
+		std::cout << "------------------ multipart/form-data ------------------\n";
+		std::cout << "<";
+		std::cout << part_two;
+		std::cout << ">";
 	}
-	catch (const std::exception &e)
+	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
-		std::cerr << e.what() << '\n';
-		method = "GET";
-		target = "/";
-		httpVersion = "HTTP/1.1";
+		std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
 	}
+	if (headers["Content-Type"].find("text/plain") != std::string::npos)
+	{
+		std::cout << "------------------ text/plain ------------------\n";
+	}
+}
+
+void split_parts(std::stringstream &iss, std::string &part_one, std::string &part_two)
+{
+	std::string line;
+	bool trigger = false;
+	while (1)
+	{
+		std::getline(iss, line);
+		if (line.empty())
+			break;
+		if (line == "\r" && !trigger)
+			trigger = true;
+		// ------------------------
+		if (trigger)
+			part_two += line + "\n";
+		else
+			part_one += line + "\n";
+	}
+}
+
+void fillFirstPart(std::string &part_one, std::string &method, std::string &target, std::string &httpVersion, std::map<std::string, std::string> &headers)
+{
+	int i = 0;
+	std::string line;
+	std::stringstream iss(part_one);
+	while (1)
+	{
+		std::getline(iss, line);
+		if (line.empty())
+			break;
+		if (i == 0)
+		{
+			std::stringstream fline(line);
+			fline >> method >> target >> httpVersion;
+		}
+		else
+		{
+			std::istringstream s_iss(line);
+			std::string key, value;
+			std::getline(s_iss, key, ':');
+			std::getline(s_iss, value);
+			size_t start = value.find_first_not_of(" \t");
+			value = value.substr(start);
+			headers[key] = value;
+		}
+		i++;
+	}
+}
+
+void parse_request(std::string &request,
+				   std::string &method,
+				   std::string &target,
+				   std::string &httpVersion,
+				   std::string &body,
+				   std::map<std::string, std::string> &headers)
+{
+	std::string part_one, part_two;
+	std::stringstream iss(request);
+	split_parts(iss, part_one, part_two);
+	fillFirstPart(part_one, method, target, httpVersion, headers);
+	fillSeconPart(part_two, body, headers);
 }
 
 RequestData::RequestData(std::string &request)
 {
 	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers);
-	// this->headers["first"] = "second";
-	// this->headers["first1"] = "second1";
-	// this->headers["first2"] = "second2";
+	std::cout << "1: " << this->method << "\n";
+	std::cout << "2: " << this->uri << "\n";
+	std::cout << "3: " << this->httpVersion << "\n";
+	// this->method = "GET";
+	// this->uri = "/upload.html";
+	// this->httpVersion = "HTTP/1.1";
 }
 
 std::string RequestData::getUri() const
@@ -99,10 +133,13 @@ std::string RequestData::getAllHeaders() const
 
 std::ostream &operator<<(std::ostream &o, RequestData const &i)
 {
-	o << "URI: " << i.getUri() << "\n"
+	o << "------------------------------------\n"
+	  << "URI: " << i.getUri() << "\n"
 	  << "Method: " << i.getMethod() << "\n"
 	  << "httpVers: " << i.getHttpVersion() << "\n"
-	  << "Headers: \n" << i.getAllHeaders() << "\n"
-	  << "body: " << i.getBody();
+	  << "Headers: \n"
+	  << i.getAllHeaders() << "\n"
+	  << "body: " << i.getBody()
+	  << "------------------------------------\n";
 	return o;
 }

@@ -52,7 +52,7 @@
 
 
 // Consts
-#define BUFFER_SIZE (1024 * 1024) // 1MB
+#define BUFFER_SIZE 1024 * 1024 // 10MB
 #define STATIC_HTTP "static/http/"
 
 #define CLIENTS_COUNT 4000

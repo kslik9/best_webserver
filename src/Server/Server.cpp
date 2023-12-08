@@ -200,7 +200,8 @@ void Server::waitClients()
 			//not a listening socket and it's readable
 			else {
 				std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
-				char	buffer[BUFFER_SIZE];
+				// char	buffer[BUFFER_SIZE];
+				char *buffer = new char[BUFFER_SIZE];
 				std::string receivedData;
 
 				closeConnection = false;
@@ -224,7 +225,7 @@ void Server::waitClients()
 						std::cout << "connection closed\n";
 						closeConnection = true;
 						// receivedData.append(buffer, bytesReceived);
-						// delete[] buffer;
+						delete[] buffer;
 						// break;
 					}
 					receivedData.append(buffer, bytesReceived);
@@ -235,6 +236,7 @@ void Server::waitClients()
 					}
 				}
 
+				delete[] buffer;
 				if (!receivedData.empty()) {
 					
 
