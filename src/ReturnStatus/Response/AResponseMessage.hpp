@@ -14,7 +14,7 @@
 
 
 // Consts
-#define BUFFER_SIZE (1024 * 1024) // 1MB
+// #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_204 "static/default_errors/204.html"
 #define STATIC_403 "static/default_errors/403.html"
 #define STATIC_404 "static/default_errors/404.html"
