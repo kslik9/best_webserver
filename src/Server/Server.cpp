@@ -59,18 +59,19 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_port = htons(port);
-	this->serverAddress.sin_addr = ip->sin_addr;
+	// this->serverAddress.sin_addr = ip->sin_addr;
+	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 	freeaddrinfo(res);
 }
 
 void Server::start(Config &mainConf) {
-	int	serverSocketFd;
-	unsigned short	port;
-	std::string hostName;
-	std::set<int>::iterator portsIt;
-	struct hostent *hostnm;
-	struct sockaddr_in server;
+	int						serverSocketFd;
+	unsigned short			port;
+	std::string				hostName;
+	std::set<int>::iterator	portsIt;
+	struct hostent			*hostnm;
+	struct sockaddr_in		server;
 	int opt = 1;
 	int socketIndex = 0;
 
@@ -132,15 +133,22 @@ void Server::start(Config &mainConf) {
 	}
 }
 
+void data_read(std::string &req, int bytesREceived) {
+	std::cout << "req: " << req << std::endl;
+	std::cout << bytesREceived << std::endl;
+}
+
 void Server::waitClients()
 {
-	int closeConnection;
-	std::vector<struct pollfd> fds;
-	int rc;
-	struct pollfd 	tempPollFd;
-	int				currentPortInex;
+	bool	closeConnection;
+	std::vector<struct pollfd>	fds;
+	int							rc;
+	struct pollfd				tempPollFd;
+	int							currentPortInex;
 	int endServer = false;
 	int clientSd = -1;
+	std::string http_resp;
+
 
 	//init pollfds fds with server sockets
 	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
@@ -149,11 +157,12 @@ void Server::waitClients()
 		fds.push_back(tempPollFd);
 	}
 
-
 	while (endServer == false) {
+		closeConnection = false;
 		rc = poll(&fds[0], fds.size(), 3000);
 		if (rc < 0) {
 			std::cout << "poll() error\n";
+			break;
 		}
 		for (int i = 0; i < fds.size(); i++) {
 			//loop to find descriptors that return POLLIN
@@ -184,52 +193,81 @@ void Server::waitClients()
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);
-
 				currentPortInex =  i;
 			}
 
 			// if (pollfd[i].revents & POLLOUT)
 			//not a listening socket and it's readable
 			else {
-				std::cout << "fd " << fds[i].fd << " is readable" << std::endl;
+				std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
+				// char	buffer[BUFFER_SIZE];
+				char *buffer = new char[BUFFER_SIZE];
+				std::string receivedData;
+
 				closeConnection = false;
+				ssize_t bytesReceived;
 				while (true) {
-					char *buffer = new char[BUFFER_SIZE];
-					ssize_t bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
+					bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
+					std::cout << "bytes received: " << bytesReceived << std::endl;
 					if (bytesReceived < 0) {
-						// std::cout << "recv() failed\n";
-						closeConnection = true;
-						break;
+						// // std::cout << "recv() failed\n";
+						// closeConnection = true;
+						// // receivedData.append(buffer, bytesReceived);
+						// // break;
+
+						if (errno != EWOULDBLOCK) {
+							perror("recv() faild");
+							closeConnection = true;
+						}
+						// break;
 					}
 					if (bytesReceived == 0) {
 						std::cout << "connection closed\n";
 						closeConnection = true;
+						// receivedData.append(buffer, bytesReceived);
 						delete[] buffer;
+						// break;
+					}
+					receivedData.append(buffer, bytesReceived);
+
+					if (bytesReceived < BUFFER_SIZE) {
+						closeConnection = true;
 						break;
 					}
-					std::cout << "bytes received: " << bytesReceived << std::endl;
+				}
 
-					std::string str_buffer(buffer);
-					std::string http_resp = buildHttpResponse(currentPortInex, str_buffer);
+				delete[] buffer;
+				if (!receivedData.empty()) {
+					
+
+					// std::string str_buffer(buffer);
+					// data_read(str_buffer, bytesReceived);
+					http_resp = buildHttpResponse(currentPortInex, receivedData);
+					// http_resp = buildHttpResponse(currentPortInex, buffer);
 					//send response to client
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+					// rc = send(fd[i].fd)
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
 						closeConnection = true;
 						break;
 					}
+				}
 					// close(fds[i].fd);
-					closeConnection = true;
-					delete[] buffer;
-				}
-				if (closeConnection) {
-					close(fds[i].fd);
-					fds[i].fd = -1;
-				}
+					// closeConnection = true;
+					// delete[] buffer;
+			}
+			std::cout << "con: " << closeConnection << std::endl;
+			if (closeConnection == true) {
+				std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
+				close(fds[i].fd);
+				fds[i].fd = -1;
+				fds.erase(fds.begin() + i);
 			}
 		}
 	}
 }
+
 
 /*
 ** --------------------------------- ACCESSOR ---------------------------------

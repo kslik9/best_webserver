@@ -1,7 +1,6 @@
 SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/Config/Config.cpp src/Logger/Logger.cpp src/Server/Server.cpp \
-				src/ReturnStatus/ReturnStatus.cpp \
-				src/ReturnStatus/HttpRequestChecker.cpp \
+				src/ReturnStatus/HttpRequestFlow.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
 				src/ReturnStatus/HandlePostMethod.cpp \
