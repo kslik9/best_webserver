@@ -5,7 +5,8 @@
 */
 
 Server::Server() {
-
+	this->contentLen = -2;
+	this->bodySize = 0;
 }
 
 
@@ -133,9 +134,48 @@ void Server::start(Config &mainConf) {
 	}
 }
 
-void data_read(std::string &req, int bytesREceived) {
-	std::cout << "req: " << req << std::endl;
-	std::cout << bytesREceived << std::endl;
+
+int getContentLen(std::string bufferStr) {
+	std::string target = "Content-Length: ";
+
+    size_t found = bufferStr.find(target);
+
+    if (found != std::string::npos) {
+        found += target.length();
+        size_t end = bufferStr.find("\r\n", found);
+        std::string lengthStr = bufferStr.substr(found, end - found);
+
+        // Convert string to integer
+		// std::cout << "len::: " << lengthStr << "\n";
+        int contentLength = std::stoi(lengthStr);
+        return contentLength;
+    }
+	return -1;
+}
+
+int countBodySize(std::string bufferStr, int bytesReceived) {
+	int foundbrbn = bufferStr.find("\r\n\r\n");
+
+	if (foundbrbn != std::string::npos) {
+		std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 2) << "]\n";
+		return bytesReceived - (foundbrbn + 2);
+	}
+	return bytesReceived;
+}
+
+bool Server::reachedTheEnd(std::string bufferStr, int bytesReceived) {
+	// std::cout << "buffer: [" << buffer << "]\n";
+	// std::cout << "bytes received: [" << bytesReceived << "]\n";
+	if (contentLen == -2)
+		this->contentLen = getContentLen(bufferStr);
+	std::cout << "Content Length: " << this->contentLen << std::endl;
+
+	this->bodySize += countBodySize(bufferStr, contentLen);
+	std::cout << "body size: " << this->bodySize << "\n\n";
+	
+	if (this->bodySize >= this->contentLen)
+		return true;
+	return false;
 }
 
 void Server::waitClients()
@@ -201,48 +241,48 @@ void Server::waitClients()
 			else {
 				std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
 				// char	buffer[BUFFER_SIZE];
-				char *buffer = new char[BUFFER_SIZE];
+				char buffer[BUFFER_SIZE];
 				std::string receivedData;
 
 				closeConnection = false;
 				ssize_t bytesReceived;
-				while (true) {
+				std::string joinedStr;
+				this->contentLen = -2;
+				this->bodySize = 0; 
+				while(true) {
 					bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
-					std::cout << "bytes received: " << bytesReceived << std::endl;
+					
+					
+					// if (reachedTheEnd(buffer, bytesReceived)) {
+					// 	closeConnection = true;
+					// }
 					if (bytesReceived < 0) {
-						// // std::cout << "recv() failed\n";
-						// closeConnection = true;
-						// // receivedData.append(buffer, bytesReceived);
-						// // break;
-
-						if (errno != EWOULDBLOCK) {
-							perror("recv() faild");
+						std::string bufferStr(buffer);
+						if (reachedTheEnd(bufferStr, bytesReceived))
+						{
 							closeConnection = true;
+							break;
 						}
+						continue;
 						// break;
 					}
-					if (bytesReceived == 0) {
-						std::cout << "connection closed\n";
-						closeConnection = true;
-						// receivedData.append(buffer, bytesReceived);
-						delete[] buffer;
-						// break;
-					}
-					receivedData.append(buffer, bytesReceived);
-
-					if (bytesReceived < BUFFER_SIZE) {
+					if (bytesReceived == 0)
+					{
 						closeConnection = true;
 						break;
 					}
+					std::string bufferStr(buffer);
+					joinedStr += bufferStr;
+					memset(buffer, '\0', BUFFER_SIZE);
 				}
 
-				delete[] buffer;
-				if (!receivedData.empty()) {
-					
-
+				// exit(1);
+				// delete[] buffer;
+				if (!joinedStr.empty()) {
+					closeConnection = true;
 					// std::string str_buffer(buffer);
 					// data_read(str_buffer, bytesReceived);
-					http_resp = buildHttpResponse(currentPortInex, receivedData);
+					http_resp = buildHttpResponse(currentPortInex, joinedStr);
 					// http_resp = buildHttpResponse(currentPortInex, buffer);
 					//send response to client
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
@@ -252,17 +292,18 @@ void Server::waitClients()
 						closeConnection = true;
 						break;
 					}
+
+					// closeConnection = true;
 				}
 					// close(fds[i].fd);
-					// closeConnection = true;
 					// delete[] buffer;
-			}
 			std::cout << "con: " << closeConnection << std::endl;
 			if (closeConnection == true) {
 				std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
+			}
 			}
 		}
 	}

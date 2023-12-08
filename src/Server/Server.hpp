@@ -14,9 +14,12 @@ class Server
 		std::vector<int>						serverSocketsFd;
 		std::multimap<std::string, std::string>	portsAndHosts;
 		std::vector<ServConf>					conf;
+		int										contentLen;
+		int										bodySize;
 	public:
 		Server();
 		~Server();
+		bool reachedTheEnd(std::string bufferStr, int bytesReceived);
 		void start(Config &mainConf);
 		void waitClients();
 		sockaddr_in getServer_address() const;
