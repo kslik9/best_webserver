@@ -1,6 +1,7 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handleGetMethod() {
+AResponseMessage    *HttpRequestFlow::handleGetMethod() {
+    std::cout << BLUE_TEXT << "GET METHOD" << RESET_COLOR << std::endl;
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
         return new NotFound404(this->target, this->config.errorPages["404"]);
@@ -47,6 +48,7 @@ AResponseMessage    *HttpRequestChecker::handleGetMethod() {
             return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
+            std::cout << RED_TEXT << "cgi doesn't exist in location or resource not ended with .php" << RESET_COLOR << std::endl;
             std::cout << GREEN_TEXT << "file served" << RESET_COLOR << std::endl;
             return new OK200(this->resourcesWithRoot);
         }

@@ -1,6 +1,7 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
+AResponseMessage    *HttpRequestFlow::handleDeleteMethod() {
+    std::cout << BLUE_TEXT << "DELETE METHOD" << RESET_COLOR << std::endl;
 
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
@@ -22,6 +23,7 @@ AResponseMessage    *HttpRequestChecker::handleDeleteMethod() {
                 if (!checkIndexFilesInDir()) {
                     std::cout << RED_TEXT << "no index file on dir" << RESET_COLOR << std::endl;
                     return new Forbidden403(this->config.errorPages["403"]);
+                    
                 }
                 else {
                     std::cout << GREEN_TEXT << "there is index file on dir" << RESET_COLOR << std::endl;

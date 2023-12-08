@@ -32,9 +32,8 @@
 #include "../src/Config/Config.hpp"
 #include "../src/Logger/Logger.hpp"
 #include "../src/Server/Server.hpp"
-#include "../src/ReturnStatus/ReturnStatus.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
-#include "../src/ReturnStatus/HttpRequestChecker.hpp"
+#include "../src/ReturnStatus/HttpRequestFlow.hpp"
 
 #include "../src/ReturnStatus/Response/AResponseMessage.hpp"
 #include "../src/ReturnStatus/Response/NotFound404.hpp"
@@ -53,7 +52,7 @@
 
 
 // Consts
-#define BUFFER_SIZE 10264576 // 10MB
+#define BUFFER_SIZE 1024 * 1024 // 10MB
 #define STATIC_HTTP "static/http/"
 
 #define CLIENTS_COUNT 4000

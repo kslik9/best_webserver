@@ -1,7 +1,7 @@
-#include "HttpRequestChecker.hpp"
+#include "HttpRequestFlow.hpp"
 
-AResponseMessage    *HttpRequestChecker::handlePostMethod() {
- 
+AResponseMessage    *HttpRequestFlow::handlePostMethod() {
+    std::cout << BLUE_TEXT << "POST METHOD" << RESET_COLOR << std::endl;
     //check if location support upload
     if(checkLocationSupportUpload()) {
         //upload the post request body
@@ -26,33 +26,30 @@ AResponseMessage    *HttpRequestChecker::handlePostMethod() {
         if (checkIndexFilesInDir()) {
             std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
             if (checkLocationIncludesCgi()) {
-                //run cgi on requested file with GET request method
+                std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+                return new ResponseFromCgi(this->requestData, this->location["root"]);
             }
             else {
-                //create 403 Forbidden
-                //return requested file
-                
+                std::cout << RED_TEXT << "cgi doensn't exist in location" << RESET_COLOR << std::endl;
+                return new Forbidden403(this->config.errorPages["403"]);
             }
         }
         else {
             std::cout << RED_TEXT << "index files not found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
-            std::cout << GREEN_TEXT << "index files found: " << this->resourcesWithRoot << RESET_COLOR << std::endl;
-
+            return new Forbidden403(this->config.errorPages["403"]);
         }
     }
     //we request a file here
     else {
         if (checkLocationIncludesCgi()) {
-            //run cgi on requested file with POST request method
+            std::cout << GREEN_TEXT << "cgi exists in location" << RESET_COLOR << std::endl;
+            return new ResponseFromCgi(this->requestData, this->location["root"]);
         }
         else {
-            //create 403 Forbidden
-            //this->statusCode = 403
-            //this->statusMessage = Forbidden
-            //return errorPage
+            std::cout << RED_TEXT << "cgi doesn't exist in location" << RESET_COLOR << std::endl;
+            return new Forbidden403(this->config.errorPages["403"]);
         }
     }
-
     std::cout << "end\n";
     return new NotFound404(this->target, this->config.errorPages["404"]);
 }
