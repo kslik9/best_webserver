@@ -19,7 +19,7 @@
 
 std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 {
-	std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
+	// std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
 
     int         fileStat;
     std::string php_resp;
@@ -28,7 +28,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     php_resp += "Content-Type: text/html\r\n";
     // ------------------------------------------
     RequestData request(requestStr);
-    std::cout << "something her2\n";
+    // std::cout << "something her2\n";
     AResponseMessage *createdResponse;
     std::string     responseMessage;
     //http request checker
@@ -38,7 +38,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     
     delete createdResponse;
     return responseMessage;
-    std::cout << "something her2\n";
+    // std::cout << "something her2\n";
 
     return php_resp;
 }
