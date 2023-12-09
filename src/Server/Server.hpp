@@ -26,6 +26,8 @@ class Server
 		std::string buildHttpResponse(int socketIndex, std::string request);
 		Server &operator=(Server const &rhs);
 		void	setServerAddress(unsigned short &port, std::string &hostName);
+		void	setContentLen(std::string bufferStr);
+		void	setBodySize(std::string bufferStr, int bytesReceived);
 };
 
 #endif /* ********************************************************** SERVER_H */

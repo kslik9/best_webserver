@@ -4,18 +4,18 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 {
 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
-		std::cout << "------------------ multipart/form-data ------------------\n";
-		std::cout << "<";
-		std::cout << part_two;
-		std::cout << ">";
+		// std::cout << "------------------ multipart/form-data ------------------\n";
+		// std::cout << "<";
+		// std::cout << part_two;
+		// std::cout << ">";
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
-		std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
 	}
 	if (headers["Content-Type"].find("text/plain") != std::string::npos)
 	{
-		std::cout << "------------------ text/plain ------------------\n";
+		// std::cout << "------------------ text/plain ------------------\n";
 	}
 }
 
@@ -84,9 +84,9 @@ void parse_request(std::string &request,
 RequestData::RequestData(std::string &request)
 {
 	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers);
-	std::cout << "1: " << this->method << "\n";
-	std::cout << "2: " << this->uri << "\n";
-	std::cout << "3: " << this->httpVersion << "\n";
+	// std::cout << "1: " << this->method << "\n";
+	// std::cout << "2: " << this->uri << "\n";
+	// std::cout << "3: " << this->httpVersion << "\n";
 	// this->method = "GET";
 	// this->uri = "/upload.html";
 	// this->httpVersion = "HTTP/1.1";
