@@ -1,13 +1,54 @@
 #include "RequestData.hpp"
 
+std::string get_fileName(std::string part_two)
+{
+	size_t k = part_two.find("filename=");
+
+		size_t first = part_two.find("\"", k);
+		size_t second = part_two.find("\"", first + 1);
+		std::string tmp = part_two.substr(first + 1 , second - first - 1);
+		return tmp;
+	
+	// exit(0);
+}
+std::string get_content(std::string part_two)
+{
+	size_t k = part_two.find("Content-Type");
+	size_t start = part_two.find("\r\n", k);
+	start = part_two.find("\r\n", start + 1);
+	std::string tmp;
+
+	size_t end = part_two.find("\r\n", start + 1);
+	tmp = part_two.substr(start , end - start - 1);
+	return tmp;
+
+}
+void uploadfile(std::string part_two)
+{
+	// int how_many_sig()
+	std::string filename , content;
+	filename = "/Users/kslik/Desktop/kk/";
+	filename = filename + get_fileName(part_two);
+	std::cout << filename << std::endl;
+	content = get_content(part_two);
+	std::ofstream outputFile(filename);
+	if(outputFile.is_open())
+	{
+		std::cout << "\nseccusefly\n";
+		outputFile << content;	
+	}
+	outputFile.close();
+}
 void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
 {
 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		std::cout << "------------------ multipart/form-data ------------------\n";
-		std::cout << "<";
+		std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
+		// uploadfile(part_two);
 		std::cout << part_two;
-		std::cout << ">";
+		std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
+		// exit(0);
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
@@ -77,6 +118,7 @@ void parse_request(std::string &request,
 	std::string part_one, part_two;
 	std::stringstream iss(request);
 	split_parts(iss, part_one, part_two);
+	// std::cout << part_two << "\n";
 	fillFirstPart(part_one, method, target, httpVersion, headers);
 	fillSeconPart(part_two, body, headers);
 }
@@ -84,9 +126,9 @@ void parse_request(std::string &request,
 RequestData::RequestData(std::string &request)
 {
 	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers);
-	std::cout << "1: " << this->method << "\n";
-	std::cout << "2: " << this->uri << "\n";
-	std::cout << "3: " << this->httpVersion << "\n";
+	// std::cout << "1: " << this->method << "\n";
+	// std::cout << "2: " << this->uri << "\n";
+	// std::cout << "3: " << this->httpVersion << "\n";
 	// this->method = "GET";
 	// this->uri = "/upload.html";
 	// this->httpVersion = "HTTP/1.1";

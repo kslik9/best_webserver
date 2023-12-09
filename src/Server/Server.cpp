@@ -232,6 +232,9 @@ void Server::waitClients()
 
 					if (bytesReceived < BUFFER_SIZE) {
 						closeConnection = true;
+						std::cout << "{{{{{{{{here}}}}}}}}---------\n";
+						std::cout << buffer << std::endl;
+						std::cout << "{{{{{{{{sala}}}}}}}}\n";
 						break;
 					}
 				}
