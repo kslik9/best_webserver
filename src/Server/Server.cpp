@@ -4,6 +4,16 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
+class Socket {
+	private:
+		int										contentLen;
+		int										bodySize;
+	public:
+		void	setContentLen(std::string bufferStr);
+		void	setBodySize(std::string bufferStr, int bytesReceived);
+};
+
+
 Server::Server() {
 	this->contentLen = -2;
 	this->bodySize = 0;
@@ -154,24 +164,20 @@ int getContentLen(std::string bufferStr) {
 }
 
 int countBodySize(std::string bufferStr, int bytesReceived) {
+	if (bytesReceived < 0)
+		return 0;
 	int foundbrbn = bufferStr.find("\r\n\r\n");
 
-	if (foundbrbn != std::string::npos) {
-		std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 2) << "]\n";
-		return bytesReceived - (foundbrbn + 2);
+	// std::cout << "shoko: " << bufferStr << std::endl;
+	if (bufferStr.find("\r\n\r\n") != std::string::npos) {
+		// std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 4) << "]\n";
+		std::cout << "found\n";
+		return bytesReceived - (foundbrbn + 4);
 	}
 	return bytesReceived;
 }
 
 bool Server::reachedTheEnd(std::string bufferStr, int bytesReceived) {
-	// std::cout << "buffer: [" << buffer << "]\n";
-	// std::cout << "bytes received: [" << bytesReceived << "]\n";
-	if (contentLen == -2)
-		this->contentLen = getContentLen(bufferStr);
-	std::cout << "Content Length: " << this->contentLen << std::endl;
-
-	this->bodySize += countBodySize(bufferStr, contentLen);
-	std::cout << "body size: " << this->bodySize << "\n\n";
 	
 	if (this->bodySize >= this->contentLen)
 		return true;
@@ -250,54 +256,65 @@ void Server::waitClients()
 				this->contentLen = -2;
 				this->bodySize = 0; 
 				while(true) {
+					memset(buffer, '\0', BUFFER_SIZE);
 					bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
-					
-					
-					// if (reachedTheEnd(buffer, bytesReceived)) {
-					// 	closeConnection = true;
-					// }
+					std::string bufferStr(buffer);
+					setContentLen(bufferStr);
+					setBodySize(bufferStr, bytesReceived);
 					if (bytesReceived < 0) {
-						std::string bufferStr(buffer);
-						if (reachedTheEnd(bufferStr, bytesReceived))
-						{
+						if (reachedTheEnd(bufferStr, bytesReceived)) {
 							closeConnection = true;
+							joinedStr.append(bufferStr);
 							break;
 						}
+						// std::cout << "con_len: " << this->contentLen << std::endl;
+						// std::cout << "vody_si: " << buffer << std::endl;
 						continue;
-						// break;
 					}
-					if (bytesReceived == 0)
-					{
+					if (bytesReceived == 0) {
+						joinedStr.append(bufferStr);
 						closeConnection = true;
 						break;
 					}
-					std::string bufferStr(buffer);
-					joinedStr += bufferStr;
-					memset(buffer, '\0', BUFFER_SIZE);
+					if (reachedTheEnd(bufferStr, bytesReceived)) {
+						closeConnection = true;
+						joinedStr.append(bufferStr);
+						break;
+					}
+					std::cout << RED_TEXT << "part: " << bufferStr << RESET_COLOR << "\n";
+					joinedStr.append(bufferStr);
+					// memset(buffer, '\0', BUFFER_SIZE);
+					std::cout << "inside while\n";
+					// std::cout << "con_len: " << this->contentLen << std::endl;
+					// std::cout << "vody_si: " << this->bodySize << std::endl;
 				}
 
+				std::cout << "con_len: " << this->contentLen << std::endl;
+				std::cout << "vody_si: " << this->bodySize << std::endl;
 				// exit(1);
 				// delete[] buffer;
 				if (!joinedStr.empty()) {
+					std::cout << "na\n";
 					closeConnection = true;
 					// std::string str_buffer(buffer);
 					// data_read(str_buffer, bytesReceived);
 					http_resp = buildHttpResponse(currentPortInex, joinedStr);
 					// http_resp = buildHttpResponse(currentPortInex, buffer);
 					//send response to client
+					std::cout << "http_res: " << http_resp << std::endl;
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-					// rc = send(fd[i].fd)
+					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
 						closeConnection = true;
 						break;
 					}
-
 					// closeConnection = true;
 				}
 					// close(fds[i].fd);
 					// delete[] buffer;
 			std::cout << "con: " << closeConnection << std::endl;
+			std::cout << "sent: \n";
 			if (closeConnection == true) {
 				std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
 				close(fds[i].fd);
@@ -319,4 +336,12 @@ sockaddr_in Server::getServer_address() const {
 	return this->serverAddress;
 }
 
+void	Server::setContentLen(std::string bufferStr) {
+	if (this->contentLen == -2)
+		this->contentLen = getContentLen(bufferStr);
+}
+
+void	Server::setBodySize(std::string bufferStr, int bytesReceived) {
+	this->bodySize += countBodySize(bufferStr, bytesReceived);
+}
 /* ************************************************************************** */
