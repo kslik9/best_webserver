@@ -4,15 +4,6 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-class Socket {
-	private:
-		int										contentLen;
-		int										bodySize;
-	public:
-		void	setContentLen(std::string bufferStr);
-		void	setBodySize(std::string bufferStr, int bytesReceived);
-};
-
 
 Server::Server() {
 	this->contentLen = -2;
@@ -87,7 +78,6 @@ void Server::start(Config &mainConf) {
 	int socketIndex = 0;
 
 	for (int i = 0; i < mainConf.how_mn_servers(); i++) {
-		// std::cout << "conf: " << mainConf.srvConf.at(i).name << std::endl;
 		for (portsIt = mainConf.srvConf[i].ports.begin(); portsIt != mainConf.srvConf[i].ports.end(); portsIt++) {
 			port = *portsIt;
 			hostName = mainConf.srvConf[i].name;
@@ -145,48 +135,48 @@ void Server::start(Config &mainConf) {
 }
 
 
-int getContentLen(std::string bufferStr) {
-	std::string target = "Content-Length: ";
+// int getContentLen(std::string bufferStr) {
+// 	std::string target = "Content-Length: ";
 
-    size_t found = bufferStr.find(target);
+//     size_t found = bufferStr.find(target);
 
-    if (found != std::string::npos) {
-        found += target.length();
-        size_t end = bufferStr.find("\r\n", found);
-        std::string lengthStr = bufferStr.substr(found, end - found);
+//     if (found != std::string::npos) {
+//         found += target.length();
+//         size_t end = bufferStr.find("\r\n", found);
+//         std::string lengthStr = bufferStr.substr(found, end - found);
 
-        // Convert string to integer
-		// std::cout << "len::: " << lengthStr << "\n";
-        int contentLength = std::stoi(lengthStr);
-        return contentLength;
-    }
-	return -1;
-}
+//         // Convert string to integer
+// 		// std::cout << "len::: " << lengthStr << "\n";
+//         int contentLength = std::stoi(lengthStr);
+//         return contentLength;
+//     }
+// 	return -1;
+// }
 
-int countBodySize(std::string bufferStr, int bytesReceived) {
-	if (bytesReceived < 0)
-		return 0;
-	int foundbrbn = bufferStr.find("\r\n\r\n");
+// int countBodySize(std::string bufferStr, int bytesReceived) {
+// 	if (bytesReceived < 0)
+// 		return 0;
+// 	int foundbrbn = bufferStr.find("\r\n\r\n");
 
-	// std::cout << "shoko: " << bufferStr << std::endl;
-	if (bufferStr.find("\r\n\r\n") != std::string::npos) {
-		// std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 4) << "]\n";
-		std::cout << "found\n";
-		return bytesReceived - (foundbrbn + 4);
-	}
-	return bytesReceived;
-}
+// 	// std::cout << "shoko: " << bufferStr << std::endl;
+// 	if (bufferStr.find("\r\n\r\n") != std::string::npos) {
+// 		// std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 4) << "]\n";
+// 		std::cout << "found\n";
+// 		return bytesReceived - (foundbrbn + 4);
+// 	}
+// 	return bytesReceived;
+// }
 
-bool Server::reachedTheEnd(std::string bufferStr, int bytesReceived) {
+// bool Server::reachedTheEnd(std::string bufferStr, int bytesReceived) {
 	
-	if (this->bodySize >= this->contentLen)
-		return true;
-	return false;
-}
+// 	if (this->bodySize >= this->contentLen)
+// 		return true;
+// 	return false;
+// }
 
 void Server::waitClients()
 {
-	bool	closeConnection;
+	bool	closeConn;
 	std::vector<struct pollfd>	fds;
 	int							rc;
 	struct pollfd				tempPollFd;
@@ -201,10 +191,12 @@ void Server::waitClients()
 		tempPollFd.fd = serverSocketsFd[i];
 		tempPollFd.events = POLLIN;
 		fds.push_back(tempPollFd);
+		Socket sock;
+		this->sockets.push_back(sock);
 	}
-
+	int socketIndex = fds.size();
 	while (endServer == false) {
-		closeConnection = false;
+		closeConn = false;
 		rc = poll(&fds[0], fds.size(), 3000);
 		if (rc < 0) {
 			std::cout << "poll() error\n";
@@ -239,89 +231,118 @@ void Server::waitClients()
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);
-				currentPortInex =  i;
+				currentPortInex = i;
+				// socketIndex++;
+				Socket sock;
+				sockets.push_back(sock);
+
 			}
-
-			// if (pollfd[i].revents & POLLOUT)
 			//not a listening socket and it's readable
+				
 			else {
-				std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
-				// char	buffer[BUFFER_SIZE];
-				char buffer[BUFFER_SIZE];
-				std::string receivedData;
+				this->sockets.at(i).resetBuffer();
+				std::string	joinedStr;
+				if (this->sockets.at(i).allDataRead(fds.at(i).fd)) {
+					joinedStr = this->sockets.at(i).getJoinedStr();
+					closeConn = this->sockets.at(i).getCloseConnStat();
+					std::cout << "yes all data was read\n";
+					std::cout << "final result: " << GREEN_TEXT 
+						<< joinedStr << RESET_COLOR << std::endl;
 
-				closeConnection = false;
-				ssize_t bytesReceived;
-				std::string joinedStr;
-				this->contentLen = -2;
-				this->bodySize = 0; 
-				while(true) {
-					memset(buffer, '\0', BUFFER_SIZE);
-					bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
-					std::string bufferStr(buffer);
-					setContentLen(bufferStr);
-					setBodySize(bufferStr, bytesReceived);
-					if (bytesReceived < 0) {
-						if (reachedTheEnd(bufferStr, bytesReceived)) {
-							closeConnection = true;
-							joinedStr.append(bufferStr);
-							break;
-						}
-						// std::cout << "con_len: " << this->contentLen << std::endl;
-						// std::cout << "vody_si: " << buffer << std::endl;
-						continue;
-					}
-					if (bytesReceived == 0) {
-						joinedStr.append(bufferStr);
-						closeConnection = true;
-						break;
-					}
-					if (reachedTheEnd(bufferStr, bytesReceived)) {
-						closeConnection = true;
-						joinedStr.append(bufferStr);
-						break;
-					}
-					std::cout << RED_TEXT << "part: " << bufferStr << RESET_COLOR << "\n";
-					joinedStr.append(bufferStr);
-					// memset(buffer, '\0', BUFFER_SIZE);
-					std::cout << "inside while\n";
-					// std::cout << "con_len: " << this->contentLen << std::endl;
-					// std::cout << "vody_si: " << this->bodySize << std::endl;
-				}
-
-				std::cout << "con_len: " << this->contentLen << std::endl;
-				std::cout << "vody_si: " << this->bodySize << std::endl;
-				// exit(1);
-				// delete[] buffer;
-				if (!joinedStr.empty()) {
-					std::cout << "na\n";
-					closeConnection = true;
-					// std::string str_buffer(buffer);
-					// data_read(str_buffer, bytesReceived);
 					http_resp = buildHttpResponse(currentPortInex, joinedStr);
-					// http_resp = buildHttpResponse(currentPortInex, buffer);
-					//send response to client
-					std::cout << "http_res: " << http_resp << std::endl;
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
-						closeConnection = true;
+						closeConn = true;
 						break;
 					}
-					// closeConnection = true;
 				}
-					// close(fds[i].fd);
-					// delete[] buffer;
-			std::cout << "con: " << closeConnection << std::endl;
-			std::cout << "sent: \n";
-			if (closeConnection == true) {
+			}
+			if (closeConn) {
 				std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
+				this->sockets.erase(this->sockets.begin() + i);
 			}
-			}
+
+
+
+
+				// if (!this->sockets.at(i).getJoinedStr().empty()) {
+				// 	closeConnection = true;
+				// 	// http_resp = buildHttpResponse(currentPortInex, joinedStr);
+				// 	rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+				// 	// std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
+				// 	if (rc < 0) {
+				// 		std::cerr << "send() failed\n";
+				// 		closeConnection = true;
+				// 		break;
+				// 	}
+				// }
+
+			// std::cout << "index: " << this->sockets.size() << std::endl;
+
+			// if (pollfd[i].revents & POLLOUT)
+			//not a listening socket and it's readable
+			// else {
+			// 	std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
+			// 	// char	buffer[BUFFER_SIZE];
+			// 	char buffer[BUFFER_SIZE];
+			// 	std::string receivedData;
+
+			// 	closeConnection = false;
+			// 	ssize_t bytesReceived;
+			// 	std::string joinedStr;
+			// 	this->contentLen = -2;
+			// 	this->bodySize = 0; 
+			// 	while(true) {
+			// 		memset(buffer, '\0', BUFFER_SIZE);
+			// 		bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
+			// 		std::string bufferStr(buffer);
+			// 		setContentLen(bufferStr);
+			// 		setBodySize(bufferStr, bytesReceived);
+			// 		if (bytesReceived < 0) {
+			// 			if (reachedTheEnd(bufferStr, bytesReceived)) {
+			// 				closeConnection = true;
+			// 				joinedStr.append(bufferStr);
+			// 				break;
+			// 			}
+			// 			continue;
+			// 		}
+			// 		if (bytesReceived == 0) {
+			// 			joinedStr.append(bufferStr);
+			// 			closeConnection = true;
+			// 			break;
+			// 		}
+			// 		if (reachedTheEnd(bufferStr, bytesReceived)) {
+			// 			closeConnection = true;
+			// 			joinedStr.append(bufferStr);
+			// 			break;
+			// 		}
+			// 		joinedStr.append(bufferStr);
+			// 	}
+			// 	if (!joinedStr.empty()) {
+			// 		closeConnection = true;
+			// 		http_resp = buildHttpResponse(currentPortInex, joinedStr);
+			// 		rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
+			// 		std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
+			// 		if (rc < 0) {
+			// 			std::cerr << "send() failed\n";
+			// 			closeConnection = true;
+			// 			break;
+			// 		}
+			// 	}
+			// std::cout << "con: " << closeConnection << std::endl;
+			// std::cout << "sent: \n";
+			// if (closeConnection == true) {
+			// 	std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
+			// 	close(fds[i].fd);
+			// 	fds[i].fd = -1;
+			// 	fds.erase(fds.begin() + i);
+			// }
+			// }
 		}
 	}
 }
@@ -336,12 +357,12 @@ sockaddr_in Server::getServer_address() const {
 	return this->serverAddress;
 }
 
-void	Server::setContentLen(std::string bufferStr) {
-	if (this->contentLen == -2)
-		this->contentLen = getContentLen(bufferStr);
-}
+// void	Server::setContentLen(std::string bufferStr) {
+// 	if (this->contentLen == -2)
+// 		this->contentLen = getContentLen(bufferStr);
+// }
 
-void	Server::setBodySize(std::string bufferStr, int bytesReceived) {
-	this->bodySize += countBodySize(bufferStr, bytesReceived);
-}
+// void	Server::setBodySize(std::string bufferStr, int bytesReceived) {
+// 	this->bodySize += countBodySize(bufferStr, bytesReceived);
+// }
 /* ************************************************************************** */

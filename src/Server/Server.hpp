@@ -6,6 +6,9 @@
 class	HttpMessageChecker;
 class	ServConf;
 class	Config;
+class	Socket;
+
+
 
 class Server
 {
@@ -16,6 +19,7 @@ class Server
 		std::vector<ServConf>					conf;
 		int										contentLen;
 		int										bodySize;
+		std::vector<Socket>						sockets;
 	public:
 		Server();
 		~Server();
@@ -26,8 +30,9 @@ class Server
 		std::string buildHttpResponse(int socketIndex, std::string request);
 		Server &operator=(Server const &rhs);
 		void	setServerAddress(unsigned short &port, std::string &hostName);
-		void	setContentLen(std::string bufferStr);
-		void	setBodySize(std::string bufferStr, int bytesReceived);
+		// void	setContentLen(std::string bufferStr);
+		// void	setBodySize(std::string bufferStr, int bytesReceived);
+
 };
 
 #endif /* ********************************************************** SERVER_H */

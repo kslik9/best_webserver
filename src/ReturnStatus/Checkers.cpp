@@ -5,7 +5,7 @@ bool    HttpRequestFlow::checkNotAllowededChars() {
 	unsigned int	targetLen = target.length();
 
 	for (int i = 1; i < targetLen; i++) {
-		if (allowedChars.find(target[i]) == std::string::npos)
+		if (allowedChars.find(target.at(i)) == std::string::npos)
 			return true;
 	}
 	return false;
