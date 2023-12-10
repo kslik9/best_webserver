@@ -32,6 +32,7 @@
 #include "../src/Config/Config.hpp"
 #include "../src/Logger/Logger.hpp"
 #include "../src/Server/Server.hpp"
+#include "../src/Server/Socket.hpp"
 #include "../src/ReturnStatus/RequestData.hpp"
 #include "../src/ReturnStatus/HttpRequestFlow.hpp"
 
@@ -62,7 +63,7 @@
 #define GREEN_TEXT "\033[1;32m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
-// #define ROOT_FOLDER "/Users/aessaoud/Desktop/projects/webserv/var/www/html"
-#define PATH "/Users/aessaoud/goinfre/homebrew/bin:/Users/aessaoud/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
+#define ROOT_FOLDER "/Users/ylabrahm/Desktop/webserv/var/www/html"
+#define PATH "/Users/ylabrahm/goinfre/homebrew/bin:/Users/ylabrahm/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
 
 class ReturnStatus;
