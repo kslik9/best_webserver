@@ -62,8 +62,8 @@ bool    Socket::allDataRead(int fd) {
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
     std::cout << "bytes received: " << bytesReceived << std::endl;
-    std::cout << "con_len: " << this->contentLen << std::endl;
-    std::cout << "body_size: " << this->bodySize << std::endl;
+    std::cout << "con_len   : " << this->contentLen << std::endl;
+    std::cout << "body_size : " << this->bodySize << std::endl;
     if (bytesReceived < 0) {
 		if (this->bodySize >= this->contentLen) {
             joinedStr.append(bufferStr);
