@@ -100,8 +100,8 @@ void Server::start(Config &mainConf) {
 
 			// this solves the error of binding by reusing address
 			if (setsockopt(this->serverSocketsFd[socketIndex], SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
-			logger.Log(ERROR, "Error of binding by reusing address");
-			throw std::runtime_error("Error of binding by reusing address");
+				logger.Log(ERROR, "Error of binding by reusing address");
+				throw std::runtime_error("Error of binding by reusing address");
 			}
 
 			//set server address info
@@ -169,14 +169,14 @@ void Server::waitClients()
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
 			{
-				std::cout << "revent == 0\n";
+				// std::cout << "revent == 0\n";
 				continue;
 			}
-			if (fds[i].revents != POLLIN) {
-				std::cerr << "revents error\n";
-				endServer = true;
-				break;
-			}
+			// if (fds[i].revents != POLLIN) {
+			// 	std::cerr << "revents error\n";
+			// 	endServer = true;
+			// 	break;
+			// }
 
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
