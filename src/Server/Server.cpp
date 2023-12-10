@@ -196,6 +196,7 @@ void Server::waitClients()
 	}
 	int socketIndex = fds.size();
 	while (endServer == false) {
+		std::cout << "ljamal\n";
 		closeConn = false;
 		rc = poll(&fds[0], fds.size(), 3000);
 		if (rc < 0) {
@@ -207,11 +208,11 @@ void Server::waitClients()
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
 				continue;
-			if (fds[i].revents != POLLIN) {
-				std::cout << "revents error\n";
-				endServer = true;
-				break;
-			}
+			// if (fds[i].revents != POLLIN) {
+			// 	std::cout << "revents error\n";
+			// 	endServer = true;
+			// 	break;
+			// }
 
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
@@ -246,8 +247,8 @@ void Server::waitClients()
 					joinedStr = this->sockets.at(i).getJoinedStr();
 					closeConn = this->sockets.at(i).getCloseConnStat();
 					std::cout << "yes all data was read\n";
-					std::cout << "final result: " << GREEN_TEXT 
-						<< joinedStr << RESET_COLOR << std::endl;
+					// std::cout << "final result: " << GREEN_TEXT 
+					// 	<< joinedStr << RESET_COLOR << std::endl;
 
 					http_resp = buildHttpResponse(currentPortInex, joinedStr);
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
@@ -257,6 +258,9 @@ void Server::waitClients()
 						closeConn = true;
 						break;
 					}
+				}
+				else {
+					std::cout << "not data was read yet :(, waiting for second part\n";
 				}
 			}
 			if (closeConn) {
