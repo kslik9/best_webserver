@@ -12,6 +12,7 @@ class Socket {
         bool        closeConnection;
 	public:
 		Socket();
+		~Socket();
 		void	    setContentLen(std::string bufferStr);
 		void	    setBodySize(std::string bufferStr, int bytesReceived);
 		int         getBodySize();
