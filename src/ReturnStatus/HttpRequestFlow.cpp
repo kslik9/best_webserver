@@ -16,6 +16,7 @@ void    HttpRequestFlow::createHttpHeader() {
 
 //this will check the request and at the end it will create an http message and return it
 AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
+    // return new Forbidden403(this->config.errorPages["403"]);
     std::map<std::string, std::string> abstractErrorPages;
     abstractErrorPages["404"] = "errors/404.html";
 

@@ -25,7 +25,6 @@ NotFound404::NotFound404(std::string &targetp, std::string &errorPath) {
 
 #include <ctime>
 std::string NotFound404::createResponse() {
-    return "ja";
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;
     response << startLine;

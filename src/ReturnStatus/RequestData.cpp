@@ -44,19 +44,18 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		std::cout << "------------------ multipart/form-data ------------------\n";
-		std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<";
-		// uploadfile(part_two);
+		std::cout << "<";
 		std::cout << part_two;
-		std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-		// exit(0);
+		uploadfile(part_two);
+		std::cout << ">";
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
-		std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
 	}
 	if (headers["Content-Type"].find("text/plain") != std::string::npos)
 	{
-		std::cout << "------------------ text/plain ------------------\n";
+		// std::cout << "------------------ text/plain ------------------\n";
 	}
 }
 

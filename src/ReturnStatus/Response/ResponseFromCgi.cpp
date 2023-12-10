@@ -1,26 +1,20 @@
 #include "ResponseFromCgi.hpp"
 
-void    ResponseFromCgi::init_env(RequestData request, std::string const &root) {
-    // URI: /blog/post/index.php
-	// std::cout << "\n-----------------------------------------------------\n";
-
-
-	// std::string targetFile, folder, root_folderStr(ROOT_FOLDER);
+void ResponseFromCgi::init_env(RequestData request, std::string const &root)
+{
+	// URI: /blog/post/index.php
 	std::string targetFile, folder, root_folderStr(root);
 	size_t lastSlashPos = request.getUri().rfind('/');
-	if (lastSlashPos != std::string::npos) {
+	if (lastSlashPos != std::string::npos)
+	{
 		folder = request.getUri().substr(0, lastSlashPos);
 		targetFile = request.getUri().substr(lastSlashPos + 1);
 	}
-	// std::cout << "target: " << targetFile << "\n";
-	// std::cout << "folder: " << folder << "\n";
-	// std::cout << "\n\n\n-----------------------------------------------------\n";
 	this->keyValue["DOCUMENT_URI"] = folder;
 	this->keyValue["SCRIPT_NAME"] = "/" + targetFile;
 	this->keyValue["SCRIPT_FILENAME"] = root_folderStr + "/" + request.getUri();
-	this->keyValue["REQUEST_METHOD"] = request.getMethod();
+	// this->keyValue["REQUEST_METHOD"] = request.getMethod(); // DYNAMIC should be added
 	this->keyValue["DOCUMENT_ROOT"] = root_folderStr;
-	// this->keyValue["PATH"] = PATH;
 	this->keyValue["SERVER_NAME"] = "0.0.0.0";
 	this->keyValue["SERVER_PORT"] = "8081";
 	this->keyValue["GETAWAY_INTERFACE"] = "CGI/1.1";
@@ -29,18 +23,19 @@ void    ResponseFromCgi::init_env(RequestData request, std::string const &root) 
 	this->keyValue["FCGI_ROLE"] = "RESPONDER";
 	this->keyValue["REQUEST_SCHEME"] = "http";
 	this->keyValue["SERVER_SOFTWARE"] = "webserv/1.1";
-	this->keyValue["REMOTE_ADDR"] = "0.0.0.0";
-	this->keyValue["REMOTE_PORT"] = "0";
-	this->keyValue["PATH_TRANSLATED"] = "";
-	this->keyValue["QUERY_STRING"] = "";
+	this->keyValue["REQUEST_METHOD"] = "POST"; // STATIC should be removed
+	this->keyValue["QUERY_STRING"] = "var=1337&mar=42"; // STATIC should be removed
+	this->keyValue["CONTENT_LENGTH"] = "30"; // STATIC should be removed
+	// 
 }
 
-ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root) {
-    this->init_env(rq, root);
-    this->headers["Content-Type"] = get_mime_type(root);
-    this->headers["Date"] = getCurrentTime();
-    this->statusCode = "200";
-    this->statusMessage = "OK";
+ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root)
+{
+	this->init_env(rq, root);
+	this->headers["Content-Type"] = get_mime_type(root);
+	this->headers["Date"] = getCurrentTime();
+	this->statusCode = "200";
+	this->statusMessage = "OK";
 }
 
 char **mapToArr(std::map<std::string, std::string> mp)
@@ -62,8 +57,9 @@ char **mapToArr(std::map<std::string, std::string> mp)
 	return arr;
 }
 
-std::string ResponseFromCgi::process() {
-    std::vector<const char *> php_args;
+std::string ResponseFromCgi::process()
+{
+	std::vector<const char *> php_args;
 	php_script src;
 	src.path = "php/index.php";
 	src.file_stream = new std::ifstream(src.path);
@@ -77,65 +73,65 @@ std::string ResponseFromCgi::process() {
 	php_args.push_back(src.path.c_str());
 	php_args.push_back(NULL);
 	int pipe_fd[2];
-	if (pipe(pipe_fd) == -1) {
+	if (pipe(pipe_fd) == -1)
+	{
 		std::cerr << "Error creating pipe" << std::endl;
 		delete src.file_stream;
 		return "delete";
 	}
 	pid_t child_pid = fork();
-	if (child_pid == -1) {
+	if (child_pid == -1)
+	{
 		std::cerr << "Error forking the process" << std::endl;
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		delete src.file_stream;
 		return "delete";
 	}
-	if (child_pid == 0) {
+	if (child_pid == 0)
+	{
 		char **envs = mapToArr(this->keyValue);
-		// for (size_t i = 0; envs[i]; i++)
-		// 	std::cout << i << ":" << envs[i] << "\n";
-		close(pipe_fd[0]);
 		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
+		std::string postData = "data_from_97=1337&musclues=-42"; // STATOC
+    	ssize_t bytes_written = write(pipe_fd[1], postData.c_str(), postData.length());
+		dup2(pipe_fd[0], STDIN_FILENO);
 		if (execve(CGI_BIN, (char *const *)(&php_args[0]), envs) == -1)
 		{
 			std::cerr << "Error executing php command" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	}
-	else {
+	else
+	{
+		int status;
+		waitpid(child_pid, &status, 0);
 		close(pipe_fd[1]);
 		std::stringstream output;
 		char buffer[4096];
 		ssize_t bytes_read;
-		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0) {
+		while ((bytes_read = read(pipe_fd[0], buffer, sizeof(buffer))) > 0)
+		{
 			output.write(buffer, bytes_read);
-			// std::cout << "[[" << output.str() << "]]" << std::endl;
 		}
-		// std::cout << "[[" << output.str() << "]]\n";
-		// output.write("\r\n", 2);
 		close(pipe_fd[0]);
-		int status;
-		waitpid(child_pid, &status, 0);
 		delete src.file_stream;
 		return output.str();
 	}
 	return "NULL"; // Provisoire
 }
 
+std::string ResponseFromCgi::createResponse()
+{
+	startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
 
-std::string ResponseFromCgi::createResponse() {
-    startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
+	std::map<std::string, std::string>::iterator it;
+	response << startLine;
+	// for (it = headers.begin(); it != headers.end(); ++it)
+	//     response << it->first << ": " << it->second << "\r\n";
+	// response << "\r\n";
+	// response << "\r\n";
 
-    std::map<std::string, std::string>::iterator it;
-    response << startLine;
-    // for (it = headers.begin(); it != headers.end(); ++it)
-    //     response << it->first << ": " << it->second << "\r\n";
-    // response << "\r\n";
-    // response << "\r\n";
-    
-    std::string php_resp = this->process();
-    response << php_resp;
-    return response.str(); 
-
+	std::string php_resp = this->process();
+	response << php_resp;
+	return response.str();
 }
