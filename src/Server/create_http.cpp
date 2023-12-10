@@ -23,12 +23,10 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 
     int         fileStat;
     std::string php_resp;
-    // // ------------------------------------------
-    php_resp += "HTTP/1.1 200 OK\r\n";
-    php_resp += "Content-Type: text/html\r\n";
     // ------------------------------------------
     RequestData request(requestStr);
-    // std::cout << "something her2\n";
+
+    // // ------------------------------------------
     AResponseMessage *createdResponse;
     std::string     responseMessage;
     //http request checker
@@ -40,7 +38,6 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     return responseMessage;
     // std::cout << "something her2\n";
 
-    return php_resp;
 }
 
     
