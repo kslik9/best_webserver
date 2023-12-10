@@ -135,45 +135,6 @@ void Server::start(Config &mainConf) {
 }
 
 
-// int getContentLen(std::string bufferStr) {
-// 	std::string target = "Content-Length: ";
-
-//     size_t found = bufferStr.find(target);
-
-//     if (found != std::string::npos) {
-//         found += target.length();
-//         size_t end = bufferStr.find("\r\n", found);
-//         std::string lengthStr = bufferStr.substr(found, end - found);
-
-//         // Convert string to integer
-// 		// std::cout << "len::: " << lengthStr << "\n";
-//         int contentLength = std::stoi(lengthStr);
-//         return contentLength;
-//     }
-// 	return -1;
-// }
-
-// int countBodySize(std::string bufferStr, int bytesReceived) {
-// 	if (bytesReceived < 0)
-// 		return 0;
-// 	int foundbrbn = bufferStr.find("\r\n\r\n");
-
-// 	// std::cout << "shoko: " << bufferStr << std::endl;
-// 	if (bufferStr.find("\r\n\r\n") != std::string::npos) {
-// 		// std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 4) << "]\n";
-// 		std::cout << "found\n";
-// 		return bytesReceived - (foundbrbn + 4);
-// 	}
-// 	return bytesReceived;
-// }
-
-// bool Server::reachedTheEnd(std::string bufferStr, int bytesReceived) {
-	
-// 	if (this->bodySize >= this->contentLen)
-// 		return true;
-// 	return false;
-// }
-
 void Server::waitClients()
 {
 	bool	closeConn;
@@ -196,7 +157,7 @@ void Server::waitClients()
 	}
 	int socketIndex = fds.size();
 	while (endServer == false) {
-		std::cout << "ljamal\n";
+		// std::cout << "ljamal\n";
 		closeConn = false;
 		rc = poll(&fds[0], fds.size(), 3000);
 		if (rc < 0) {
@@ -207,12 +168,15 @@ void Server::waitClients()
 			//loop to find descriptors that return POLLIN
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
+			{
+				std::cout << "revent == 0\n";
 				continue;
-			// if (fds[i].revents != POLLIN) {
-			// 	std::cout << "revents error\n";
-			// 	endServer = true;
-			// 	break;
-			// }
+			}
+			if (fds[i].revents != POLLIN) {
+				std::cerr << "revents error\n";
+				endServer = true;
+				break;
+			}
 
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
 			{
@@ -260,6 +224,7 @@ void Server::waitClients()
 					}
 				}
 				else {
+					std::cout << RED_TEXT << "part: " << this->sockets.at(i).getJoinedStr() << RESET_COLOR << "\n\n";
 					std::cout << "not data was read yet :(, waiting for second part\n";
 				}
 			}

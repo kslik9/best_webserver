@@ -58,7 +58,7 @@ void    Socket::resetBuffer() {
 bool    Socket::allDataRead(int fd) {
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
-    std::string bufferStr(buffer);
+    std::string bufferStr(buffer, bytesReceived);
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
     std::cout << "bytes received: " << bytesReceived << std::endl;
