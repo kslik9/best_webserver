@@ -19,7 +19,7 @@
 
 std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 {
-	// std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
+	std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
 
     int         fileStat;
     std::string php_resp;
