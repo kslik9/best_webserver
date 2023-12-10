@@ -202,7 +202,6 @@ void Server::waitClients()
 				sockets.push_back(sock);
 
 			}
-			//not a listening socket and it's readable
 				
 			else {
 				this->sockets.at(i).resetBuffer();
