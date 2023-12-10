@@ -1,5 +1,15 @@
 #include "Socket.hpp"
 
+Socket::Socket() {
+    this->contentLen = -2;
+    this->bodySize = 0;
+    this->closeConnection = false;
+}
+
+Socket::~Socket() {
+    
+}
+
 int getContentLen(std::string bufferStr) {
 	std::string target = "Content-Length: ";
 
@@ -32,11 +42,7 @@ int countBodySize(std::string bufferStr, int bytesReceived) {
 	return bytesReceived;
 }
 
-Socket::Socket() {
-    this->contentLen = -2;
-    this->bodySize = 0;
-    this->closeConnection = false;
-}
+
 
 void    Socket::setContentLen(std::string bufferStr) {
     if (this->contentLen == -2)

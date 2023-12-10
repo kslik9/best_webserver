@@ -10,15 +10,13 @@ Server::Server() {
 	this->bodySize = 0;
 }
 
-
-
-
 /*
 ** -------------------------------- DESTRUCTOR --------------------------------
 */
 
 Server::~Server() {
 	conf.clear();
+	sockets.clear();
 	serverSocketsFd.clear();
 	portsAndHosts.clear();
 }

@@ -53,7 +53,6 @@
 
 
 // Consts
-#define BUFFER_SIZE 1024 * 1024 // 10MB
 #define STATIC_HTTP "static/http/"
 
 #define CLIENTS_COUNT 4000
@@ -63,7 +62,5 @@
 #define GREEN_TEXT "\033[1;32m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
-#define ROOT_FOLDER "/Users/ylabrahm/Desktop/webserv/var/www/html"
-#define PATH "/Users/ylabrahm/goinfre/homebrew/bin:/Users/ylabrahm/goinfre/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki"
 
 class ReturnStatus;
