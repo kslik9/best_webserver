@@ -25,6 +25,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     std::string php_resp;
     // ------------------------------------------
     RequestData request(requestStr);
+    std::cout << "mama\n";
 
     // // ------------------------------------------
     AResponseMessage *createdResponse;
