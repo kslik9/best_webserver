@@ -270,83 +270,6 @@ void Server::waitClients()
 				fds.erase(fds.begin() + i);
 				this->sockets.erase(this->sockets.begin() + i);
 			}
-
-
-
-
-				// if (!this->sockets.at(i).getJoinedStr().empty()) {
-				// 	closeConnection = true;
-				// 	// http_resp = buildHttpResponse(currentPortInex, joinedStr);
-				// 	rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-				// 	// std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
-				// 	if (rc < 0) {
-				// 		std::cerr << "send() failed\n";
-				// 		closeConnection = true;
-				// 		break;
-				// 	}
-				// }
-
-			// std::cout << "index: " << this->sockets.size() << std::endl;
-
-			// if (pollfd[i].revents & POLLOUT)
-			//not a listening socket and it's readable
-			// else {
-			// 	std::cout << "fd " << fds[i].fd << " is readable, i: " << i << std::endl;
-			// 	// char	buffer[BUFFER_SIZE];
-			// 	char buffer[BUFFER_SIZE];
-			// 	std::string receivedData;
-
-			// 	closeConnection = false;
-			// 	ssize_t bytesReceived;
-			// 	std::string joinedStr;
-			// 	this->contentLen = -2;
-			// 	this->bodySize = 0; 
-			// 	while(true) {
-			// 		memset(buffer, '\0', BUFFER_SIZE);
-			// 		bytesReceived = recv(fds[i].fd, buffer, BUFFER_SIZE, 0);
-			// 		std::string bufferStr(buffer);
-			// 		setContentLen(bufferStr);
-			// 		setBodySize(bufferStr, bytesReceived);
-			// 		if (bytesReceived < 0) {
-			// 			if (reachedTheEnd(bufferStr, bytesReceived)) {
-			// 				closeConnection = true;
-			// 				joinedStr.append(bufferStr);
-			// 				break;
-			// 			}
-			// 			continue;
-			// 		}
-			// 		if (bytesReceived == 0) {
-			// 			joinedStr.append(bufferStr);
-			// 			closeConnection = true;
-			// 			break;
-			// 		}
-			// 		if (reachedTheEnd(bufferStr, bytesReceived)) {
-			// 			closeConnection = true;
-			// 			joinedStr.append(bufferStr);
-			// 			break;
-			// 		}
-			// 		joinedStr.append(bufferStr);
-			// 	}
-			// 	if (!joinedStr.empty()) {
-			// 		closeConnection = true;
-			// 		http_resp = buildHttpResponse(currentPortInex, joinedStr);
-			// 		rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-			// 		std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
-			// 		if (rc < 0) {
-			// 			std::cerr << "send() failed\n";
-			// 			closeConnection = true;
-			// 			break;
-			// 		}
-			// 	}
-			// std::cout << "con: " << closeConnection << std::endl;
-			// std::cout << "sent: \n";
-			// if (closeConnection == true) {
-			// 	std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
-			// 	close(fds[i].fd);
-			// 	fds[i].fd = -1;
-			// 	fds.erase(fds.begin() + i);
-			// }
-			// }
 		}
 	}
 }
@@ -355,18 +278,3 @@ void Server::waitClients()
 /*
 ** --------------------------------- ACCESSOR ---------------------------------
 */
-
-
-sockaddr_in Server::getServer_address() const {
-	return this->serverAddress;
-}
-
-// void	Server::setContentLen(std::string bufferStr) {
-// 	if (this->contentLen == -2)
-// 		this->contentLen = getContentLen(bufferStr);
-// }
-
-// void	Server::setBodySize(std::string bufferStr, int bytesReceived) {
-// 	this->bodySize += countBodySize(bufferStr, bytesReceived);
-// }
-/* ************************************************************************** */
