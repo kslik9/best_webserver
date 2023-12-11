@@ -19,7 +19,9 @@ std::string get_content(std::string part_two)
 	std::string tmp;
 
 	size_t end = part_two.find("\r\n", start + 1);
-	tmp = part_two.substr(start , end - start - 1);
+	tmp = part_two.substr(start + 2 , end - start - 1);
+	// std::cout << "{"<< tmp << "}" <<std::endl;
+	// exit(0);
 	return tmp;
 
 }
@@ -44,10 +46,10 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		// std::cout << "------------------ multipart/form-data ------------------\n";
-		// std::cout << "<";
-		// std::cout << part_two;
-		uploadfile(part_two);
-		// std::cout << ">";
+		std::cout << "<";
+		std::cout << part_two;
+		// uploadfile(part_two);
+		std::cout << ">";
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
