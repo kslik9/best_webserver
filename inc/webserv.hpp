@@ -45,6 +45,8 @@
 #include "../src/ReturnStatus/Response/NoContent204.hpp"
 #include "../src/ReturnStatus/Response/InternalServerError500.hpp"
 #include "../src/ReturnStatus/Response/OK200.hpp"
+#include "../src/ReturnStatus/Response/Created201.hpp"
+#include "../src/ReturnStatus/Response/PayloadTooLarge.hpp"
 #include "../src/ReturnStatus/Response/ResponseFromCgi.hpp"
 
 

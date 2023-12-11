@@ -1,31 +1,22 @@
-#include "NotFound404.hpp"
+#include "Created201.hpp"
 
-//contructor
-NotFound404::NotFound404(std::string &targetp, std::string &errorPath) {
-    statusCode = "404";
-    statusMessage = "Not Found";
-    target = targetp;
-
+Created201::Created201() {
+    statusCode = "201";
+    statusMessage = "Created";
     //headers
     headers["Date"] = getCurrentTime();
     headers["Content-Type"] = "text/html";
 
-    if (!access(errorPath.c_str(), F_OK | R_OK))
-        this->errorPath = errorPath;
-    else
-        this->errorPath = STATIC_404;
-    
+    this->errorPath = STATIC_201;
 }
 
-#include <ctime>
-std::string NotFound404::createResponse() {
+std::string Created201::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;
     response << startLine;
     for (it = headers.begin(); it != headers.end(); ++it)
         response << it->first << ": " << it->second << "\r\n"; //similar to: "Content-Type: " << mime_type << "\r\n"
     response << "\r\n";
-
 
     //create body
     std::ifstream file1(this->errorPath, std::ios::binary);
