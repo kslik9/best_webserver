@@ -4,11 +4,11 @@ std::string get_fileName(std::string part_two)
 {
 	size_t k = part_two.find("filename=");
 
-		size_t first = part_two.find("\"", k);
-		size_t second = part_two.find("\"", first + 1);
-		std::string tmp = part_two.substr(first + 1 , second - first - 1);
-		return tmp;
-	
+	size_t first = part_two.find("\"", k);
+	size_t second = part_two.find("\"", first + 1);
+	std::string tmp = part_two.substr(first + 1, second - first - 1);
+	return tmp;
+
 	// exit(0);
 }
 std::string get_content(std::string part_two)
@@ -19,25 +19,25 @@ std::string get_content(std::string part_two)
 	std::string tmp;
 
 	size_t end = part_two.find("\r\n\r\n", start + 1);
-	tmp = part_two.substr(start + 2 , end - start - 1);
-	std::cout << BLUE_TEXT << "start =" << start << " | end = "  << end  <<std::endl << RESET_COLOR;
+	tmp = part_two.substr(start + 2, end - start - 1);
+	std::cout << BLUE_TEXT << "start =" << start << " | end = " << end << std::endl
+			  << RESET_COLOR;
 	// exit(0);
 	return tmp;
-
 }
 void uploadfile(std::string part_two)
 {
 	// int how_many_sig()
-	std::string filename , content;
+	std::string filename, content;
 	filename = "uploadedFiles/";
 	filename = filename + get_fileName(part_two);
 	std::cout << filename << std::endl;
 	content = get_content(part_two);
 	std::ofstream outputFile(filename);
-	if(outputFile.is_open())
+	if (outputFile.is_open())
 	{
 		std::cout << "\nseccusefly\n";
-		outputFile << content;	
+		outputFile << content;
 	}
 	outputFile.close();
 }
@@ -67,7 +67,7 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 	bool trigger = false;
 	while (1)
 	{
-		if(!std::getline(iss, line))
+		if (!std::getline(iss, line))
 			break;
 		if (line == "\r" && !trigger)
 			trigger = true;
@@ -79,7 +79,12 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 	}
 }
 
-void fillFirstPart(std::string &part_one, std::string &method, std::string &target, std::string &httpVersion, std::map<std::string, std::string> &headers)
+void fillFirstPart(std::string &part_one,
+				   std::string &method,
+				   std::string &target,
+				   std::string &httpVersion,
+				   std::map<std::string, std::string> &headers,
+				   std::string &query_string)
 {
 	int i = 0;
 	std::string line;
@@ -93,6 +98,12 @@ void fillFirstPart(std::string &part_one, std::string &method, std::string &targ
 		{
 			std::stringstream fline(line);
 			fline >> method >> target >> httpVersion;
+			int pos = target.find("?");
+			if (pos != std::string::npos)
+			{
+				query_string = target.substr(pos + 1);
+				target = target.substr(0, pos);
+			}
 		}
 		else
 		{
@@ -113,25 +124,19 @@ void parse_request(std::string &request,
 				   std::string &target,
 				   std::string &httpVersion,
 				   std::string &body,
-				   std::map<std::string, std::string> &headers)
+				   std::map<std::string, std::string> &headers,
+				   std::string &query_string)
 {
 	std::string part_one, part_two;
 	std::stringstream iss(request);
 	split_parts(iss, part_one, part_two);
-	// std::cout << part_two << "\n";
-	fillFirstPart(part_one, method, target, httpVersion, headers);
+	fillFirstPart(part_one, method, target, httpVersion, headers, query_string);
 	fillSeconPart(part_two, body, headers);
 }
 
 RequestData::RequestData(std::string &request)
 {
-	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers);
-	// std::cout << "1: " << this->method << "\n";
-	// std::cout << "2: " << this->uri << "\n";
-	// std::cout << "3: " << this->httpVersion << "\n";
-	// this->method = "GET";
-	// this->uri = "/upload.html";
-	// this->httpVersion = "HTTP/1.1";
+	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers, this->query_string);
 }
 
 std::string RequestData::getUri() const
@@ -157,6 +162,11 @@ std::string RequestData::getBody() const
 std::map<std::string, std::string> RequestData::getHeaders() const
 {
 	return this->headers;
+}
+
+std::string RequestData::getQueryString() const
+{
+	return this->query_string;
 }
 
 std::string RequestData::getAllHeaders() const
