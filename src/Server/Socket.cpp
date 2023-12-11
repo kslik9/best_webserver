@@ -1,16 +1,21 @@
 #include "Socket.hpp"
 
 Socket::Socket() {
+
+}
+
+Socket::Socket(short portIndx) {
     this->contentLen = -2;
     this->bodySize = 0;
     this->closeConnection = false;
+    this->portIndex = portIndx;
 }
 
 Socket::~Socket() {
     
 }
 
-int getContentLen(std::string bufferStr) {
+int countContentLen(std::string bufferStr) {
 	std::string target = "Content-Length: ";
 
     size_t found = bufferStr.find(target);
@@ -43,10 +48,9 @@ int countBodySize(std::string bufferStr, int bytesReceived) {
 }
 
 
-
 void    Socket::setContentLen(std::string bufferStr) {
     if (this->contentLen == -2)
-        this->contentLen = getContentLen(bufferStr);
+        this->contentLen = countContentLen(bufferStr);
 }
 
 void    Socket::setBodySize(std::string bufferStr, int bytesReceived) {
@@ -97,4 +101,16 @@ std::string Socket::getJoinedStr() const {
 
 bool        Socket::getCloseConnStat() {
     return this->closeConnection;
+}
+
+void    Socket::setPortIndex(short i) {
+    this->portIndex = i;
+}
+
+short    Socket::getPortIndex() const {
+    return this->portIndex;
+}
+
+int Socket::getContentLen() const {
+    return this->contentLen;
 }

@@ -26,7 +26,7 @@ class Server
 		bool reachedTheEnd(std::string bufferStr, int bytesReceived);
 		void start(Config &mainConf);
 		void waitClients();
-		std::string buildHttpResponse(int socketIndex, std::string request);
+		std::string buildHttpResponse(std::string requestStr, short socketIndex, int contentLen);
 		Server &operator=(Server const &rhs);
 		void	setServerAddress(unsigned short &port, std::string &hostName);
 

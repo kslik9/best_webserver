@@ -4,16 +4,21 @@ AResponseMessage    *HttpRequestFlow::handlePostMethod() {
     std::cout << BLUE_TEXT << "POST METHOD" << RESET_COLOR << std::endl;
     //check if location support upload
     if(checkLocationSupportUpload()) {
+        std::cout << GREEN_TEXT << "upload is supported" << RESET_COLOR << std::endl;
+        if (fileExceedsMaxSize()) {
+            std::cout << RED_TEXT << "file is too large" << RESET_COLOR << std::endl;
+            return new PayloadTooLarge(this->config.errorPages["413"]);
+        }
+        std::cout << GREEN_TEXT << "file uploaded" << RESET_COLOR << std::endl;
         //upload the post request body
         //create `201 Created` http response message
         //return ;
     }
-
+    std::cout << RED_TEXT << "uploa is not supported" << RESET_COLOR << std::endl;
     if(!checkContentExistsInRoot()) {
         std::cout << RED_TEXT <<  "`" << this->resourcesWithRoot << "` doesn't exist in root " << RESET_COLOR << std::endl;
         return new NotFound404(this->target, this->config.errorPages["404"]);
     }
-
     std::cout << GREEN_TEXT << "`" << this->resourcesWithRoot << "` exists in root" << RESET_COLOR << std::endl;
     //we check if the uri is dir (has '/' at end)
     if (checkContentIsDir()) {
