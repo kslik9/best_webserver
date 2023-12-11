@@ -19,7 +19,9 @@ std::string get_content(std::string part_two)
 	std::string tmp;
 
 	size_t end = part_two.find("\r\n", start + 1);
-	tmp = part_two.substr(start , end - start - 1);
+	tmp = part_two.substr(start + 2 , end - start - 1);
+	// std::cout << "{"<< tmp << "}" <<std::endl;
+	// exit(0);
 	return tmp;
 
 }
