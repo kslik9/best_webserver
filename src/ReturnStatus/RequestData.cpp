@@ -18,9 +18,9 @@ std::string get_content(std::string part_two)
 	start = part_two.find("\r\n", start + 1);
 	std::string tmp;
 
-	size_t end = part_two.find("\r\n", start + 1);
+	size_t end = part_two.find("\r\n\r\n", start + 1);
 	tmp = part_two.substr(start + 2 , end - start - 1);
-	// std::cout << "{"<< tmp << "}" <<std::endl;
+	std::cout << BLUE_TEXT << "start =" << start << " | end = "  << end  <<std::endl << RESET_COLOR;
 	// exit(0);
 	return tmp;
 
@@ -67,8 +67,7 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 	bool trigger = false;
 	while (1)
 	{
-		std::getline(iss, line);
-		if (line.empty())
+		if(!std::getline(iss, line))
 			break;
 		if (line == "\r" && !trigger)
 			trigger = true;
