@@ -221,7 +221,7 @@ void Server::waitClients()
 					}
 				}
 				else {
-					std::cout << RED_TEXT << "part: " << this->sockets.at(i).getJoinedStr() << RESET_COLOR << "\n\n";
+					// std::cout << RED_TEXT << "part: " << this->sockets.at(i).getJoinedStr() << RESET_COLOR << "\n\n";
 					std::cout << "not data was read yet :(, waiting for second part\n";
 				}
 			}
