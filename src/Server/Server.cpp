@@ -157,7 +157,7 @@ void Server::waitClients()
 	while (endServer == false) {
 		// std::cout << "ljamal\n";
 		closeConn = false;
-		rc = poll(&fds[0], fds.size(), 3000);
+		rc = poll(&fds[0], fds.size(), 0);
 		if (rc < 0) {
 			std::cout << "poll() error\n";
 			break;
@@ -190,7 +190,7 @@ void Server::waitClients()
 				}
 				//add new incoming connection to the pollfd
 				std::cout << "new incoming connection " << clientSd << std::endl;
-				// setNonBlocking(clientSd);
+				setNonBlocking(clientSd);
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);
@@ -208,7 +208,8 @@ void Server::waitClients()
 					http_resp = buildHttpResponse(
 						this->sockets.at(i).getJoinedStr(), 
 						this->sockets.at(i).getPortIndex(),
-						this->sockets.at(i).getContentLen());
+						this->sockets.at(i).getContentLen()
+					);
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {

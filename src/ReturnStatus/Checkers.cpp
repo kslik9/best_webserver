@@ -205,7 +205,10 @@ bool    HttpRequestFlow::checkDirIndedWithBackSlash() {
     return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
 
-bool    HttpRequestFlow::checkLocationSupportUpload() {
+bool    HttpRequestFlow::checkLocationSupportUpload(std::string &uploadDir) {
+    return true;
+    if (uploadDir.empty())
+        return false;
     return true;
 }
 
@@ -224,4 +227,44 @@ bool    HttpRequestFlow::deleteFile() {
 
 bool    HttpRequestFlow::fileExceedsMaxSize() {
     return false;
+}
+
+std::string get_content(std::string part_two)
+{
+	size_t k = part_two.find("Content-Type");
+	size_t start = part_two.find("\r\n", k);
+	start = part_two.find("\r\n", start + 1);
+	std::string tmp;
+
+	size_t end = part_two.find("\r\n\r\n", start + 1);
+	tmp = part_two.substr(start + 2 , end - start - 1);
+	// std::cout << BLUE_TEXT << "start =" << start << " | end = "  << end  <<std::endl << RESET_COLOR;
+	// exit(0);
+	return tmp;
+}
+
+std::string get_fileName(std::string part_two)
+{
+	size_t k = part_two.find("filename=");
+
+		size_t first = part_two.find("\"", k);
+		size_t second = part_two.find("\"", first + 1);
+		std::string tmp = part_two.substr(first + 1 , second - first - 1);
+		return tmp;
+}
+
+bool    HttpRequestFlow::uploadFile(std::string partTwo) {
+    std::string filename , content;
+	filename = "uploadedFiles/";
+	filename = filename + get_fileName(partTwo);
+	// std::cout << filename << std::endl;
+	content = get_content(partTwo);
+	std::ofstream outputFile(filename);
+	if(outputFile.is_open())
+	{
+		// std::cout << "\nseccusefly\n";
+		outputFile << content;	
+	}
+	outputFile.close();
+    return true;
 }

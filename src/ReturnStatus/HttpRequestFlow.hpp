@@ -28,8 +28,9 @@ class HttpRequestFlow {
         bool                                checkDirIndedWithBackSlash();
         bool                                deleteDirContent();
         bool                                checkWriteAccessOnDir();
-        bool                                checkLocationSupportUpload();
+        bool                                checkLocationSupportUpload(std::string &uploadDir);
         bool                                fileExceedsMaxSize();
+        bool                                uploadFile(std::string partTwo);
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
@@ -41,6 +42,7 @@ class HttpRequestFlow {
         AResponseMessage    *checkRequestAndReturnHttpMessage();
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
         void        createHttpHeader();
-        void        setContentLen(int contentLen);        
+        void        setContentLen(int contentLen);
+           
 };
 
