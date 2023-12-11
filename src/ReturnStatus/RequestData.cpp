@@ -1,64 +1,26 @@
 #include "RequestData.hpp"
 
-std::string get_fileName(std::string part_two)
-{
-	size_t k = part_two.find("filename=");
+// void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
+// {
+// 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ multipart/form-data ------------------\n";
+// 		// std::cout << "<";
+// 		// std::cout << part_two;
+// 		uploadfile(part_two);
+// 		// std::cout << ">";
+// 	}
+// 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+// 	}
+// 	if (headers["Content-Type"].find("text/plain") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ text/plain ------------------\n";
+// 	}
+// }
 
-		size_t first = part_two.find("\"", k);
-		size_t second = part_two.find("\"", first + 1);
-		std::string tmp = part_two.substr(first + 1 , second - first - 1);
-		return tmp;
-}
-
-std::string get_content(std::string part_two)
-{
-	size_t k = part_two.find("Content-Type");
-	size_t start = part_two.find("\r\n", k);
-	start = part_two.find("\r\n", start + 1);
-	std::string tmp;
-
-	size_t end = part_two.find("\r\n\r\n", start + 1);
-	tmp = part_two.substr(start + 2 , end - start - 1);
-	std::cout << BLUE_TEXT << "start =" << start << " | end = "  << end  <<std::endl << RESET_COLOR;
-	// exit(0);
-	return tmp;
-}
-void uploadfile(std::string part_two)
-{
-	std::string filename , content;
-	filename = "uploadedFiles/";
-	filename = filename + get_fileName(part_two);
-	std::cout << filename << std::endl;
-	content = get_content(part_two);
-	std::ofstream outputFile(filename);
-	if(outputFile.is_open())
-	{
-		std::cout << "\nseccusefly\n";
-		outputFile << content;	
-	}
-	outputFile.close();
-}
-void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
-{
-	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
-	{
-		// std::cout << "------------------ multipart/form-data ------------------\n";
-		std::cout << "<";
-		std::cout << part_two;
-		uploadfile(part_two);
-		std::cout << ">";
-	}
-	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
-	{
-		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
-	}
-	if (headers["Content-Type"].find("text/plain") != std::string::npos)
-	{
-		// std::cout << "------------------ text/plain ------------------\n";
-	}
-}
-
-void split_parts(std::stringstream &iss, std::string &part_one, std::string &part_two)
+void	RequestData::split_parts(std::stringstream &iss)
 {
 	std::string line;
 	bool trigger = false;
@@ -70,9 +32,9 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 			trigger = true;
 		// ------------------------
 		if (trigger)
-			part_two += line + "\n";
+			this->partTwo += line + "\n";
 		else
-			part_one += line + "\n";
+			this->partOne += line + "\n";
 	}
 }
 
@@ -105,30 +67,24 @@ void fillFirstPart(std::string &part_one, std::string &method, std::string &targ
 	}
 }
 
-void parse_request(std::string &request,
+void	RequestData::parse_request(std::string &request,
 				   std::string &method,
 				   std::string &target,
 				   std::string &httpVersion,
 				   std::string &body,
 				   std::map<std::string, std::string> &headers)
 {
-	std::string part_one, part_two;
+	// std::string part_one, part_two;
 	std::stringstream iss(request);
-	split_parts(iss, part_one, part_two);
+	split_parts(iss);
 	// std::cout << part_two << "\n";
-	fillFirstPart(part_one, method, target, httpVersion, headers);
-	fillSeconPart(part_two, body, headers);
+	fillFirstPart(this->partOne, method, target, httpVersion, headers);
+	// fillSeconPart(this->partTwo, body, headers);
 }
 
 RequestData::RequestData(std::string &request)
 {
 	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers);
-	// std::cout << "1: " << this->method << "\n";
-	// std::cout << "2: " << this->uri << "\n";
-	// std::cout << "3: " << this->httpVersion << "\n";
-	// this->method = "GET";
-	// this->uri = "/upload.html";
-	// this->httpVersion = "HTTP/1.1";
 }
 
 std::string RequestData::getUri() const
@@ -181,4 +137,12 @@ std::ostream &operator<<(std::ostream &o, RequestData const &i)
 	  << "body: " << i.getBody()
 	  << "------------------------------------\n";
 	return o;
+}
+
+std::string RequestData::getPartOne() const {
+	return this->partOne;
+}
+
+std::string RequestData::getPartTwo() const {
+	return this->partTwo;
 }

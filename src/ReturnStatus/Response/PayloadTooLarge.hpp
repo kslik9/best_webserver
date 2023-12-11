@@ -1,3 +1,4 @@
+#pragma once
 #include "AResponseMessage.hpp"
 
 class PayloadTooLarge : public AResponseMessage {

@@ -41,7 +41,7 @@ int countBodySize(std::string bufferStr, int bytesReceived) {
 	// std::cout << "shoko: " << bufferStr << std::endl;
 	if (bufferStr.find("\r\n\r\n") != std::string::npos) {
 		// std::cout << "ki: [[" << bufferStr.substr(foundbrbn + 4) << "]\n";
-		std::cout << "found\n";
+		// std::cout << "found\n";
 		return bytesReceived - (foundbrbn + 4);
 	}
 	return bytesReceived;
@@ -71,9 +71,9 @@ bool    Socket::allDataRead(int fd) {
     std::string bufferStr(buffer, bytesReceived);
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
-    std::cout << "bytes received : " << bytesReceived << std::endl;
-    std::cout << "con_len        : " << this->contentLen << std::endl;
-    std::cout << "body_size      : " << this->bodySize << std::endl;
+    // std::cout << "bytes received : " << bytesReceived << std::endl;
+    // std::cout << "con_len        : " << this->contentLen << std::endl;
+    // std::cout << "body_size      : " << this->bodySize << std::endl;
     if (bytesReceived < 0) {
 		if (this->bodySize >= this->contentLen) {
             joinedStr.append(bufferStr);
