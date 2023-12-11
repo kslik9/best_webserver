@@ -2,7 +2,7 @@
 
 void ResponseFromCgi::init_env(RequestData request, std::string const &root)
 {
-	// URI: /blog/post/index.php
+	// URI: /blog/post/index.php?id=1337
 	std::string targetFile, folder, root_folderStr(root);
 	size_t lastSlashPos = request.getUri().rfind('/');
 	if (lastSlashPos != std::string::npos)
@@ -13,7 +13,7 @@ void ResponseFromCgi::init_env(RequestData request, std::string const &root)
 	this->keyValue["DOCUMENT_URI"] = folder;
 	this->keyValue["SCRIPT_NAME"] = "/" + targetFile;
 	this->keyValue["SCRIPT_FILENAME"] = root_folderStr + "/" + request.getUri();
-	// this->keyValue["REQUEST_METHOD"] = request.getMethod(); // DYNAMIC should be added
+	this->keyValue["REQUEST_METHOD"] = request.getMethod(); // DYNAMIC should be added
 	this->keyValue["DOCUMENT_ROOT"] = root_folderStr;
 	this->keyValue["SERVER_NAME"] = "0.0.0.0";
 	this->keyValue["SERVER_PORT"] = "8081";
@@ -23,8 +23,7 @@ void ResponseFromCgi::init_env(RequestData request, std::string const &root)
 	this->keyValue["FCGI_ROLE"] = "RESPONDER";
 	this->keyValue["REQUEST_SCHEME"] = "http";
 	this->keyValue["SERVER_SOFTWARE"] = "webserv/1.1";
-	this->keyValue["REQUEST_METHOD"] = "POST"; // STATIC should be removed
-	this->keyValue["QUERY_STRING"] = "var=1337&mar=42"; // STATIC should be removed
+	this->keyValue["QUERY_STRING"] = request.getQueryString(); //"var=1337&mar=42"; // STATIC should be removed
 	this->keyValue["CONTENT_LENGTH"] = "30"; // STATIC should be removed
 	// 
 }
@@ -126,11 +125,6 @@ std::string ResponseFromCgi::createResponse()
 
 	std::map<std::string, std::string>::iterator it;
 	response << startLine;
-	// for (it = headers.begin(); it != headers.end(); ++it)
-	//     response << it->first << ": " << it->second << "\r\n";
-	// response << "\r\n";
-	// response << "\r\n";
-
 	std::string php_resp = this->process();
 	response << php_resp;
 	return response.str();

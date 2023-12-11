@@ -5,6 +5,7 @@ class RequestData
 {
 private:
     std::string uri;
+    std::string query_string;
     std::string method;
     std::string httpVersion;
     std::map<std::string, std::string> headers;
@@ -14,6 +15,7 @@ public:
     RequestData(std::string &request);
     // 
     std::string getUri() const;
+    std::string getQueryString() const;
     std::string getMethod() const;
     std::string getHttpVersion() const;
     std::string getBody() const;

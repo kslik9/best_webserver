@@ -8,7 +8,6 @@
 ?>
 
 <?php
-    echo $_POST['data_from_97'];
-    echo "<br>\n";
-    echo $_POST['musclues'];
+    // echo $_SERVER['REQUEST_METHOD'] . "<br>";
+    var_dump($_GET);
 ?>
