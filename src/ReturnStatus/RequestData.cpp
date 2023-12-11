@@ -46,10 +46,10 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		// std::cout << "------------------ multipart/form-data ------------------\n";
-		// std::cout << "<";
-		// std::cout << part_two;
-		uploadfile(part_two);
-		// std::cout << ">";
+		std::cout << "<";
+		std::cout << part_two;
+		// uploadfile(part_two);
+		std::cout << ">";
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
