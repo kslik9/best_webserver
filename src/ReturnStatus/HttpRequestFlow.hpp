@@ -13,6 +13,7 @@ class HttpRequestFlow {
         std::string                         method;
         std::string                         resources;
         std::string                         resourcesWithRoot;
+        int                                 contentLen;
         bool                                checkNotAllowededChars();
         bool                                checkUriLength();
         bool                                checkRequestHttpMessage();
@@ -28,18 +29,18 @@ class HttpRequestFlow {
         bool                                deleteDirContent();
         bool                                checkWriteAccessOnDir();
         bool                                checkLocationSupportUpload();
+        bool                                fileExceedsMaxSize();
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
-    public:
-        RequestData &requestData;
-        HttpRequestFlow(RequestData &requestData, ServConf &servConf);
-        std::string getStatusCode();
-        void        createHttpHeader();
-        
-        AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
         AResponseMessage    *handleDeleteMethod();
+        RequestData &requestData;
+    public:
+        AResponseMessage    *checkRequestAndReturnHttpMessage();
+        HttpRequestFlow(RequestData &requestData, ServConf &servConf);
+        void        createHttpHeader();
+        void        setContentLen(int contentLen);        
 };
 

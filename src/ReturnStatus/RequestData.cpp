@@ -8,9 +8,8 @@ std::string get_fileName(std::string part_two)
 		size_t second = part_two.find("\"", first + 1);
 		std::string tmp = part_two.substr(first + 1 , second - first - 1);
 		return tmp;
-	
-	// exit(0);
 }
+
 std::string get_content(std::string part_two)
 {
 	size_t k = part_two.find("Content-Type");
@@ -23,11 +22,9 @@ std::string get_content(std::string part_two)
 	std::cout << BLUE_TEXT << "start =" << start << " | end = "  << end  <<std::endl << RESET_COLOR;
 	// exit(0);
 	return tmp;
-
 }
 void uploadfile(std::string part_two)
 {
-	// int how_many_sig()
 	std::string filename , content;
 	filename = "uploadedFiles/";
 	filename = filename + get_fileName(part_two);
@@ -48,7 +45,7 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 		// std::cout << "------------------ multipart/form-data ------------------\n";
 		std::cout << "<";
 		std::cout << part_two;
-		// uploadfile(part_two);
+		uploadfile(part_two);
 		std::cout << ">";
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)

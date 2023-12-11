@@ -206,7 +206,7 @@ bool    HttpRequestFlow::checkDirIndedWithBackSlash() {
 }
 
 bool    HttpRequestFlow::checkLocationSupportUpload() {
-    return false;
+    return true;
 }
 
 bool    HttpRequestFlow::deleteDirContent() {
@@ -220,4 +220,8 @@ bool    HttpRequestFlow::checkWriteAccessOnDir() {
 
 bool    HttpRequestFlow::deleteFile() {
     return true;
+}
+
+bool    HttpRequestFlow::fileExceedsMaxSize() {
+    return false;
 }
