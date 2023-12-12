@@ -21,6 +21,7 @@
 #define STATIC_405 "static/default_errors/405.html"
 #define STATIC_409 "static/default_errors/409.html"
 #define STATIC_500 "static/default_errors/500.html"
+#define STATIC_413 "static/default_errors/413.html"
 
 
 class AResponseMessage {

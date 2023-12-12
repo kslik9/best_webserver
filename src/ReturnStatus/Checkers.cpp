@@ -206,7 +206,7 @@ bool    HttpRequestFlow::checkDirIndedWithBackSlash() {
 }
 
 bool    HttpRequestFlow::checkLocationSupportUpload() {
-    return false;
+    return true;
 }
 
 bool    HttpRequestFlow::deleteDirContent() {
@@ -220,4 +220,26 @@ bool    HttpRequestFlow::checkWriteAccessOnDir() {
 
 bool    HttpRequestFlow::deleteFile() {
     return true;
+}
+
+bool    HttpRequestFlow::uploadFile(std::string &partTwo) {
+    // std::string filename, content;
+	// filename = "uploadedFiles/";
+	// filename = filename + get_fileName(part_two);
+	// std::cout << filename << std::endl;
+	// content = get_content(part_two);
+	// std::ofstream outputFile(filename);
+	// if (outputFile.is_open())
+	// {
+	// 	std::cout << "\nseccusefly\n";
+	// 	outputFile << content;
+	// }
+	// outputFile.close();
+
+
+    return false;
+}
+
+bool    HttpRequestFlow::checkFilEexceedMaxSize() {
+    return false;
 }
