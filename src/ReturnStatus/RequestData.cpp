@@ -74,10 +74,10 @@ void RequestData::split_parts(std::stringstream &iss)
 		if (line == "\r" && !trigger)
 			trigger = true;
 		// ------------------------
-		if (!trigger)
+		if (trigger)
+			this->partTwo += line + "\n";
+		else
 			this->partOne += line + "\n";
-		else if (line != "\r")
-			this->partTwo += line; //+ "\n";
 	}
 }
 
