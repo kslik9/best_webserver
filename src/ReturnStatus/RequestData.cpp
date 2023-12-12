@@ -1,69 +1,69 @@
 #include "RequestData.hpp"
 
-std::string get_fileName(std::string part_two)
-{
-	size_t k = part_two.find("filename=");
+// std::string get_fileName(std::string part_two)
+// {
+// 	size_t k = part_two.find("filename=");
 
-	size_t first = part_two.find("\"", k);
-	size_t second = part_two.find("\"", first + 1);
-	std::string tmp = part_two.substr(first + 1, second - first - 1);
-	return tmp;
+// 	size_t first = part_two.find("\"", k);
+// 	size_t second = part_two.find("\"", first + 1);
+// 	std::string tmp = part_two.substr(first + 1, second - first - 1);
+// 	return tmp;
 
-	// exit(0);
-}
-std::string get_content(std::string part_two)
-{
-	size_t k = part_two.find("Content-Type");
-	size_t start = part_two.find("\r\n", k);
-	start = part_two.find("\r\n", start + 1);
-	std::string tmp;
+// 	// exit(0);
+// }
+// std::string get_content(std::string part_two)
+// {
+// 	size_t k = part_two.find("Content-Type");
+// 	size_t start = part_two.find("\r\n", k);
+// 	start = part_two.find("\r\n", start + 1);
+// 	std::string tmp;
 
-	size_t end = part_two.find("\r\n\r\n", start + 1);
-	tmp = part_two.substr(start + 2, end - start - 1);
-	std::cout << BLUE_TEXT << "start =" << start << " | end = " << end << std::endl
-			  << RESET_COLOR;
-	// exit(0);
-	return tmp;
-}
-void uploadfile(std::string part_two)
-{
-	// int how_many_sig()
-	std::string filename, content;
-	filename = "uploadedFiles/";
-	filename = filename + get_fileName(part_two);
-	std::cout << filename << std::endl;
-	content = get_content(part_two);
-	std::ofstream outputFile(filename);
-	if (outputFile.is_open())
-	{
-		std::cout << "\nseccusefly\n";
-		outputFile << content;
-	}
-	outputFile.close();
-}
-void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
-{
-	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
-	{
-		// std::cout << "------------------ multipart/form-data ------------------\n";
-		std::cout << "<";
-		std::cout << part_two;
-		// uploadfile(part_two);
-		std::cout << ">";
-	}
-	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
-	{
-		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
-		body = part_two;
-	}
-	if (headers["Content-Type"].find("text/plain") != std::string::npos)
-	{
-		// std::cout << "------------------ text/plain ------------------\n";
-		body = part_two;
-	}
-}
+// 	size_t end = part_two.find("\r\n\r\n", start + 1);
+// 	tmp = part_two.substr(start + 2, end - start - 1);
+// 	std::cout << BLUE_TEXT << "start =" << start << " | end = " << end << std::endl
+// 			  << RESET_COLOR;
+// 	// exit(0);
+// 	return tmp;
+// }
+// void uploadfile(std::string part_two)
+// {
+// 	// int how_many_sig()
+// 	std::string filename, content;
+// 	filename = "uploadedFiles/";
+// 	filename = filename + get_fileName(part_two);
+// 	std::cout << filename << std::endl;
+// 	content = get_content(part_two);
+// 	std::ofstream outputFile(filename);
+// 	if (outputFile.is_open())
+// 	{
+// 		std::cout << "\nseccusefly\n";
+// 		outputFile << content;
+// 	}
+// 	outputFile.close();
+// }
+// void fillSeconPart(std::string &part_two, std::string &body, std::map<std::string, std::string> &headers)
+// {
+// 	if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ multipart/form-data ------------------\n";
+// 		std::cout << "<";
+// 		std::cout << part_two;
+// 		// uploadfile(part_two);
+// 		std::cout << ">";
+// 	}
+// 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+// 		body = part_two;
+// 	}
+// 	if (headers["Content-Type"].find("text/plain") != std::string::npos)
+// 	{
+// 		// std::cout << "------------------ text/plain ------------------\n";
+// 		body = part_two;
+// 	}
+// }
 
-void split_parts(std::stringstream &iss, std::string &part_one, std::string &part_two)
+void RequestData::split_parts(std::stringstream &iss)
 {
 	std::string line;
 	bool trigger = false;
@@ -75,35 +75,24 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 			trigger = true;
 		// ------------------------
 		if (!trigger)
-		{
-			part_one += line + "\n";
-		}
+			this->partOne += line + "\n";
 		else if (line != "\r")
-		{
-			part_two += line; //+ "\n";
-		}
+			this->partTwo += line; //+ "\n";
 	}
 }
 
-void fillFirstPart(std::string &part_one,
-				   std::string &method,
-				   std::string &target,
-				   std::string &httpVersion,
-				   std::map<std::string, std::string> &headers,
-				   std::string &query_string)
+void	RequestData::fillFirstPart()
 {
 	int i = 0;
 	std::string line;
-	std::stringstream iss(part_one);
-	while (1)
-	{
+	std::stringstream iss(this->partOne);
+	while (1) {
 		std::getline(iss, line);
 		if (line.empty())
 			break;
-		if (i == 0)
-		{
+		if (i == 0) {
 			std::stringstream fline(line);
-			fline >> method >> target >> httpVersion;
+			fline >> this->method >> this->target >> this->httpVersion;
 			int pos = target.find("?");
 			if (pos != std::string::npos)
 			{
@@ -111,8 +100,7 @@ void fillFirstPart(std::string &part_one,
 				target = target.substr(0, pos);
 			}
 		}
-		else
-		{
+		else {
 			std::istringstream s_iss(line);
 			std::string key, value;
 			std::getline(s_iss, key, ':');
@@ -125,61 +113,47 @@ void fillFirstPart(std::string &part_one,
 	}
 }
 
-void parse_request(std::string &request,
-				   std::string &method,
-				   std::string &target,
-				   std::string &httpVersion,
-				   std::string &body,
-				   std::map<std::string, std::string> &headers,
-				   std::string &query_string)
+void	RequestData::parse_request(std::string &request)
 {
 	// std::cout << "------------- RAW -------------\n";
 	// std::cout << request << std::endl;
 	// std::cout << "------------- --- -------------\n";
-	std::string part_one, part_two;
+	// std::string part_one, part_two;
 	std::stringstream iss(request);
-	split_parts(iss, part_one, part_two);
-	fillFirstPart(part_one, method, target, httpVersion, headers, query_string);
-	fillSeconPart(part_two, body, headers);
+	split_parts(iss);
+	fillFirstPart();
+	// fillSeconPart(part_two, body, headers);
 }
 
-RequestData::RequestData(std::string &request)
-{
-	parse_request(request, this->method, this->uri, this->httpVersion, this->body, this->headers, this->query_string);
+RequestData::RequestData(std::string &request) {
+	parse_request(request);
 }
 
-std::string RequestData::getUri() const
-{
-	return this->uri;
+std::string RequestData::getUri() const {
+	return this->target;
 }
 
-std::string RequestData::getMethod() const
-{
+std::string RequestData::getMethod() const {
 	return this->method;
 }
 
-std::string RequestData::getHttpVersion() const
-{
+std::string RequestData::getHttpVersion() const {
 	return this->httpVersion;
 }
 
-std::string RequestData::getBody() const
-{
+std::string RequestData::getBody() const {
 	return this->body;
 }
 
-std::map<std::string, std::string> RequestData::getHeaders() const
-{
+std::map<std::string, std::string> RequestData::getHeaders() const {
 	return this->headers;
 }
 
-std::string RequestData::getQueryString() const
-{
+std::string RequestData::getQueryString() const {
 	return this->query_string;
 }
 
-std::string RequestData::getAllHeaders() const
-{
+std::string RequestData::getAllHeaders() const {
 	typedef std::map<std::string, std::string>::const_iterator iterator;
 	std::string holyders;
 	iterator it = this->headers.begin();
@@ -192,8 +166,7 @@ std::string RequestData::getAllHeaders() const
 	return holyders;
 }
 
-std::ostream &operator<<(std::ostream &o, RequestData const &i)
-{
+std::ostream &operator<<(std::ostream &o, RequestData const &i) {
 	o << "------------------------------------\n"
 	  << "URI: " << i.getUri() << "\n"
 	  << "Method: " << i.getMethod() << "\n"
@@ -203,4 +176,12 @@ std::ostream &operator<<(std::ostream &o, RequestData const &i)
 	  << "body: " << i.getBody()
 	  << "------------------------------------\n";
 	return o;
+}
+
+std::string RequestData::getPartOne() const {
+	return this->partOne;
+}
+
+std::string RequestData::getPartTwo() const {
+	return this->partTwo;
 }

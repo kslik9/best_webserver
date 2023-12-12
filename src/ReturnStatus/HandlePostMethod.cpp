@@ -4,10 +4,13 @@ AResponseMessage    *HttpRequestFlow::handlePostMethod() {
     std::cout << BLUE_TEXT << "POST METHOD" << RESET_COLOR << std::endl;
     //check if location support upload
     if(checkLocationSupportUpload()) {
+        std::cout << GREEN_TEXT << "file uploaded succesfully" << RESET_COLOR << std::endl;
         if (checkFilEexceedMaxSize()) {
+            std::cout << RED_TEXT << "file uploaded succesfully" << RESET_COLOR << std::endl;
             return new PayloadTooLarge(this->config.errorPages["413"]);
         }
-        
+        uploadFile();
+        return new Created201();
     }
 
     if(!checkContentExistsInRoot()) {
