@@ -157,7 +157,7 @@ void Server::waitClients()
 	while (endServer == false) {
 		// std::cout << "ljamal\n";
 		closeConn = false;
-		rc = poll(&fds[0], fds.size(), 3000);
+		rc = poll(&fds[0], fds.size(), 0);
 		if (rc < 0) {
 			std::cout << "poll() error\n";
 			break;
@@ -190,28 +190,26 @@ void Server::waitClients()
 				}
 				//add new incoming connection to the pollfd
 				std::cout << "new incoming connection " << clientSd << std::endl;
-				// setNonBlocking(clientSd);
+				setNonBlocking(clientSd);
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);
 				currentPortInex = i;
-				// socketIndex++;
-				Socket sock;
+				Socket sock(currentPortInex);
 				sockets.push_back(sock);
-
 			}
 				
 			else {
 				this->sockets.at(i).resetBuffer();
 				std::string	joinedStr;
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd)) {
-					joinedStr = this->sockets.at(i).getJoinedStr();
 					closeConn = this->sockets.at(i).getCloseConnStat();
 					std::cout << "yes all data was read\n";
-					// std::cout << "final result: " << GREEN_TEXT 
-					// 	<< joinedStr << RESET_COLOR << std::endl;
-
-					http_resp = buildHttpResponse(currentPortInex, joinedStr);
+					http_resp = buildHttpResponse(
+						this->sockets.at(i).getJoinedStr(), 
+						this->sockets.at(i).getPortIndex(),
+						this->sockets.at(i).getContentLen()
+					);
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {

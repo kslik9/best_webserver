@@ -10,14 +10,19 @@ class Socket {
         std::string joinedStr;
         char        buffer[BUFFER_SIZE];
         bool        closeConnection;
+		short		portIndex;
 	public:
 		Socket();
+		Socket(short portIndx);
 		~Socket();
 		void	    setContentLen(std::string bufferStr);
 		void	    setBodySize(std::string bufferStr, int bytesReceived);
-		int         getBodySize();
-        void        resetBuffer();
         bool        allDataRead(int fd);
+		void		setPortIndex(short i);
         std::string getJoinedStr() const;
         bool        getCloseConnStat();
+		short		getPortIndex() const;
+		int         getBodySize();
+		int			getContentLen() const;
+        void        resetBuffer();
 };

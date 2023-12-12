@@ -63,7 +63,8 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 	}
 }
 
-void split_parts(std::stringstream &iss, std::string &part_one, std::string &part_two)
+
+void	RequestData::split_parts(std::stringstream &iss)
 {
 	std::string line;
 	bool trigger = false;
@@ -82,6 +83,7 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 		{
 			part_two += line; //+ "\n";
 		}
+
 	}
 }
 
@@ -125,7 +127,7 @@ void fillFirstPart(std::string &part_one,
 	}
 }
 
-void parse_request(std::string &request,
+void	RequestData::parse_request(std::string &request,
 				   std::string &method,
 				   std::string &target,
 				   std::string &httpVersion,
@@ -203,4 +205,12 @@ std::ostream &operator<<(std::ostream &o, RequestData const &i)
 	  << "body: " << i.getBody()
 	  << "------------------------------------\n";
 	return o;
+}
+
+std::string RequestData::getPartOne() const {
+	return this->partOne;
+}
+
+std::string RequestData::getPartTwo() const {
+	return this->partTwo;
 }

@@ -5,9 +5,6 @@ HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) :
     this->method = requestData.getMethod();
 }
 
-std::string HttpRequestFlow::getStatusCode() {
-    return this->statusCode;
-}
 
 void    HttpRequestFlow::createHttpHeader() {
     
@@ -67,3 +64,7 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
 }
+
+ void   HttpRequestFlow::setContentLen(int contentLen) {
+    this->contentLen = contentLen;
+ }
