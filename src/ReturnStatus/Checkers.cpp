@@ -194,6 +194,7 @@ bool    HttpRequestFlow::checkAutoIndexOn() {
 }
 
 bool    HttpRequestFlow::checkLocationIncludesCgi() {
+    std::cout << "resources with root: " << resourcesWithRoot << std::endl;
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
     if (this->location["cgi_extension"] != "none" && this->location["cgi_extension"] == ".php")
@@ -249,9 +250,10 @@ std::string get_content(std::string partTwo)
 	return tmp;
 }
 
-bool    HttpRequestFlow::uploadFile() {
+bool    HttpRequestFlow::handlePost() {
     std::map<std::string, std::string> headers = this->requestData.getHeaders();
     std::string partTwo = this->requestData.getPartTwo();
+    // std::string body;
     if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		// // std::cout << "------------------ multipart/form-data ------------------\n";
@@ -259,7 +261,6 @@ bool    HttpRequestFlow::uploadFile() {
 		// std::cout << partTwo;
 		// upload(partTwo);
 		// std::cout << ">";
-
 
         std::string filename, content;
         filename = "uploadedFiles/";
@@ -273,16 +274,11 @@ bool    HttpRequestFlow::uploadFile() {
         }
         outputFile.close();
 	}
-	// if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
-	// {
-	// 	// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
-	// 	body = partTwo;
-	// }
-	// if (headers["Content-Type"].find("text/plain") != std::string::npos)
-	// {
-	// 	// std::cout << "------------------ text/plain ------------------\n";
-	// 	body = partTwo;
-	// }
+	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
+        this->requestData.setBody(partTwo);
+	if (headers["Content-Type"].find("text/plain") != std::string::npos)
+        this->requestData.setBody(partTwo);
+
     return true;
 }
 
