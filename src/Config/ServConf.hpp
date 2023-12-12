@@ -23,7 +23,5 @@ class ServConf
         mp rout2;
         map_last rout;
         std::vector<std::string> my_data;
-        std::string upload_directory;
-        std::string upload_max_size;
 
 };
