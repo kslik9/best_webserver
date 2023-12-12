@@ -224,32 +224,54 @@ bool    HttpRequestFlow::deleteFile() {
 }
 
 
-
-std::string get_fileName(std::string part_two)
+std::string get_fileName(std::string part_two, int i)
 {
-	size_t k = part_two.find("filename=");
-
-	size_t first = part_two.find("\"", k);
-	size_t second = part_two.find("\"", first + 1);
-	std::string tmp = part_two.substr(first + 1, second - first - 1);
+    int p = 0;
+    i = i + 1;
+    size_t k = -1;
+    size_t first;
+    size_t second;
+    std::string tmp;
+    while(p < i)
+    {
+        k = part_two.find("filename=", k + 1);
+        first = part_two.find("\"", k);
+        second = part_two.find("\"", first + 1);
+        tmp = part_two.substr(first + 1, second - first - 1);
+        p++;
+    }
 	return tmp;
 }
 
-std::string get_content(std::string partTwo)
+std::string get_content(std::string partTwo, int i)
 {
-	size_t k = partTwo.find("Content-Type");
-	size_t start = partTwo.find("\r\n", k);
-	start = partTwo.find("\r\n", start + 1);
-	std::string tmp;
-
-	size_t end = partTwo.find("\r\n\r\n", start + 1);
-	tmp = partTwo.substr(start + 2, end - start - 1);
-	std::cout << BLUE_TEXT << "start =" << start << " | end = " << end << std::endl
-			  << RESET_COLOR;
-	// exit(0);
+    size_t k = - 1;
+    int p = 0;
+    i++;
+    std::string tmp;
+    while(p < i)
+    {
+        k = partTwo.find("Content-Type", k + 1);
+        size_t start = partTwo.find("\r\n", k);
+        start = partTwo.find("\r\n", start + 1);
+        size_t end = partTwo.find("\n----", start + 2);
+        tmp = partTwo.substr(start + 2 , end - start - 2);
+        p++;
+    }
+    // std::cout << "file= " << tmp << "}" << std::endl;
 	return tmp;
 }
-
+int how_many_files(std::string partTwo)
+{
+    size_t k = partTwo.find("filename=");
+    int i = 0;
+    while(k != std::string::npos)
+    {
+        k = partTwo.find("filename=" , k + 1);
+        i++;
+    }
+    return i;
+}
 bool    HttpRequestFlow::handlePost() {
     std::map<std::string, std::string> headers = this->requestData.getHeaders();
     std::string partTwo = this->requestData.getPartTwo();
@@ -257,22 +279,25 @@ bool    HttpRequestFlow::handlePost() {
     if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
 	{
 		// // std::cout << "------------------ multipart/form-data ------------------\n";
-		// std::cout << "<";
-		// std::cout << partTwo;
 		// upload(partTwo);
 		// std::cout << ">";
+        int i = 0;
+        while(i < how_many_files(partTwo))
+        {
+            std::string filename, content;
+            filename = "uploadedFiles/";
+            filename = filename + get_fileName(partTwo, i);
 
-        std::string filename, content;
-        filename = "uploadedFiles/";
-        filename = filename + get_fileName(partTwo);
-        std::cout << filename << std::endl;
-        content = get_content(partTwo); 
-        std::ofstream outputFile(filename);
-        if (outputFile.is_open()) {
-            std::cout << "\nseccusefly\n";
-            outputFile << content;
+            content = get_content(partTwo, i); 
+            std::ofstream outputFile(filename);
+            if (outputFile.is_open()) {
+                std::cout << "\nseccusefly\n";
+                outputFile << content;
+            }
+            outputFile.close();
+            i++;
         }
-        outputFile.close();
+        exit(0);
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
         this->requestData.setBody(partTwo);
