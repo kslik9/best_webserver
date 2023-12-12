@@ -6,10 +6,17 @@ AResponseMessage    *HttpRequestFlow::handlePostMethod() {
     if(checkLocationSupportUpload()) {
         std::cout << GREEN_TEXT << "file uploaded succesfully" << RESET_COLOR << std::endl;
         if (checkFilEexceedMaxSize()) {
-            std::cout << RED_TEXT << "file uploaded succesfully" << RESET_COLOR << std::endl;
             return new PayloadTooLarge(this->config.errorPages["413"]);
         }
-        uploadFile();
+        if (handlePost()) {
+            if (this->requestData.getHeaders()["Content-Type"].find("multipart/form-data") != std::string::npos)
+                return new Created201();
+            else
+                return new ResponseFromCgi(this->requestData, this->location["root"]);
+        }
+        else {
+            return new InternalServerError500(this->config.errorPages["500"]);
+        }
         return new Created201();
     }
 
