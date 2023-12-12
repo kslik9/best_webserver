@@ -222,22 +222,68 @@ bool    HttpRequestFlow::deleteFile() {
     return true;
 }
 
-bool    HttpRequestFlow::uploadFile(std::string &partTwo) {
-    // std::string filename, content;
-	// filename = "uploadedFiles/";
-	// filename = filename + get_fileName(part_two);
-	// std::cout << filename << std::endl;
-	// content = get_content(part_two);
-	// std::ofstream outputFile(filename);
-	// if (outputFile.is_open())
+
+
+std::string get_fileName(std::string part_two)
+{
+	size_t k = part_two.find("filename=");
+
+	size_t first = part_two.find("\"", k);
+	size_t second = part_two.find("\"", first + 1);
+	std::string tmp = part_two.substr(first + 1, second - first - 1);
+	return tmp;
+}
+
+std::string get_content(std::string partTwo)
+{
+	size_t k = partTwo.find("Content-Type");
+	size_t start = partTwo.find("\r\n", k);
+	start = partTwo.find("\r\n", start + 1);
+	std::string tmp;
+
+	size_t end = partTwo.find("\r\n\r\n", start + 1);
+	tmp = partTwo.substr(start + 2, end - start - 1);
+	std::cout << BLUE_TEXT << "start =" << start << " | end = " << end << std::endl
+			  << RESET_COLOR;
+	// exit(0);
+	return tmp;
+}
+
+bool    HttpRequestFlow::uploadFile() {
+    std::map<std::string, std::string> headers = this->requestData.getHeaders();
+    std::string partTwo = this->requestData.getPartTwo();
+    if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
+	{
+		// // std::cout << "------------------ multipart/form-data ------------------\n";
+		// std::cout << "<";
+		// std::cout << partTwo;
+		// upload(partTwo);
+		// std::cout << ">";
+
+
+        std::string filename, content;
+        filename = "uploadedFiles/";
+        filename = filename + get_fileName(partTwo);
+        std::cout << filename << std::endl;
+        content = get_content(partTwo); 
+        std::ofstream outputFile(filename);
+        if (outputFile.is_open()) {
+            std::cout << "\nseccusefly\n";
+            outputFile << content;
+        }
+        outputFile.close();
+	}
+	// if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	// {
-	// 	std::cout << "\nseccusefly\n";
-	// 	outputFile << content;
+	// 	// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+	// 	body = partTwo;
 	// }
-	// outputFile.close();
-
-
-    return false;
+	// if (headers["Content-Type"].find("text/plain") != std::string::npos)
+	// {
+	// 	// std::cout << "------------------ text/plain ------------------\n";
+	// 	body = partTwo;
+	// }
+    return true;
 }
 
 bool    HttpRequestFlow::checkFilEexceedMaxSize() {

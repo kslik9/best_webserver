@@ -28,7 +28,7 @@ class HttpRequestFlow {
         bool                                deleteDirContent();
         bool                                checkWriteAccessOnDir();
         bool                                checkLocationSupportUpload();
-        bool                                uploadFile(std::string &partTwo);
+        bool                                uploadFile();
         bool                                checkFilEexceedMaxSize();
         ServConf                            &config;
         std::map<std::string, std::string>  location;
