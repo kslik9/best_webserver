@@ -25,8 +25,6 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     std::string php_resp;
     // ------------------------------------------
     RequestData request(requestStr);
-    std::cout << "mama\n";
-
     // // ------------------------------------------
     AResponseMessage *createdResponse;
     std::string     responseMessage;
@@ -41,10 +39,9 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
 
 }
 
-    
-    // system("clear");
-    // std::cout << "------------------------------------------------------\n";
-    // CGIHandler handler(request);
-    // std::string resp = handler.process();
-    // php_resp += resp;
-    // return php_resp;
+// system("clear");
+// std::cout << "------------------------------------------------------\n";
+// CGIHandler handler(request);
+// std::string resp = handler.process();
+// php_resp += resp;
+// return php_resp;
