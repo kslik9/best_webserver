@@ -25,7 +25,7 @@
 // 	// exit(0);
 // 	return tmp;
 // }
-// void uploadfile(std::string part_two)
+// void handlePost(std::string part_two)
 // {
 // 	// int how_many_sig()
 // 	std::string filename, content;
@@ -48,7 +48,7 @@
 // 		// std::cout << "------------------ multipart/form-data ------------------\n";
 // 		std::cout << "<";
 // 		std::cout << part_two;
-// 		// uploadfile(part_two);
+// 		// handlePost(part_two);
 // 		std::cout << ">";
 // 	}
 // 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
@@ -184,4 +184,8 @@ std::string RequestData::getPartOne() const {
 
 std::string RequestData::getPartTwo() const {
 	return this->partTwo;
+}
+
+void	RequestData::setBody(std::string &body) {
+	this->body = body;
 }
