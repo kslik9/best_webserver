@@ -54,10 +54,12 @@ void fillSeconPart(std::string &part_two, std::string &body, std::map<std::strin
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
 	{
 		// std::cout << "------------------ application/x-www-form-urlencoded ------------------\n";
+		body = part_two;
 	}
 	if (headers["Content-Type"].find("text/plain") != std::string::npos)
 	{
 		// std::cout << "------------------ text/plain ------------------\n";
+		body = part_two;
 	}
 }
 
@@ -72,10 +74,14 @@ void split_parts(std::stringstream &iss, std::string &part_one, std::string &par
 		if (line == "\r" && !trigger)
 			trigger = true;
 		// ------------------------
-		if (trigger)
-			part_two += line + "\n";
-		else
+		if (!trigger)
+		{
 			part_one += line + "\n";
+		}
+		else if (line != "\r")
+		{
+			part_two += line; //+ "\n";
+		}
 	}
 }
 
@@ -127,6 +133,9 @@ void parse_request(std::string &request,
 				   std::map<std::string, std::string> &headers,
 				   std::string &query_string)
 {
+	// std::cout << "------------- RAW -------------\n";
+	// std::cout << request << std::endl;
+	// std::cout << "------------- --- -------------\n";
 	std::string part_one, part_two;
 	std::stringstream iss(request);
 	split_parts(iss, part_one, part_two);
