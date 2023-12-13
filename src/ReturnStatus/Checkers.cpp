@@ -297,7 +297,7 @@ bool    HttpRequestFlow::handlePost() {
             outputFile.close();
             i++;
         }
-        exit(0);
+        // exit(0);
 	}
 	if (headers["Content-Type"].find("application/x-www-form-urlencoded") != std::string::npos)
         this->requestData.setBody(partTwo);
