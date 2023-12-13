@@ -121,7 +121,8 @@ mp Config::get_info_for_loca(std::string str)
 	tm["method4"] = t_ry(str, tmp, "method", 8, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 9, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 8, 0);
-
+	tm["upload_directory"] = t_ry(str, tmp, "upload_directory", 17, 1);
+	tm["upload_max_size"] = t_ry(str, tmp, "upload_max_size", 16, 1);
 	return tm;
 }
 void Config::display_all(ServConf srvConf)
@@ -152,7 +153,7 @@ void Config::display_all(ServConf srvConf)
 			it = srvConf.rout.begin();
 			while(it != srvConf.rout.end())
 			{
-				// std::cout <<"route =>{" <<  it->first << "}:\n" ;
+				std::cout <<"route =>{" <<  it->first << "}:\n" ;
 				oi = it->second.begin();
 				while(oi != it->second.end())
 				{
