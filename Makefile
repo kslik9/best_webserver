@@ -21,7 +21,8 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/CGI/cgi.cpp src/CGIHandler/CGIHandler.cpp \
 				src/Config/ServConf.cpp \
 				src/FileUploadHandler/FileUploadHandler.cpp \
-				src/Server/Socket.cpp
+				src/Server/Socket.cpp \
+				src/utils.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 OBJS		:= $(addprefix obj/, $(OBJS))

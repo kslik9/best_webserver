@@ -64,7 +64,7 @@ void    Socket::resetBuffer() {
 bool    Socket::allDataRead(int fd) {
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
-    std::string bufferStr(buffer, bytesReceived);
+    std::string bufferStr(buffer, bytesReceived + 1);
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
     std::cout << "bytes received : " << bytesReceived << std::endl;
@@ -76,6 +76,7 @@ bool    Socket::allDataRead(int fd) {
 		    this->closeConnection = true;
             return true;
         }
+        std::cout << "na\n";
 	}
     if (bytesReceived == 0) {
 		joinedStr.append(bufferStr);
