@@ -5,4 +5,4 @@ a.out
 logs/
 uploadedFiles/*
 .DS_Store
-
+var/
