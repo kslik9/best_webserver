@@ -5,11 +5,9 @@ HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) :
     this->method = requestData.getMethod();
 }
 
-
-void    HttpRequestFlow::createHttpHeader() {
-    
+HttpRequestFlow::~HttpRequestFlow() {
+    location.clear();
 }
-
 
 //this will check the request and at the end it will create an http message and return it
 AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {

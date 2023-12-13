@@ -33,16 +33,15 @@ class HttpRequestFlow {
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
         int                                 bodySize;
-    public:
-        void    setBodySize(int bodySizeP);
-        int     getBodySize();
         RequestData &requestData;
-        HttpRequestFlow(RequestData &requestData, ServConf &servConf);
-        void        createHttpHeader();
-        
-        AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
         AResponseMessage    *handleDeleteMethod();
+    public:
+        HttpRequestFlow(RequestData &requestData, ServConf &servConf);
+        ~HttpRequestFlow();
+        void    setBodySize(int bodySizeP);
+        int     getBodySize();
+        AResponseMessage    *checkRequestAndReturnHttpMessage();
 };
 

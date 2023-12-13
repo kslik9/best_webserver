@@ -214,6 +214,7 @@ void Server::waitClients()
 					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
+					std::cout << "rc: " << rc << std::endl;
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
 						closeConn = true;

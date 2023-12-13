@@ -51,8 +51,6 @@
 #include "../src/ReturnStatus/Response/ResponseFromCgi.hpp"
 #include "../src/ReturnStatus/Response/Created201.hpp"
 
-// 
-#include "../src/CGIHandler/CGIHandler.hpp"
 
 #include <list>
 #include <set>

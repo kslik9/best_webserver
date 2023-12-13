@@ -27,15 +27,21 @@ bool HttpRequestFlow::checkRequestHttpMessage()
     char *s;
 
     confMaxBodySizeStr = this->location["body_max_size"];
+    std::cout << "c: " << confMaxBodySizeStr << std::endl;
     if (confMaxBodySizeStr.empty())
         confMaxBodySizeStr = "524288000";
 
     
     confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
     std::cout << "body size: " << this->getBodySize() << std::endl;
-    std::cout << "conf size: " << this->getBodySize() << std::endl;
+    std::cout << "conf size: " << confMaxBodySize << std::endl;
     if (this->getBodySize() > confMaxBodySize)
         return true;
+    return false;
+}
+
+bool HttpRequestFlow::checkFilEexceedMaxSize()
+{
     return false;
 }
 
@@ -244,9 +250,11 @@ bool HttpRequestFlow::checkDirIndedWithBackSlash()
     return this->resourcesWithRoot.at(this->resourcesWithRoot.length() - 1) == '/';
 }
 
-bool HttpRequestFlow::checkLocationSupportUpload()
-{
-    return true;
+bool HttpRequestFlow::checkLocationSupportUpload() {
+    std::cout << "upload_directory: " << this->location["upload_directory"] << std::endl;
+    if (!this->location["upload_directory"].empty())
+        return true;
+    return false;
 }
 
 bool HttpRequestFlow::deleteDirContent()
@@ -362,7 +370,3 @@ bool HttpRequestFlow::handlePost()
     return true;
 }
 
-bool HttpRequestFlow::checkFilEexceedMaxSize()
-{
-    return false;
-}
