@@ -23,9 +23,11 @@ void ResponseFromCgi::init_env(RequestData request, std::string const &root)
 	this->keyValue["SERVER_SOFTWARE"] = "webserv/1.1";
 	this->keyValue["QUERY_STRING"] = request.getQueryString();
 	this->keyValue["CONTENT_LENGTH"] = std::to_string(this->inBody.length());
-	// this->keyValue["SERVER_NAME"] = "0.0.0.0";
-	// this->keyValue["SERVER_PORT"] = "8081";
-	// 
+	appendToPhpFile(this->keyValue["SCRIPT_FILENAME"]);
+	/*
+		// this->keyValue["SERVER_NAME"] = "0.0.0.0";
+		// this->keyValue["SERVER_PORT"] = "8081";
+	*/
 }
 
 ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root)
@@ -59,7 +61,7 @@ std::string ResponseFromCgi::process()
 {
 	std::vector<const char *> php_args;
 	php_script src;
-	src.path = "php/index.php";
+	src.path = this->keyValue["SCRIPT_FILENAME"];
 	src.file_stream = new std::ifstream(src.path);
 	if (!src.file_stream->is_open())
 	{
