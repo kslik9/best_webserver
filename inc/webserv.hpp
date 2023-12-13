@@ -43,6 +43,7 @@
 #include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"
 #include "../src/ReturnStatus/Response/Forbidden403.hpp"
 #include "../src/ReturnStatus/Response/Conflict409.hpp"
+#include "../src/ReturnStatus/Response/UriTooLong414.hpp"
 #include "../src/ReturnStatus/Response/NoContent204.hpp"
 #include "../src/ReturnStatus/Response/InternalServerError500.hpp"
 #include "../src/ReturnStatus/Response/OK200.hpp"
@@ -52,6 +53,9 @@
 
 // 
 #include "../src/CGIHandler/CGIHandler.hpp"
+
+#include <list>
+#include <set>
 
 
 // Consts

@@ -122,7 +122,8 @@ mp Config::get_info_for_loca(std::string str)
 	tm["redirect"] = t_ry(str, tmp, "redirect", 9, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 8, 0);
 	tm["upload_directory"] = t_ry(str, tmp, "upload_directory", 17, 1);
-	tm["upload_max_size"] = t_ry(str, tmp, "upload_max_size", 16, 1);
+	tm["body_max_size"] = t_ry(str, tmp, "body_max_size", 14, 1);
+
 	return tm;
 }
 void Config::display_all(ServConf srvConf)

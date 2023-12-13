@@ -211,7 +211,7 @@ void Server::waitClients()
 					// std::cout << "final result: " << GREEN_TEXT 
 					// 	<< joinedStr << RESET_COLOR << std::endl;
 
-					http_resp = buildHttpResponse(currentPortInex, joinedStr);
+					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {

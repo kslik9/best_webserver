@@ -19,19 +19,16 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
+        std::cout << RED_TEXT << "request has not allowed charachters" << RESET_COLOR << std::endl;
         return new BadRequest400(this->config.errorPages["400"]);
     }
     if (checkUriLength()) {
-        //create 414 Request-URI Too Long
-        //this->statusCode = 414
-        //this->statusMessage = Request-URI Too Long
-        // return errorPage
+        std::cout << RED_TEXT << "uri length" << RESET_COLOR << std::endl;
+        return new UriTooLong414(this->config.errorPages["414"]);
     }
     if (checkRequestHttpMessage()) {
-        //create 413 Request Entity Too Large
-        //this->statusCode = 413
-        //this->statusMessage = Request Entity Too Large
-        // return errorPage
+        std::cout << RED_TEXT << "body is too large" << RESET_COLOR << std::endl;
+        return new PayloadTooLarge(this->config.errorPages["413"]);
     }
     
     //check if no location match the request uri
@@ -62,4 +59,12 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
         return handleDeleteMethod();
 
     return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
+}
+
+void    HttpRequestFlow::setBodySize(int bodySizeP) {
+    this->bodySize = bodySizeP;
+}
+
+int     HttpRequestFlow::getBodySize() {
+    return this->bodySize;
 }

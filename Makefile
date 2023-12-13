@@ -16,10 +16,12 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/Forbidden403.cpp \
 				src/ReturnStatus/Response/ResponseFromCgi.cpp \
 				src/ReturnStatus/Response/OK200.cpp \
+				src/ReturnStatus/Response/UriTooLong414.cpp \
 				src/ReturnStatus/Response/Created201.cpp \
 				src/ReturnStatus/Response/PayloadTooLarge413.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \
-				src/CGI/cgi.cpp src/CGIHandler/CGIHandler.cpp \
+				src/CGI/cgi.cpp \
+				src/CGIHandler/CGIHandler.cpp \
 				src/Config/ServConf.cpp \
 				src/FileUploadHandler/FileUploadHandler.cpp \
 				src/Server/Socket.cpp \
