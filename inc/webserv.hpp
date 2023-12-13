@@ -37,6 +37,7 @@
 #include "../src/ReturnStatus/HttpRequestFlow.hpp"
 
 #include "../src/ReturnStatus/Response/AResponseMessage.hpp"
+#include "../src/ReturnStatus/Response/BadRequest400.hpp"
 #include "../src/ReturnStatus/Response/NotFound404.hpp"
 #include "../src/ReturnStatus/Response/MovedPermanently301.hpp"
 #include "../src/ReturnStatus/Response/MethodNotAllowed405.hpp"

@@ -7,7 +7,6 @@ class   ServConf;
 
 class HttpRequestFlow {
     private:
-        std::string                         statusCode;
         std::string                         statusMessage;
         std::string                         target;
         std::string                         method;
@@ -36,7 +35,6 @@ class HttpRequestFlow {
     public:
         RequestData &requestData;
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
-        std::string getStatusCode();
         void        createHttpHeader();
         
         AResponseMessage    *checkRequestAndReturnHttpMessage();

@@ -5,9 +5,6 @@ HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) :
     this->method = requestData.getMethod();
 }
 
-std::string HttpRequestFlow::getStatusCode() {
-    return this->statusCode;
-}
 
 void    HttpRequestFlow::createHttpHeader() {
     
@@ -22,8 +19,7 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
-        this->statusCode = "400";
-        this->statusMessage = "Bad Request";
+        return new BadRequest400(this->config.errorPages["400"]);
     }
     if (checkUriLength()) {
         //create 414 Request-URI Too Long
