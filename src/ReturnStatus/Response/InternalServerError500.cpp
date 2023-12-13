@@ -12,6 +12,10 @@ InternalServerError500::InternalServerError500(std::string &errorPath) {
         this->errorPath = STATIC_500;
 }
 
+InternalServerError500::~InternalServerError500() {
+    this->headers.clear();
+}
+
 std::string InternalServerError500::createResponse() {
     std::map<std::string, std::string>::iterator it;
 

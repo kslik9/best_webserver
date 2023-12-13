@@ -10,17 +10,15 @@ NotFound404::NotFound404(std::string &targetp, std::string &errorPath) {
     headers["Date"] = getCurrentTime();
     headers["Content-Type"] = "text/html";
 
-    // std::cout << "error path:" << errorPath << "]" << std::endl;
-
-    // std::cout << access(errorPath.c_str(), F_OK) << std::endl;
-    //check if errorpage is exist
     if (!access(errorPath.c_str(), F_OK | R_OK))
         this->errorPath = errorPath;
     else
         this->errorPath = STATIC_404;
-
-
     
+}
+
+NotFound404::~NotFound404() {
+    this->headers.clear();
 }
 
 #include <ctime>

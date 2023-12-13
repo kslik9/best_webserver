@@ -21,6 +21,10 @@ OK200::OK200(std::string &resource, std::string const &url, bool autoIndex) {
     this->target = url;
 }
 
+OK200::~OK200() {
+    this->headers.clear();
+}
+
 std::string OK200::getListing() {
     std::string dir = this->resourcePath;
     DIR *directory;

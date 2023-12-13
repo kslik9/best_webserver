@@ -39,6 +39,10 @@ ResponseFromCgi::ResponseFromCgi(RequestData &rq, std::string const &root)
 	this->statusMessage = "OK";
 }
 
+ResponseFromCgi::~ResponseFromCgi() {
+	this->headers.clear();
+}
+
 char **mapToArr(std::map<std::string, std::string> mp)
 {
 	int i = 0;

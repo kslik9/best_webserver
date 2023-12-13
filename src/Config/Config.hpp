@@ -27,6 +27,10 @@ typedef std::map<std::string, mp > map_last;
 
 class Config
 {
+	private:
+		static const int arr = 10;
+		std::vector<std::string>	raw_data;
+		unsigned int				port;
 	public:
 		Config();
 		Config(Config const &src);
@@ -34,7 +38,6 @@ class Config
 		void parsePort(int i);
 		~Config();
 		Config &operator=(Config const &rhs);
-		// 
 		int 	how_mn_servers();
 		void filldata();
 		void display_all(ServConf srvConf);
@@ -48,10 +51,6 @@ class Config
 		std::string value_fo_loca(vec::iterator it);
 		void parseConf();
 		std::vector<ServConf> srvConf; 
-	private:
-		static const int arr = 10;
-		std::vector<std::string> raw_data;
-		unsigned int port;
 };
 
 std::ostream &operator<<(std::ostream &o, Config const &i);

@@ -8,5 +8,6 @@ class OK200 : public AResponseMessage {
     public:
         OK200(std::string &resource);
         OK200(std::string &resource, std::string const &url, bool autoIndex);
+        ~OK200();
         std::string createResponse();
 };

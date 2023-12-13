@@ -13,6 +13,10 @@ UriTooLong414::UriTooLong414(std::string &errorPath) {
         this->errorPath = STATIC_414;
 }
 
+UriTooLong414::~UriTooLong414() {
+    this->headers.clear();
+}
+
 std::string UriTooLong414::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;

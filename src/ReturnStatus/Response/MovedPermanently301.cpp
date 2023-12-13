@@ -8,6 +8,10 @@ MovedPermanently301::MovedPermanently301(std::string &location) {
     headers["Date"] = getCurrentTime();
 }
 
+MovedPermanently301::~MovedPermanently301() {
+    this->headers.clear();
+}
+
 std::string MovedPermanently301::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;

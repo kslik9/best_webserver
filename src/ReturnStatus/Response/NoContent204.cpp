@@ -13,6 +13,10 @@ NoContent204::NoContent204(std::string &errorPath) {
         this->errorPath = STATIC_204;
 }
 
+NoContent204::~NoContent204() {
+    this->headers.clear();
+}
+
 std::string NoContent204::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;

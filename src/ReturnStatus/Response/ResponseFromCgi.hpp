@@ -17,5 +17,6 @@ class ResponseFromCgi : public AResponseMessage {
         std::string process();
     public:
         ResponseFromCgi(RequestData &rq, std::string const &root);
+        ~ResponseFromCgi();
         std::string createResponse();
 };

@@ -6,5 +6,6 @@ class Forbidden403 : public AResponseMessage {
         bool        autoIndex;
     public:
         Forbidden403(std::string const &errorPage);
+        ~Forbidden403();
         std::string createResponse();
 };

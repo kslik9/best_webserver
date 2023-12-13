@@ -13,6 +13,10 @@ Conflict409::Conflict409(std::string &errorPath) {
         this->errorPath = STATIC_409;
 }
 
+Conflict409::~Conflict409() {
+    this->headers.clear();
+}
+
 std::string Conflict409::createResponse() {
     std::map<std::string, std::string>::iterator it;
 

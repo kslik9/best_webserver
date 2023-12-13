@@ -34,9 +34,9 @@ class HttpRequestFlow {
         bool                                deleteFile();
         int                                 bodySize;
         RequestData &requestData;
-        AResponseMessage    *handleGetMethod();
-        AResponseMessage    *handlePostMethod();
-        AResponseMessage    *handleDeleteMethod();
+        AResponseMessage                    *handleGetMethod();
+        AResponseMessage                    *handlePostMethod();
+        AResponseMessage                    *handleDeleteMethod();
     public:
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
         ~HttpRequestFlow();

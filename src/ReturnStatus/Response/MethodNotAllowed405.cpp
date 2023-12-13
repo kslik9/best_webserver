@@ -13,6 +13,10 @@ MethodNotAllowed405::MethodNotAllowed405(std::string &allowedMethods, std::strin
         this->errorPath = STATIC_405;
 }
 
+MethodNotAllowed405::~MethodNotAllowed405() {
+    this->headers.clear();
+}
+
 std::string MethodNotAllowed405::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;

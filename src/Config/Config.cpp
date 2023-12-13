@@ -4,14 +4,14 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-Config::Config()
-{
+Config::Config() {
 	srvConf.resize(10);
 }
 
-Config::Config(const Config &src)
-{
+Config::Config(const Config &src) {
+	
 }
+
 int didWeFinish(std::string tmp)
 {
 	for(size_t i = 0; i < tmp.length(); i++)

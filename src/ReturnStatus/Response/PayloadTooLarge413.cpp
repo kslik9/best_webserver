@@ -15,7 +15,10 @@ PayloadTooLarge::PayloadTooLarge(std::string &errorPath) {
     
 }
 
-#include <ctime>
+PayloadTooLarge::~PayloadTooLarge() {
+    this->headers.clear();
+}
+
 std::string PayloadTooLarge::createResponse() {
 
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";

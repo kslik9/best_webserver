@@ -14,6 +14,10 @@ BadRequest400::BadRequest400(std::string &errorPage) {
         this->errorPath = STATIC_400;
 }
 
+BadRequest400::~BadRequest400() {
+    this->headers.clear();
+}
+
 std::string BadRequest400::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     std::map<std::string, std::string>::iterator it;

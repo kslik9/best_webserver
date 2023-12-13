@@ -13,6 +13,10 @@ Forbidden403::Forbidden403(std::string const &errorPage) {
         this->errorPath = STATIC_403;
 }
 
+Forbidden403::~Forbidden403() {
+    this->headers.clear();
+}
+
 std::string Forbidden403::createResponse() {
     startLine = "HTTP/1.1 " + this->statusCode + " " + this->statusMessage + "\r\n";
     response << startLine;
