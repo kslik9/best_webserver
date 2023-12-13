@@ -22,7 +22,20 @@ bool HttpRequestFlow::checkUriLength()
 
 bool HttpRequestFlow::checkRequestHttpMessage()
 {
-    // check if the request body is larger than cliant max body size in config file
+    long    confMaxBodySize;
+    std::string confMaxBodySizeStr;
+    char *s;
+
+    confMaxBodySizeStr = this->location["body_max_size"];
+    if (confMaxBodySizeStr.empty())
+        confMaxBodySizeStr = "524288000";
+
+    
+    confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
+    std::cout << "body size: " << this->getBodySize() << std::endl;
+    std::cout << "conf size: " << this->getBodySize() << std::endl;
+    if (this->getBodySize() > confMaxBodySize)
+        return true;
     return false;
 }
 
@@ -75,8 +88,7 @@ std::string getRouteStr(std::string url)
     return route;
 }
 
-#include <list>
-#include <set>
+
 
 // /hello/images
 std::list<std::string> extractRoutes(std::string stringRoute)

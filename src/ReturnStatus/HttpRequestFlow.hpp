@@ -32,7 +32,10 @@ class HttpRequestFlow {
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
+        int                                 bodySize;
     public:
+        void    setBodySize(int bodySizeP);
+        int     getBodySize();
         RequestData &requestData;
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
         void        createHttpHeader();
