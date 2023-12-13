@@ -234,9 +234,6 @@ bool HttpRequestFlow::checkLocationIncludesCgi()
     std::cout << "resources with root: " << resourcesWithRoot << std::endl;
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
-    std::cout << "php file is: " << this->resourcesWithRoot << std::endl;
-
-    // appendToPhpFile(this->resourcesWithRoot);
     if (this->location["cgi_extension"] != "none" && this->location["cgi_extension"] == ".php")
         return true;
     return false;
