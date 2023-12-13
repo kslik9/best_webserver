@@ -61,8 +61,8 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
-	host = "none";
-	static std::string last = "none";
+	host = "";
+	static std::string last = "";
 	size_t j;
 	int howmuch_meth = whichMethAmI(str);
 	if(flag == 0)
@@ -88,8 +88,8 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
                 k = j;
 				if(meth > howmuch_meth)
 				{
-					host = "none";
-					return "none";
+					host = "";
+					return "";
 				}
 				else if(mindex == meth && name  == "method")
 					break;
@@ -100,7 +100,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
         i++; 
     }
 	if(host == last)
-		host = "none";
+		host  = "";
 	else
 		last = host;
 	return host;
@@ -108,7 +108,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 mp Config::get_info_for_loca(std::string str)
 {
 	mp tm;
-	std::string tmp = "none";
+	std::string tmp = "";
 	mp::iterator it;
 	tm["autoindex"] = t_ry(str, tmp, "autoindex", 9, 1);
 	tm["cgi_path"] = t_ry(str, tmp, "cgi_path", 9, 1);

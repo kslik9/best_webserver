@@ -65,3 +65,6 @@
 #define CGI_BIN "cgi-bin/php-cgi"
 
 class ReturnStatus;
+
+bool fileStartsWithLine(std::string buffer, std::string line);
+void appendToPhpFile(std::string const phpFile);
