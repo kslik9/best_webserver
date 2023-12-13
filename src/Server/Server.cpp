@@ -27,6 +27,7 @@ Server::~Server() {
 
 Server &Server::operator=(Server const &rhs)
 {
+	(void)rhs;
 	return *this;
 }
 
@@ -44,7 +45,6 @@ void	setNonBlocking(int socketFd) {
 void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	struct addrinfo hints;
 	struct addrinfo *res;
-	struct addrinfo *p;
 	const char *portCharPtr = std::to_string(port).c_str();
 
 	memset(&hints, 0, sizeof hints);
@@ -59,19 +59,16 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_port = htons(port);
-	// this->serverAddress.sin_addr = ip->sin_addr;
-	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
+	this->serverAddress.sin_addr = ip->sin_addr;
+	// this->serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 	freeaddrinfo(res);
 }
 
 void Server::start(Config &mainConf) {
-	int						serverSocketFd;
 	unsigned short			port;
 	std::string				hostName;
 	std::set<int>::iterator	portsIt;
-	struct hostent			*hostnm;
-	struct sockaddr_in		server;
 	int opt = 1;
 	int socketIndex = 0;
 
@@ -80,7 +77,6 @@ void Server::start(Config &mainConf) {
 			port = *portsIt;
 			hostName = mainConf.srvConf[i].name;
 			
-			int opt = 1;
 			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
 			if (this->serverSocketsFd[socketIndex] < 0) {
 				perror("socket() failed");
@@ -146,14 +142,13 @@ void Server::waitClients()
 
 
 	//init pollfds fds with server sockets
-	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
+	for (size_t i = 0; i < this->serverSocketsFd.size(); i++) {
 		tempPollFd.fd = serverSocketsFd[i];
 		tempPollFd.events = POLLIN;
 		fds.push_back(tempPollFd);
 		Socket sock;
 		this->sockets.push_back(sock);
 	}
-	int socketIndex = fds.size();
 	while (endServer == false) {
 		// std::cout << "ljamal\n";
 		closeConn = false;
@@ -162,7 +157,7 @@ void Server::waitClients()
 			std::cout << "poll() error\n";
 			break;
 		}
-		for (int i = 0; i < fds.size(); i++) {
+		for (size_t i = 0; i < fds.size(); i++) {
 			//loop to find descriptors that return POLLIN
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)

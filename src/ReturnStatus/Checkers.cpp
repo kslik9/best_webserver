@@ -5,7 +5,7 @@ bool HttpRequestFlow::checkNotAllowededChars()
     std::string allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
     unsigned int targetLen = target.length();
 
-    for (int i = 1; i < targetLen; i++)
+    for (size_t i = 1; i < targetLen; i++)
     {
         if (allowedChars.find(target.at(i)) == std::string::npos)
             return true;
@@ -24,7 +24,7 @@ bool HttpRequestFlow::checkRequestHttpMessage()
 {
     long    confMaxBodySize;
     std::string confMaxBodySizeStr;
-    char *s;
+    // char *s;
 
     confMaxBodySizeStr = this->location["body_max_size"];
     std::cout << "c: " << confMaxBodySizeStr << std::endl;
@@ -32,7 +32,7 @@ bool HttpRequestFlow::checkRequestHttpMessage()
         confMaxBodySizeStr = "524288000";
 
     
-    confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
+    confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), 0, 10);
     std::cout << "body size: " << this->getBodySize() << std::endl;
     std::cout << "conf size: " << confMaxBodySize << std::endl;
     if (this->getBodySize() > confMaxBodySize)
@@ -68,10 +68,9 @@ bool isFile(std::string const &file)
 
 std::string getRouteStr(std::string url)
 {
-    int pos = 0;
+    size_t pos = 0;
     url = url.substr(1);
     std::string route = "/";
-    // std::cout << url << std::endl;
     while ((pos = url.find("/")) != std::string::npos)
     {
         // here i will check if
@@ -103,8 +102,7 @@ std::list<std::string> extractRoutes(std::string stringRoute)
 
     //  std::cout << stringRoute << std::endl;
     routes.push_back(stringRoute);
-    int stringRouteLen = stringRoute.length();
-    int pos;
+    size_t pos;
     while ((pos = stringRoute.find_last_of("/")) != std::string::npos)
     {
 

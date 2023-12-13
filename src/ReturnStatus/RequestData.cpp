@@ -30,7 +30,7 @@ void	RequestData::fillFirstPart()
 		if (i == 0) {
 			std::stringstream fline(line);
 			fline >> this->method >> this->target >> this->httpVersion;
-			int pos = target.find("?");
+			size_t pos = target.find("?");
 			if (pos != std::string::npos)
 			{
 				query_string = target.substr(pos + 1);

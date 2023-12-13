@@ -1,6 +1,6 @@
 #include "BadRequest400.hpp"
 
-BadRequest400::BadRequest400(std::string &errorPage) {
+BadRequest400::BadRequest400(std::string &errorPath) {
     statusCode = "400";
     statusMessage = "Bad Request";
 

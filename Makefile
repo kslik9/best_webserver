@@ -29,8 +29,7 @@ OBJS		:= $(addprefix obj/, $(OBJS))
 
 CC 			= c++
 RM			= rm -f
-# CFLAGS		= -std=c++98 -fsanitize=address
-# CFLAGS		=
+CFLAGS		= -Wall -Werror -Wextra -std=c++98
 NAME		= webserv
 INCLUDE		= -Iinc/
 

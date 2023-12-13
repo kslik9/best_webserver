@@ -17,7 +17,7 @@ OK200::OK200(std::string &resource, std::string const &url, bool autoIndex) {
     this->resourcePath = resource;
     this->headers["Content-Type"] = "text/html";
     this->headers["Date"] = getCurrentTime();
-    this->autoIndex = true;
+    this->autoIndex = autoIndex == true ? true : true;
     this->target = url;
 }
 

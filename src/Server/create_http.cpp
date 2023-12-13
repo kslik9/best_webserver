@@ -5,8 +5,6 @@
 std::string Server::buildHttpResponse(int socketIndex, std::string requestStr, int bodySize)
 {
 	// std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
-
-    int         fileStat;
     std::string php_resp;
     // ------------------------------------------
     RequestData request(requestStr);

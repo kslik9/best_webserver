@@ -29,11 +29,11 @@ class HttpRequestFlow {
         bool                                checkLocationSupportUpload();
         bool                                handlePost();
         bool                                checkFilEexceedMaxSize();
+        RequestData                         &requestData;
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
         int                                 bodySize;
-        RequestData &requestData;
         AResponseMessage                    *handleGetMethod();
         AResponseMessage                    *handlePostMethod();
         AResponseMessage                    *handleDeleteMethod();
