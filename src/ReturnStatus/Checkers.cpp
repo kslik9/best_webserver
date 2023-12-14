@@ -22,22 +22,22 @@ bool HttpRequestFlow::checkUriLength()
 
 bool HttpRequestFlow::checkRequestHttpMessage()
 {
-    long    confMaxBodySize;
-    std::string confMaxBodySizeStr;
-    char *s;
+    // long    confMaxBodySize;
+    // std::string confMaxBodySizeStr;
+    // char *s;
 
-    confMaxBodySizeStr = this->location["body_max_size"];
-    if (confMaxBodySizeStr.empty())
-        confMaxBodySizeStr = "104857600";
+    // confMaxBodySizeStr = this->location["body_max_size"];
+    // if (confMaxBodySizeStr.empty())
+    //     confMaxBodySizeStr = "104857600";
 
     
-    confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
-    if (confMaxBodySize >= 104857600)
-        return true;
-    std::cout << "body size: " << this->getBodySize() << std::endl;
-    std::cout << "conf size: " << this->getBodySize() << std::endl;
-    if (this->getBodySize() > confMaxBodySize)
-        return true;
+    // confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
+    // if (confMaxBodySize >= 104857600)
+    //     return true;
+    // std::cout << "body size: " << this->getBodySize() << std::endl;
+    // std::cout << "conf size: " << this->getBodySize() << std::endl;
+    // if (this->getBodySize() > confMaxBodySize)
+    //     return true;
     return false;
 }
 
