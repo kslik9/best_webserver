@@ -5,9 +5,6 @@ HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) :
     this->method = requestData.getMethod();
 }
 
-std::string HttpRequestFlow::getStatusCode() {
-    return this->statusCode;
-}
 
 void    HttpRequestFlow::createHttpHeader() {
     
@@ -22,15 +19,15 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
-        std::cout << RED_TEXT << "not allowed chars" << RESET_COLOR << std::endl;
+        std::cout << RED_TEXT << "request has not allowed charachters" << RESET_COLOR << std::endl;
         return new BadRequest400(this->config.errorPages["400"]);
     }
     if (checkUriLength()) {
-        std::cout << RED_TEXT << "uri too long" << RESET_COLOR << std::endl;
+        std::cout << RED_TEXT << "uri length" << RESET_COLOR << std::endl;
         return new UriTooLong414(this->config.errorPages["414"]);
     }
     if (checkRequestHttpMessage()) {
-        std::cout << RED_TEXT << "body max size" << RESET_COLOR << std::endl;
+        std::cout << RED_TEXT << "body is too large" << RESET_COLOR << std::endl;
         return new PayloadTooLarge(this->config.errorPages["413"]);
     }
     
@@ -62,4 +59,12 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
         return handleDeleteMethod();
 
     return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
+}
+
+void    HttpRequestFlow::setBodySize(int bodySizeP) {
+    this->bodySize = bodySizeP;
+}
+
+int     HttpRequestFlow::getBodySize() {
+    return this->bodySize;
 }

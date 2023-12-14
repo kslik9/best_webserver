@@ -7,7 +7,6 @@ class   ServConf;
 
 class HttpRequestFlow {
     private:
-        std::string                         statusCode;
         std::string                         statusMessage;
         std::string                         target;
         std::string                         method;
@@ -30,20 +29,19 @@ class HttpRequestFlow {
         bool                                checkLocationSupportUpload();
         bool                                handlePost();
         bool                                checkFilEexceedMaxSize();
+        RequestData                         &requestData;
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
-        long                                bodySize;
+        int                                 bodySize;
     public:
-        RequestData &requestData;
+        void                   setBodySize(int bodySizeP);
+        int                     getBodySize();
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
-        std::string getStatusCode();
-        void        createHttpHeader();
-        
+        void                createHttpHeader();
         AResponseMessage    *checkRequestAndReturnHttpMessage();
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
         AResponseMessage    *handleDeleteMethod();
-        long                getBodySize();
 };
 

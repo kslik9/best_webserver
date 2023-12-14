@@ -2,11 +2,10 @@
 #include "webserv.hpp"
 
 
-std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
+std::string Server::buildHttpResponse(int socketIndex, std::string requestStr, int bodySize)
 {
 	// std::cout << GREEN_TEXT << "final_res: " << "[" << requestStr << "]" << RESET_COLOR << std::endl;
 
-    int         fileStat;
     std::string php_resp;
     // ------------------------------------------
     RequestData request(requestStr);
@@ -15,11 +14,11 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr)
     std::string     responseMessage;
     //http request checker
     HttpRequestFlow  hm(request, conf.at(socketIndex));
+
+    hm.setBodySize(bodySize);
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();
     
     delete createdResponse;
     return responseMessage;
-    // std::cout << "something her2\n";
-
 }

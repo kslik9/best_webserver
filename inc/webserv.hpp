@@ -65,6 +65,7 @@
 #define BLUE_TEXT "\033[1;34m"
 #define RED_TEXT "\033[1;31m"
 #define GREEN_TEXT "\033[1;32m"
+#define YELLOW_TEXT "\033[1;33m"
 // 
 #define CGI_BIN "cgi-bin/php-cgi"
 

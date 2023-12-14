@@ -9,9 +9,6 @@ Config::Config()
 	srvConf.resize(10);
 }
 
-Config::Config(const Config &src)
-{
-}
 int didWeFinish(std::string tmp)
 {
 	for(size_t i = 0; i < tmp.length(); i++)
@@ -40,7 +37,7 @@ std::string Config::value_fo_loca(vec::iterator it)
 }
 int whichMethAmI(std::string str)
 {
-	int i = 0 ;
+	size_t i = 0 ;
 	size_t k = 0;
 	int c = 0 ;
 	while(i < str.length())
@@ -57,12 +54,12 @@ int whichMethAmI(std::string str)
 }
 std::string t_ry(std::string str, std::string &host, std::string name, int len, int flag)
 {
-	int i = 0;
+	size_t i = 0;
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
-	host = "none";
-	static std::string last = "none";
+	host = "";
+	static std::string last = "";
 	size_t j;
 	int howmuch_meth = whichMethAmI(str);
 	if(flag == 0)
@@ -88,8 +85,8 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
                 k = j;
 				if(meth > howmuch_meth)
 				{
-					host = "none";
-					return "none";
+					host = "";
+					return "";
 				}
 				else if(mindex == meth && name  == "method")
 					break;
@@ -100,7 +97,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
         i++; 
     }
 	if(host == last)
-		host = "none";
+		host  = "";
 	else
 		last = host;
 	return host;
@@ -108,7 +105,7 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 mp Config::get_info_for_loca(std::string str)
 {
 	mp tm;
-	std::string tmp = "none";
+	std::string tmp = "";
 	mp::iterator it;
 	tm["autoindex"] = t_ry(str, tmp, "autoindex", 9, 1);
 	tm["cgi_path"] = t_ry(str, tmp, "cgi_path", 9, 1);
@@ -122,7 +119,8 @@ mp Config::get_info_for_loca(std::string str)
 	tm["redirect"] = t_ry(str, tmp, "redirect", 9, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 8, 0);
 	tm["upload_directory"] = t_ry(str, tmp, "upload_directory", 17, 1);
-	tm["upload_max_size"] = t_ry(str, tmp, "upload_max_size", 16, 1);
+	tm["body_max_size"] = t_ry(str, tmp, "body_max_size", 14, 1);
+
 	return tm;
 }
 void Config::display_all(ServConf srvConf)
@@ -138,13 +136,13 @@ void Config::display_all(ServConf srvConf)
 		}
 		std::cout << std::endl;
 		std::cout << "the error pages is [";
-		// mp::iterator p = srvConf.errorPages.begin();
-		// while(p != srvConf.errorPages.end())
-		// {
-		// 	std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
-		// 	*p++;
-		// }
-		// std::cout << "]" <<std::endl;
+		mp::iterator p = srvConf.errorPages.begin();
+		while(p != srvConf.errorPages.end())
+		{
+			std::cout << "code error =>[" << p->first << "]path=>[" << p->second << "]|";
+			*p++;
+		}
+		std::cout << "]" <<std::endl;
 		std::cout << "the name is " << srvConf.name << std::endl;
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
@@ -169,7 +167,7 @@ std::string get_name_good(std::string name)
 {
 	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
 	int c = 0;
-	for(int i = 0;i < name.length() + 1 ;i++)
+	for(size_t i = 0; i < name.length() + 1 ; i++)
 	{
 		if(name[i] == '/')
 			c++;
@@ -202,7 +200,6 @@ void Config::parseLocation(int i)
 		it++;
 	}
 	mp::iterator pop;
-	map_last::iterator iter = srvConf[i].rout.begin();
 	pop = srvConf[i].routes.begin();
 	while(pop != srvConf[i].routes.end())
 	{
@@ -215,7 +212,6 @@ void Config::parseInfosStr(std::string name , int leng, std::string &host, int j
 {
 	vec::iterator it = this->srvConf[j].my_data.begin();
 	std::string tmp;
-	int i = 0;
 	while(it != this->srvConf[j].my_data.end())
 	{
 		tmp = *it;
@@ -252,8 +248,6 @@ void Config::parseInfosInt(std::string name , int leng, long long &host, int i)
 }
 int 	Config::how_mn_servers()
 {
-	int i = 0 ;
-	size_t k = 0;
 	vec::iterator it = this->raw_data.begin();
 	std::string tmp;
 	int c = 0 ;
@@ -304,7 +298,8 @@ void Config::parse_error(int i)
 			tmp2 = str.substr(k + 8);
 			if(tmp2[tmp2.length() - 1] == ';')
 				tmp2[tmp2.length() - 1] = ' ';
-			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
+			tmp.erase(std::remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+			tmp2.erase(std::remove_if(tmp2.begin(), tmp2.end(), ::isspace), tmp2.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
 		}
 		*it++;
@@ -370,13 +365,11 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		// while(i < this->servers_number)
-		// {
-		// 	display_all(srvConf[i]);
-		// 	i++;
-		// }
-		// exit(0);
-
+		while(i < this->servers_number)
+		{
+			// display_all(srvConf[i]);
+			i++;
+		}
 	}
 }
 
@@ -394,12 +387,14 @@ Config::~Config()
 
 Config &Config::operator=(Config const &rhs)
 {
+	this->port = rhs.port;
+	this->raw_data = rhs.raw_data;
 	return *this;
 }
 
 std::ostream &operator<<(std::ostream &o, Config const &i)
 {
-	// o << "Value = " << i.getValue();
+	(void)i;
 	return o;
 }
 
