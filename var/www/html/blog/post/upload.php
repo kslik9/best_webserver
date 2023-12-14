@@ -1,3 +1,5 @@
+<?php $rawData = file_get_contents('php://input'); $postData = []; parse_str($rawData, $postData); foreach ($postData as $key => $value) { $_POST[trim($key)] = $value; } ?>
+<?php $rawData = file_get_contents('php://input'); $postData = []; parse_str($rawData, $postData); foreach ($postData as $key => $value) { $_POST[$key] = $value; } ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +11,11 @@
 <body class="p-16">
     <h1 class="flex py-2">let's send something using post</h1>
     <div>
-        <form action="./send.php?id=1337" method="post">
+        <form enctype="multipart/form-data" action="./send.php?id=1337" method="post">
             <div>
-                <input class="p-2 border border-gray-500 rounded" placeholder="name" name="name" type="text">
-                <input class="p-2 border border-gray-500 rounded" placeholder="age" name="age" type="text">
-                <!-- <input class="p-2 border border-gray-500 rounded" type="file" name="filox" id="filox"> -->
+                <!-- <input class="p-2 border border-gray-500 rounded" placeholder="name" name="name" type="text">
+                <input class="p-2 border border-gray-500 rounded" placeholder="age" name="age" type="text"> -->
+                <input class="p-2 border border-gray-500 rounded" type="file" name="filox" id="filox">
             </div>
             <div class="flex py-2"></div>
             <input class="cursor-pointer border border-gray-500 p-1 px-2 rounded" type="submit" value="Submit">

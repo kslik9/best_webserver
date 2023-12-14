@@ -59,6 +59,7 @@ std::string ResponseFromCgi::process()
 {
 	std::vector<const char *> php_args;
 	php_script src;
+	appendToPhpFile(this->keyValue["SCRIPT_FILENAME"]);
 	src.path = this->keyValue["SCRIPT_FILENAME"];
 	src.file_stream = new std::ifstream(src.path);
 	if (!src.file_stream->is_open())

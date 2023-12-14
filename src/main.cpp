@@ -4,7 +4,7 @@ Logger logger = Logger("webserv.log");
 
 int main(int argc, char const *argv[])
 {
-    std::string conf_file("webserver_1server.conf");
+    std::string conf_file("configs/webserver_1server.conf");
     if (argc > 1)
         conf_file = argv[1];
     Config config(conf_file);
