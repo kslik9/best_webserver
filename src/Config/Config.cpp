@@ -9,9 +9,6 @@ Config::Config()
 	srvConf.resize(10);
 }
 
-Config::Config(const Config &src)
-{
-}
 int didWeFinish(std::string tmp)
 {
 	for(size_t i = 0; i < tmp.length(); i++)
@@ -40,7 +37,7 @@ std::string Config::value_fo_loca(vec::iterator it)
 }
 int whichMethAmI(std::string str)
 {
-	int i = 0 ;
+	size_t i = 0 ;
 	size_t k = 0;
 	int c = 0 ;
 	while(i < str.length())
@@ -57,7 +54,7 @@ int whichMethAmI(std::string str)
 }
 std::string t_ry(std::string str, std::string &host, std::string name, int len, int flag)
 {
-	int i = 0;
+	size_t i = 0;
 	size_t k = 0;
 	int mindex = 1;
 	static int meth = 0;
@@ -170,7 +167,7 @@ std::string get_name_good(std::string name)
 {
 	name.erase(std::remove_if(name.begin(), name.end(), ::isspace), name.end());
 	int c = 0;
-	for(int i = 0;i < name.length() + 1 ;i++)
+	for(size_t i = 0; i < name.length() + 1 ; i++)
 	{
 		if(name[i] == '/')
 			c++;
@@ -203,7 +200,6 @@ void Config::parseLocation(int i)
 		it++;
 	}
 	mp::iterator pop;
-	map_last::iterator iter = srvConf[i].rout.begin();
 	pop = srvConf[i].routes.begin();
 	while(pop != srvConf[i].routes.end())
 	{
@@ -216,7 +212,6 @@ void Config::parseInfosStr(std::string name , int leng, std::string &host, int j
 {
 	vec::iterator it = this->srvConf[j].my_data.begin();
 	std::string tmp;
-	int i = 0;
 	while(it != this->srvConf[j].my_data.end())
 	{
 		tmp = *it;
@@ -253,8 +248,6 @@ void Config::parseInfosInt(std::string name , int leng, long long &host, int i)
 }
 int 	Config::how_mn_servers()
 {
-	int i = 0 ;
-	size_t k = 0;
 	vec::iterator it = this->raw_data.begin();
 	std::string tmp;
 	int c = 0 ;
@@ -396,12 +389,14 @@ Config::~Config()
 
 Config &Config::operator=(Config const &rhs)
 {
+	this->port = rhs.port;
+	this->raw_data = rhs.raw_data;
 	return *this;
 }
 
 std::ostream &operator<<(std::ostream &o, Config const &i)
 {
-	// o << "Value = " << i.getValue();
+	(void)i;
 	return o;
 }
 
