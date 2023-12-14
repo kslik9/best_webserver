@@ -139,13 +139,13 @@ void Config::display_all(ServConf srvConf)
 		}
 		std::cout << std::endl;
 		std::cout << "the error pages is [";
-		// mp::iterator p = srvConf.errorPages.begin();
-		// while(p != srvConf.errorPages.end())
-		// {
-		// 	std::cout << "code error =>" << p->first << " path=>" << p->second << " |";
-		// 	*p++;
-		// }
-		// std::cout << "]" <<std::endl;
+		mp::iterator p = srvConf.errorPages.begin();
+		while(p != srvConf.errorPages.end())
+		{
+			std::cout << "code error =>[" << p->first << "]path=>[" << p->second << "]|";
+			*p++;
+		}
+		std::cout << "]" <<std::endl;
 		std::cout << "the name is " << srvConf.name << std::endl;
 		std::cout << "the body max size is " << srvConf.clientBodyLimit << std::endl;
 		map_last::iterator it;
@@ -305,7 +305,8 @@ void Config::parse_error(int i)
 			tmp2 = str.substr(k + 8);
 			if(tmp2[tmp2.length() - 1] == ';')
 				tmp2[tmp2.length() - 1] = ' ';
-			str.erase(std::remove_if(str.begin(), str.end(), ::isspace), str.end());
+			tmp.erase(std::remove_if(tmp.begin(), tmp.end(), ::isspace), tmp.end());
+			tmp2.erase(std::remove_if(tmp2.begin(), tmp2.end(), ::isspace), tmp2.end());
 			this->srvConf[i].errorPages[tmp] = tmp2;
 		}
 		*it++;
@@ -376,7 +377,7 @@ Config::Config(std::string conf)
 			display_all(srvConf[i]);
 			i++;
 		}
-		exit(0);
+		// exit(0);
 
 	}
 }
