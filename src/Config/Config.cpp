@@ -367,7 +367,7 @@ Config::Config(std::string conf)
 		parseConf();
 		while(i < this->servers_number)
 		{
-			display_all(srvConf[i]);
+			// display_all(srvConf[i]);
 			i++;
 		}
 		// exit(0);

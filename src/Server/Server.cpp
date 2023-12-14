@@ -67,7 +67,6 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	this->serverAddress.sin_port = htons(port);
 	// this->serverAddress.sin_addr = ip->sin_addr;
 	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
-
 	freeaddrinfo(res);
 }
 
@@ -93,7 +92,6 @@ void Server::start(Config &mainConf) {
 			//setnonblocking
 			setNonBlocking(this->serverSocketsFd[socketIndex]);
 
-			
 			if (this->serverSocketsFd[i] < 0) {
 				logger.Log(ERROR, "Error creating server socket");
 				throw std::runtime_error("Error creating server socket");
@@ -111,8 +109,11 @@ void Server::start(Config &mainConf) {
 			//bind socket
 			if (bind(this->serverSocketsFd[socketIndex], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0)
 			{
-				logger.Log(ERROR, "Error binding server socket");
-				throw std::runtime_error("Error binding server socket");
+				// logger.Log(ERROR, "Error binding server socket");
+				// throw std::runtime_error("Error binding server socket");
+				std::cout << YELLOW_TEXT << "WARNING: An error occured and server cannot listen on " << port << " check the config file " << RESET_COLOR << std::endl; 
+				return ;
+
 			}
 
 			// listen on
