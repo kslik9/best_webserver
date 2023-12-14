@@ -9,11 +9,11 @@
 <body class="p-16">
     <h1 class="flex py-2">let's send something using post</h1>
     <div>
-        <form action="./send.php?id=1337" method="post">
+        <form enctype="multipart/form-data" action="./send.php?id=1337" method="post">
             <div>
-                <input class="p-2 border border-gray-500 rounded" placeholder="name" name="name" type="text">
-                <input class="p-2 border border-gray-500 rounded" placeholder="age" name="age" type="text">
-                <!-- <input type="file" name="file" id="file"> -->
+                <!-- <input class="p-2 border border-gray-500 rounded" placeholder="name" name="name" type="text">
+                <input class="p-2 border border-gray-500 rounded" placeholder="age" name="age" type="text"> -->
+                <input type="file" name="file" id="file">
             </div>
             <div class="flex py-2"></div>
             <input class="cursor-pointer border border-gray-500 p-1 px-2 rounded" type="submit" value="Submit">
