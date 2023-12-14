@@ -29,7 +29,6 @@ class Config
 {
 	public:
 		Config();
-		Config(Config const &src);
 		Config(std::string conf);
 		void parsePort(int i);
 		~Config();
