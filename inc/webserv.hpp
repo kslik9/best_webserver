@@ -18,6 +18,7 @@
 #include <arpa/inet.h>
 // 
 #include <map>
+#include <list>
 #include <vector>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -48,6 +49,8 @@
 #include "../src/ReturnStatus/Response/PayloadTooLarge413.hpp"
 #include "../src/ReturnStatus/Response/ResponseFromCgi.hpp"
 #include "../src/ReturnStatus/Response/Created201.hpp"
+#include "../src/ReturnStatus/Response/UriTooLong414.hpp"
+
 
 // 
 #include "../src/CGIHandler/CGIHandler.hpp"

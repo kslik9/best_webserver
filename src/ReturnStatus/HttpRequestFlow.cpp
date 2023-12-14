@@ -30,6 +30,7 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
         //this->statusCode = 414
         //this->statusMessage = Request-URI Too Long
         // return errorPage
+        return new UriTooLong414(this->config.errorPages["414"]);
     }
     if (checkRequestHttpMessage()) {
         //create 413 Request Entity Too Large

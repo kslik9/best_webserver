@@ -33,6 +33,7 @@ class HttpRequestFlow {
         ServConf                            &config;
         std::map<std::string, std::string>  location;
         bool                                deleteFile();
+        long                                bodySize;
     public:
         RequestData &requestData;
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
@@ -43,5 +44,6 @@ class HttpRequestFlow {
         AResponseMessage    *handleGetMethod();
         AResponseMessage    *handlePostMethod();
         AResponseMessage    *handleDeleteMethod();
+        long                getBodySize();
 };
 

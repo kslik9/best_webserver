@@ -27,7 +27,7 @@ public:
     std::string getAllHeaders() const;
     std::string getPartOne() const;
     std::string getPartTwo() const;
-    void    setBody(std::string &body);
+    void        setBody(std::string &body);
 };
 
 std::ostream &operator<<(std::ostream &o, RequestData const &i);
