@@ -59,7 +59,7 @@ std::string ResponseFromCgi::process()
 {
 	std::vector<const char *> php_args;
 	php_script src;
-	src.path = "php/index.php";
+	src.path = this->keyValue["SCRIPT_FILENAME"];
 	src.file_stream = new std::ifstream(src.path);
 	if (!src.file_stream->is_open())
 	{
@@ -77,7 +77,6 @@ std::string ResponseFromCgi::process()
 		delete src.file_stream;
 		return "-1"; // saaoudi dir khdemtk hna 🧏🏿‍♂️
 	}
-	// std::cout << ">>>>>>" << this->inBody << "\n";
 	pid_t child_pid = fork();
 	if (child_pid == -1)
 	{

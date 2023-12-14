@@ -4,22 +4,31 @@ Logger logger = Logger("webserv.log");
 
 int main(int argc, char const *argv[])
 {
+    std::string conf_file("webserver_1server.conf");
+    if (argc > 1)
+        conf_file = argv[1];
+    Config config(conf_file);
+    Server server;
     try
     {
-        if (argc != 2)
-        {
-            logger.Log(ERROR, "bad arguments");
-            logger.Log(INFO, "try: ./webserv ./webserver.conf");
-            return 1;
-        }
-        Config config(argv[1]);
-        Server server;
         server.start(config);
-        server.waitClients();
+        while (true)
+        {
+            try
+            {
+                server.waitClients();
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << "Can't wait Clients: " << e.what() << '\n';
+                continue;
+            }
+        }
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Main: " << e.what() << '\n';
+        std::cerr << "Can't start Server: " << e.what() << '\n';
+        exit(1);
     }
     return 0;
 }
