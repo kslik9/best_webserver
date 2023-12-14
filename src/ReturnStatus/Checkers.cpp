@@ -57,7 +57,6 @@ bool HttpRequestFlow::checkRequestHttpMessage()
 }
 
 
-
 bool isFile(std::string const &file)
 {
     return file.find(".") != std::string::npos ? true : false;
