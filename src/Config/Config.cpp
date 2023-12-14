@@ -371,12 +371,12 @@ Config::Config(std::string conf)
 		while (std::getline(file, line))
 			this->raw_data.push_back(line);
 		parseConf();
-		// while(i < this->servers_number)
-		// {
-		// 	display_all(srvConf[i]);
-		// 	i++;
-		// }
-		// exit(0);
+		while(i < this->servers_number)
+		{
+			display_all(srvConf[i]);
+			i++;
+		}
+		exit(0);
 
 	}
 }
