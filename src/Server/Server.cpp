@@ -27,6 +27,13 @@ Server::~Server() {
 
 Server &Server::operator=(Server const &rhs)
 {
+	this->serverAddress = rhs.serverAddress;
+	this->serverSocketsFd = rhs.serverSocketsFd;
+	this->portsAndHosts = rhs.portsAndHosts;
+	this->conf = rhs.conf;
+	this->contentLen = rhs.contentLen;
+	this->bodySize = rhs.bodySize;
+	this->sockets = rhs.sockets;
 	return *this;
 }
 
@@ -44,7 +51,6 @@ void	setNonBlocking(int socketFd) {
 void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 	struct addrinfo hints;
 	struct addrinfo *res;
-	struct addrinfo *p;
 	const char *portCharPtr = std::to_string(port).c_str();
 
 	memset(&hints, 0, sizeof hints);
@@ -55,23 +61,19 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 		return;
 	}
 	
-	struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
+	// struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
 
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_port = htons(port);
 	// this->serverAddress.sin_addr = ip->sin_addr;
 	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
-
 	freeaddrinfo(res);
 }
 
 void Server::start(Config &mainConf) {
-	int						serverSocketFd;
 	unsigned short			port;
 	std::string				hostName;
 	std::set<int>::iterator	portsIt;
-	struct hostent			*hostnm;
-	struct sockaddr_in		server;
 	int opt = 1;
 	int socketIndex = 0;
 
@@ -80,7 +82,7 @@ void Server::start(Config &mainConf) {
 			port = *portsIt;
 			hostName = mainConf.srvConf[i].name;
 			
-			int opt = 1;
+			// int opt = 1;
 			this->serverSocketsFd.push_back(socket(AF_INET, SOCK_STREAM, 0));
 			if (this->serverSocketsFd[socketIndex] < 0) {
 				perror("socket() failed");
@@ -90,7 +92,6 @@ void Server::start(Config &mainConf) {
 			//setnonblocking
 			setNonBlocking(this->serverSocketsFd[socketIndex]);
 
-			
 			if (this->serverSocketsFd[i] < 0) {
 				logger.Log(ERROR, "Error creating server socket");
 				throw std::runtime_error("Error creating server socket");
@@ -108,8 +109,11 @@ void Server::start(Config &mainConf) {
 			//bind socket
 			if (bind(this->serverSocketsFd[socketIndex], (struct sockaddr *)&this->serverAddress, sizeof(this->serverAddress)) < 0)
 			{
-				logger.Log(ERROR, "Error binding server socket");
-				throw std::runtime_error("Error binding server socket");
+				// logger.Log(ERROR, "Error binding server socket");
+				// throw std::runtime_error("Error binding server socket");
+				std::cout << YELLOW_TEXT << "WARNING: An error occured and server cannot listen on " << port << " check the config file " << RESET_COLOR << std::endl; 
+				return ;
+
 			}
 
 			// listen on
@@ -146,14 +150,13 @@ void Server::waitClients()
 
 
 	//init pollfds fds with server sockets
-	for (int i = 0; i < this->serverSocketsFd.size(); i++) {
+	for (size_t i = 0; i < this->serverSocketsFd.size(); i++) {
 		tempPollFd.fd = serverSocketsFd[i];
 		tempPollFd.events = POLLIN;
 		fds.push_back(tempPollFd);
 		Socket sock;
 		this->sockets.push_back(sock);
 	}
-	int socketIndex = fds.size();
 	while (endServer == false) {
 		// std::cout << "ljamal\n";
 		closeConn = false;
@@ -162,7 +165,7 @@ void Server::waitClients()
 			std::cout << "poll() error\n";
 			break;
 		}
-		for (int i = 0; i < fds.size(); i++) {
+		for (size_t i = 0; i < fds.size(); i++) {
 			//loop to find descriptors that return POLLIN
 			//then determine if it's listening or active connection
 			if (fds[i].revents == 0)
@@ -211,7 +214,7 @@ void Server::waitClients()
 					// std::cout << "final result: " << GREEN_TEXT 
 					// 	<< joinedStr << RESET_COLOR << std::endl;
 
-					http_resp = buildHttpResponse(currentPortInex, joinedStr);
+					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
 					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {

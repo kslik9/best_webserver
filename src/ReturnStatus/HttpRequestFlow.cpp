@@ -5,9 +5,6 @@ HttpRequestFlow::HttpRequestFlow(RequestData &requestData, ServConf &servConf) :
     this->method = requestData.getMethod();
 }
 
-std::string HttpRequestFlow::getStatusCode() {
-    return this->statusCode;
-}
 
 void    HttpRequestFlow::createHttpHeader() {
     
@@ -16,33 +13,26 @@ void    HttpRequestFlow::createHttpHeader() {
 
 //this will check the request and at the end it will create an http message and return it
 AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
-    // return new Forbidden403(this->config.errorPages["403"]);
-    std::map<std::string, std::string> abstractErrorPages;
-    abstractErrorPages["404"] = "errors/404.html";
 
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
-        this->statusCode = "400";
-        this->statusMessage = "Bad Request";
+        std::cout << RED_TEXT << "request has not allowed charachters" << RESET_COLOR << std::endl;
+        return new BadRequest400(this->config.errorPages["400"]);
     }
     if (checkUriLength()) {
-        //create 414 Request-URI Too Long
-        //this->statusCode = 414
-        //this->statusMessage = Request-URI Too Long
-        // return errorPage
+        std::cout << RED_TEXT << "uri length" << RESET_COLOR << std::endl;
+        return new UriTooLong414(this->config.errorPages["414"]);
     }
-    if (checkRequestHttpMessage()) {
-        //create 413 Request Entity Too Large
-        //this->statusCode = 413
-        //this->statusMessage = Request Entity Too Large
-        // return errorPage
-    }
-    
     //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) {
         std::cout << RED_TEXT << "Not matched" << RESET_COLOR << std::endl;
         return new NotFound404(this->target, this->config.errorPages["404"]);
     }
+    if (checkRequestHttpMessage()) {
+        std::cout << RED_TEXT << "body is too large" << RESET_COLOR << std::endl;
+        return new PayloadTooLarge(this->config.errorPages["413"]);
+    }
+    
     if (checkLocationHasRedirection()) {
         std::cout << BLUE_TEXT << "redirected" << RESET_COLOR << std::endl;
         return new MovedPermanently301(this->location["redirect"]);
@@ -65,5 +55,13 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
     else if (method == "DELETE")
         return handleDeleteMethod();
 
-    return new MethodNotAllowed405(this->target, abstractErrorPages["405"]);
+    return new MethodNotAllowed405(this->target, this->config.errorPages["405"]);
+}
+
+void    HttpRequestFlow::setBodySize(int bodySizeP) {
+    this->bodySize = bodySizeP;
+}
+
+int     HttpRequestFlow::getBodySize() {
+    return this->bodySize;
 }

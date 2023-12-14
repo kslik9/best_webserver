@@ -5,4 +5,5 @@ a.out
 logs/
 uploadedFiles/*
 .DS_Store
-
+var/upload/*
+var/www/*

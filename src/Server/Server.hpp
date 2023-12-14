@@ -23,10 +23,10 @@ class Server
 	public:
 		Server();
 		~Server();
+		std::string buildHttpResponse(int socketIndex, std::string requestStr, int bodySize);
 		bool reachedTheEnd(std::string bufferStr, int bytesReceived);
 		void start(Config &mainConf);
 		void waitClients();
-		std::string buildHttpResponse(int socketIndex, std::string request);
 		Server &operator=(Server const &rhs);
 		void	setServerAddress(unsigned short &port, std::string &hostName);
 
