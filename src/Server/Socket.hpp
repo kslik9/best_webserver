@@ -6,7 +6,6 @@ class Socket {
 	private:
 		int			contentLen;
 		int			bodySize;
-		int         socketFd;
         std::string joinedStr;
         char        buffer[BUFFER_SIZE];
         bool        closeConnection;

@@ -93,6 +93,7 @@ std::string ResponseFromCgi::process()
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		std::string postData = this->inBody;
     	ssize_t bytes_written = write(pipe_fd[1], postData.c_str(), postData.length());
+		(void) bytes_written;
 		dup2(pipe_fd[0], STDIN_FILENO);
 		if (execve(CGI_BIN, (char *const *)(&php_args[0]), envs) == -1)
 		{
