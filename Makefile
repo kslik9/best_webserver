@@ -1,5 +1,8 @@
-SRCS		=	src/main.cpp src/Server/create_http.cpp \
-				src/Config/Config.cpp src/Logger/Logger.cpp src/Server/Server.cpp \
+SRCS		=	src/main.cpp \
+				src/Server/create_http.cpp \
+				src/Config/Config.cpp \
+				src/Logger/Logger.cpp \
+				src/Server/Server.cpp \
 				src/ReturnStatus/HttpRequestFlow.cpp \
 				src/ReturnStatus/Checkers.cpp \
 				src/ReturnStatus/HandleGetMethod.cpp \
@@ -20,10 +23,10 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/Created201.cpp \
 				src/ReturnStatus/Response/PayloadTooLarge413.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \
-				src/CGI/cgi.cpp src/CGIHandler/CGIHandler.cpp \
 				src/Config/ServConf.cpp \
 				src/FileUploadHandler/FileUploadHandler.cpp \
-				src/Server/Socket.cpp
+				src/Server/Socket.cpp \
+				src/utils.cpp
 
 OBJS		:= $(SRCS:.cpp=.o)
 OBJS		:= $(addprefix obj/, $(OBJS))

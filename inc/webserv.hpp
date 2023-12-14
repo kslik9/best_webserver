@@ -51,10 +51,8 @@
 #include "../src/ReturnStatus/Response/Created201.hpp"
 #include "../src/ReturnStatus/Response/UriTooLong414.hpp"
 #include "../src/ReturnStatus/Response/BadRequest400.hpp"
+#include "../src/utils.cpp"
 
-
-// 
-#include "../src/CGIHandler/CGIHandler.hpp"
 
 
 // Consts

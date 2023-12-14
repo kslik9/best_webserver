@@ -1,5 +1,21 @@
 #include "HttpRequestFlow.hpp"
 
+std::string trim(std::string str)
+{
+    unsigned int fIndex = 0;
+    unsigned int lIndex = 0;
+    unsigned int strLen = str.length();
+
+    while (fIndex < strLen && str.at(fIndex) == ' ')
+        fIndex++;
+
+    lIndex = str.length() - 1;
+    while (lIndex >= 0 && str.at(lIndex) == ' ')
+        lIndex--;
+
+    return str.substr(fIndex, lIndex - fIndex + 1);
+}
+
 bool HttpRequestFlow::checkNotAllowededChars()
 {
     std::string allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
@@ -22,11 +38,10 @@ bool HttpRequestFlow::checkUriLength()
 
 bool HttpRequestFlow::checkRequestHttpMessage()
 {
-    long    confMaxBodySize;
+    long        confMaxBodySize;
     std::string confMaxBodySizeStr;
 
     confMaxBodySizeStr = this->location["body_max_size"];
-    std::cout << "ljamal: " << confMaxBodySizeStr << std::endl;
     if (confMaxBodySizeStr.empty())
         confMaxBodySizeStr = "104857600";
 
@@ -41,21 +56,7 @@ bool HttpRequestFlow::checkRequestHttpMessage()
     return false;
 }
 
-std::string trim(std::string str)
-{
-    unsigned int fIndex = 0;
-    unsigned int lIndex = 0;
-    unsigned int strLen = str.length();
 
-    while (fIndex < strLen && str.at(fIndex) == ' ')
-        fIndex++;
-
-    lIndex = str.length() - 1;
-    while (lIndex >= 0 && str.at(lIndex) == ' ')
-        lIndex--;
-
-    return str.substr(fIndex, lIndex - fIndex + 1);
-}
 
 bool isFile(std::string const &file)
 {
@@ -324,20 +325,12 @@ bool HttpRequestFlow::handlePost()
     // std::string body;
     if (headers["Content-Type"].find("multipart/form-data") != std::string::npos)
     {
-        // // std::cout << "------------------ multipart/form-data ------------------\n";
-        // upload(partTwo);
-        // std::cout << ">";
         int i = 0;
         std::string uploadDir;
         while (i < how_many_files(partTwo))
         {
 
             std::string filename, content;
-
-            // std::map<std::string, std::string>::iterator it;
-
-            // for (it = this->location.begin(); it != this->location.end(); ++it)
-            //     std::cout << "->" << it->first << "-" << it->second << std::endl;
 
             uploadDir = this->location["upload_directory"];
             std::cout << "uploadDir : " << uploadDir << std::endl;

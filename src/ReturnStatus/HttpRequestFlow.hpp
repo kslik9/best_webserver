@@ -35,13 +35,13 @@ class HttpRequestFlow {
         bool                                deleteFile();
         int                                 bodySize;
     public:
-        void                   setBodySize(int bodySizeP);
-        int                     getBodySize();
         HttpRequestFlow(RequestData &requestData, ServConf &servConf);
-        void                createHttpHeader();
-        AResponseMessage    *checkRequestAndReturnHttpMessage();
-        AResponseMessage    *handleGetMethod();
-        AResponseMessage    *handlePostMethod();
-        AResponseMessage    *handleDeleteMethod();
+        void                                setBodySize(int bodySizeP);
+        int                                 getBodySize();
+        void                                createHttpHeader();
+        AResponseMessage                    *checkRequestAndReturnHttpMessage();
+        AResponseMessage                    *handleGetMethod();
+        AResponseMessage                    *handlePostMethod();
+        AResponseMessage                    *handleDeleteMethod();
 };
 
