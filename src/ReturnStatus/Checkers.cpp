@@ -28,10 +28,12 @@ bool HttpRequestFlow::checkRequestHttpMessage()
 
     confMaxBodySizeStr = this->location["body_max_size"];
     if (confMaxBodySizeStr.empty())
-        confMaxBodySizeStr = "524288000";
+        confMaxBodySizeStr = "104857600";
 
     
     confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), nullptr, 10);
+    if (confMaxBodySize >= 104857600)
+        return true;
     std::cout << "body size: " << this->getBodySize() << std::endl;
     std::cout << "conf size: " << this->getBodySize() << std::endl;
     if (this->getBodySize() > confMaxBodySize)
