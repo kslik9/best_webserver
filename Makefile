@@ -16,6 +16,7 @@ SRCS		=	src/main.cpp src/Server/create_http.cpp \
 				src/ReturnStatus/Response/ResponseFromCgi.cpp \
 				src/ReturnStatus/Response/OK200.cpp \
 				src/ReturnStatus/Response/UriTooLong414.cpp \
+				src/ReturnStatus/Response/BadRequest400.cpp \
 				src/ReturnStatus/Response/Created201.cpp \
 				src/ReturnStatus/Response/PayloadTooLarge413.cpp \
 				src/ReturnStatus/Response/CommonFuncs.cpp \

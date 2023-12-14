@@ -50,6 +50,7 @@
 #include "../src/ReturnStatus/Response/ResponseFromCgi.hpp"
 #include "../src/ReturnStatus/Response/Created201.hpp"
 #include "../src/ReturnStatus/Response/UriTooLong414.hpp"
+#include "../src/ReturnStatus/Response/BadRequest400.hpp"
 
 
 // 

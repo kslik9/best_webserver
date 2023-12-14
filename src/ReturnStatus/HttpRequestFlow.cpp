@@ -22,21 +22,16 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     //////////////////////// check if req formed well /////////////////////////////
     if (checkNotAllowededChars()) {
-        this->statusCode = "400";
-        this->statusMessage = "Bad Request";
+        std::cout << RED_TEXT << "not allowed chars" << RESET_COLOR << std::endl;
+        return new BadRequest400(this->config.errorPages["400"]);
     }
     if (checkUriLength()) {
-        //create 414 Request-URI Too Long
-        //this->statusCode = 414
-        //this->statusMessage = Request-URI Too Long
-        // return errorPage
+        std::cout << RED_TEXT << "uri too long" << RESET_COLOR << std::endl;
         return new UriTooLong414(this->config.errorPages["414"]);
     }
     if (checkRequestHttpMessage()) {
-        //create 413 Request Entity Too Large
-        //this->statusCode = 413
-        //this->statusMessage = Request Entity Too Large
-        // return errorPage
+        std::cout << RED_TEXT << "body max size" << RESET_COLOR << std::endl;
+        return new PayloadTooLarge(this->config.errorPages["413"]);
     }
     
     //check if no location match the request uri

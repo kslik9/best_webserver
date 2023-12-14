@@ -17,6 +17,7 @@
 // #define BUFFER_SIZE (1024 * 1024) // 1MB
 #define STATIC_201 "static/default_errors/201.html"
 #define STATIC_204 "static/default_errors/204.html"
+#define STATIC_400 "static/default_errors/400.html"
 #define STATIC_403 "static/default_errors/403.html"
 #define STATIC_404 "static/default_errors/404.html"
 #define STATIC_405 "static/default_errors/405.html"
