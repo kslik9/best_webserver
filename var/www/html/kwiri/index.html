@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/output.css">
+	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+        html{
+            scroll-behavior: smooth;
+        }
+        *:focus{
+            outline: none;
+        }
+        .select-dropdown{
+            /* background-image: linear-gradient(45deg, transparent 50%, rgba(0, 0, 0, 0.111) 50%), linear-gradient(135deg, rgba(0, 0, 0, 0.078) 50%, transparent 50%);
+            background-position: calc(30px - 19px) calc(1.2em + 2px), calc(30px - 14px) calc(1.2em + 2px), calc(2.5em) 0.5em;
+            background-size: 5px 5px, 5px 5px, 1px 1.5em;
+            background-repeat: no-repeat; */
+            width: 100%;
+            font-size: 16px;
+            outline: 0px;
+            height: 48px;
+            display: block;
+            padding: 6px 12px;
+            color: #000;
+            /* border: 1px solid #ccc; */
+            /* border-radius: 4px; */
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(135deg, rgba(0, 0, 0, 0.25) 50%, transparent 50%);
+            background-position: calc(100% - 19px) calc(1.2em + 2px), calc(100% - 14px) calc(1.2em + 2px), calc(100% - 2.5em) 0.5em;
+            background-size: 5px 5px, 5px 5px, 1px 1.5em;
+            background-repeat: no-repeat;
+        }
+    </style>
+    <title>Kwir</title>
+</head>
+<body class="font-arabic">
+    <header class="w-full text-2xl">
+        <div class="flex items-center justify-between p-4 laptop:px-16 text-white font-bold">
+            <a id="menu_berger" href="#" class="z-10 fill-white">
+                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="34px" height="34px"><path d="M 2 5 L 2 7 L 22 7 L 22 5 L 2 5 z M 2 11 L 2 13 L 22 13 L 22 11 L 2 11 z M 2 17 L 2 19 L 22 19 L 22 17 L 2 17 z"/></svg>
+            </a>
+            <a href="./" class="z-10">كويري</a>
+        </div>
+    </header>
+    <div class="">
+        <div class="relative -top-20 h-[28rem] overflow-hidden">
+            <img class="w-full fixed" src="./new-img/port_header_bg.webp" alt="header">
+        </div>
+        <div class="relative -top-16 max-h-screen">
+            <main class="bg-white p-4">
+                <div class="laptop:px-20 laptop:justify-between laptop:flex laptop:flex-row-reverse grid gap-6 grid-cols-1 grid-rows-2 laptop:grid-cols-2 laptop:grid-rows-1 relative -top-80">
+                    <div class="text-white text-right p-0">
+                        <h1 class="laptop:text-5xl text-4xl font-bold">.تحكم بوقتك. ويومك</h1>
+                        <div class="flex py-2"></div>
+                        <h1 class="laptop:text-5xl text-4xl font-bold">.وحياتك</h1>
+                        <div class="flex py-0.5"></div>
+                        <span class="laptop:text-2xl text-lg font-semibold">
+                            <h1> تولى القيادة وانضم لفريق كباتن كويري </h1>
+                        </span>
+                    </div>
+                    <div class="border border-gray-100 text-right bg-white shadow-md rounded-md p-4 laptop:max-w-lg laptop:min-w-[24rem]">
+                        <div class="font-semibold text-2xl"> افتح حساباً جديداً </div>
+                        <div class="flex py-4"></div>
+                        <div action="" method="post">
+                            <select class="border border-slate-400 w-full  p-3 rounded select-dropdown" name="" id="">
+                                <option value="Laayoune">العيون</option>
+                                <option value="Laayoune">بوجدور</option>
+                                <option value="Laayoune">السمارة</option>
+                                <option value="Laayoune">طنطان</option>
+                            </select>
+                            <div class="flex py-2"></div>
+                            <div class="border border-slate-400 w-full text-left rounded flex">
+                                <div class="w-12 flex items-center pl-3 rounded overflow-hidden">
+                                    <img class="rounded-sm" src="img/ma.svg" alt="morocco">
+                                </div>
+                                <input required min="10" class="w-full h-full p-3 rounded" placeholder="+212" value="212"  type="number" name="" id="">
+                            </div>
+                            <div class="flex py-2"></div>
+                            <input placeholder="رقم الإحالة (اختياري)" class="border border-slate-400 w-full text-right p-3 rounded" type="text" name="" id="">
+                            <div class="flex py-3"></div>
+                            <input class="cursor-pointer hover:brightness-105 duration-300 ease-in-out hover:bg-gradient-to-l bg-gradient-to-r from-[#cac83e] to-[#cecb44] w-full text-white p-3 rounded font-semibold" type="submit" value="سجل الآن">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center relative -top-[16rem] text-gray-700">
+                    <div class="w-full flex justify-center items-center pb-14">
+                        <a href="#why-captin" class="scale-[2]">
+                            <svg class="fill-gray-600 animate-bounce w-6 h-6 text-center" xmlns="http://www.w3.org/2000/svg" width="24" height="24" ><path d="m12 15.586-4.293-4.293-1.414 1.414L12 18.414l5.707-5.707-1.414-1.414z"></path><path d="m17.707 7.707-1.414-1.414L12 10.586 7.707 6.293 6.293 7.707 12 13.414z"></path></svg>
+                        </a>
+                    </div>
+                    <div id="why-captin" class="text-3xl laptop:text-4xl font-bold">لماذا أصبح كابتن؟</div>
+                    <div class="flex py-6"></div>
+                    <div class="grid gap-y-12 gap-6 grid-cols-1 grid-rows-3 laptop:grid-cols-3 laptop:grid-rows-1 laptop:px-4 laptop:gap-8">
+                        <div class="why-cap-answ p-4 flex flex-col justify-center items-center">
+                            <img src="img/be_own_boss_icn.svg" alt="">
+                            <div class="font-bold text-3xl py-1">كن مدير نفسك</div>
+                            <div class="py-1 text-gray-600">اختر ساعات عملك بنفسك ولا تلتزم بدوام محدد</div>
+                        </div>
+                        <div class="why-cap-answ p-4 flex flex-col justify-center items-center">
+                            <img src="img/control_life_icn.svg" alt="">
+                            <div class="font-bold text-3xl py-1">تحكم بحياتك</div>
+                            <div class="py-1 text-gray-600">كن مسؤولاً عن عملك وحقق أهدافك بشروطك</div>
+                        </div>
+                        <div class="why-cap-answ p-4 flex flex-col justify-center items-center">
+                            <img src="img/make_your_own_money_icn.svg" alt="">
+                            <div class="font-bold text-3xl py-1">تحكم بمدخولك</div>
+                            <div class="py-1 text-gray-600">لا تحدد دخلك برقم معين</div>
+                        </div>
+                    </div>                    
+                </div>
+            </main>
+            <div class="flex py-12"></div>
+            <div class="relative -top-64 w-full bg-white">
+                <div class="w-full h-72 overflow-hidden flex items-center">
+                    <img class="w-full" src="./new-img/backdrive.webp" alt="">
+                </div>
+                <div class="relative -top-48 bg-white shadow rounded m-6 text-slate-900 text-right">
+                    <div class="font-bold text-3xl laptop:text-4xl text-center p-8">شروط العمل</div>
+                    <div class="flex py-4"></div>
+                    <div class="laptop:p-4 grid laptop:gap-12 gap-6 grid-rows-4 grid-cols-1 laptop:grid-cols-2 laptop:grid-rows-2">
+                        <!-- - -->
+                        <div class="flex justify-end items-center bg-white p-4 pl-1">
+                            <div class="flex flex-col">
+                                <div class="font-bold text-xl laptop:text-2xl">العمر</div>
+                                <div class="text-gray-700">عليك أن تكون قد تجاوزت سن الـ18 وأن تكون حائزاً على رخصة قيادة.</div>
+                            </div>
+                            <div class="flex px-0.5"></div>
+                            <div>
+                                <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path><path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path></svg>
+                            </div>
+                        </div>
+                        <!-- - -->
+                        <div class="flex justify-end items-center bg-white p-4 pl-1">
+                            <div class="flex flex-col">
+                                <div class="font-bold text-xl laptop:text-2xl">الهاتف الجوال</div>
+                                <div class="text-gray-700">
+                                    أنت بحاجة لجهاز أندرويد لتلقي الحجوزات على التطبيق
+                                </div>
+                            </div>
+                            <div class="flex px-0.5"></div>
+                            <div>
+                                <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" ><path d="M16.75 2h-10c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm-10 18V4h10l.002 16H6.75z"></path><circle cx="11.75" cy="18" r="1"></circle></svg>
+                                <!-- <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path><path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path></svg> -->
+                            </div>
+                        </div>
+                        <!-- - -->
+                        <div class="flex justify-end items-center bg-white p-4 pl-1">
+                            <div class="flex flex-col">
+                                <div class="font-bold text-xl laptop:text-2xl">السيارة</div>
+                                <div class="text-gray-700">
+                                    شروط السيارة تختلف بحسب المدينة التي تود العمل فيها
+                                </div>
+                            </div>
+                            <div class="flex px-0.5"></div>
+                            <div>
+                                <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" ><path d="m20.772 10.156-1.368-4.105A2.995 2.995 0 0 0 16.559 4H7.441a2.995 2.995 0 0 0-2.845 2.051l-1.368 4.105A2.003 2.003 0 0 0 2 12v5c0 .753.423 1.402 1.039 1.743-.013.066-.039.126-.039.195V21a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2h12v2a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2.062c0-.069-.026-.13-.039-.195A1.993 1.993 0 0 0 22 17v-5c0-.829-.508-1.541-1.228-1.844zM4 17v-5h16l.002 5H4zM7.441 6h9.117c.431 0 .813.274.949.684L18.613 10H5.387l1.105-3.316A1 1 0 0 1 7.441 6z"></path><circle cx="6.5" cy="14.5" r="1.5"></circle><circle cx="17.5" cy="14.5" r="1.5"></circle></svg>
+                                <!-- <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path><path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path></svg> -->
+                            </div>
+                        </div>
+                        <!-- - -->
+                        <div class="flex justify-end items-center bg-white p-4 pl-1">
+                            <div class="flex flex-col">
+                                <div class="font-bold text-xl laptop:text-2xl">التحقق الأمني</div>
+                                <div class="text-gray-700">
+                                    قد يتضمن ذلك فحوصات المخدرات وتقارير الشرطة وغيرها
+                                </div>
+                            </div>
+                            <div class="flex px-0.5"></div>
+                            <div>
+                                <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" ><path d="M20.995 6.9a.998.998 0 0 0-.548-.795l-8-4a1 1 0 0 0-.895 0l-8 4a1.002 1.002 0 0 0-.547.795c-.011.107-.961 10.767 8.589 15.014a.987.987 0 0 0 .812 0c9.55-4.247 8.6-14.906 8.589-15.014zM12 19.897C5.231 16.625 4.911 9.642 4.966 7.635L12 4.118l7.029 3.515c.037 1.989-.328 9.018-7.029 12.264z"></path><path d="m11 12.586-2.293-2.293-1.414 1.414L11 15.414l5.707-5.707-1.414-1.414z"></path></svg>
+                                <!-- <svg class="fill-slate-600 scale-[2] m-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path><path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path></svg> -->
+                            </div>
+                        </div>
+                        <!-- - -->
+                    </div>
+                </div>
+                <div class="flex flex-col items-center bg-gray-100 relative -top-20 p-4 py-8 laptop:p-12 text-center">
+                    <div class="text-black font-bold laptop:text-4xl text-xl">هل أنت جاهز لتصبح كابتن في كويري؟</div>
+                    <div class="flex laptop:py-8 py-4"></div>
+                    <a class="w-4/5 laptop:w-72 text-base cursor-pointer hover:brightness-105 duration-300 ease-in-out hover:bg-gradient-to-l bg-gradient-to-r from-[#aec95b] to-[#a2c047] text-white font-bold py-3 px-6 rounded shadow" href="#">
+                        سجل الآن
+                    </a>
+                </div>
+                <div class="grid gap-4 grid-cols-1 grid-rows-2 laptop:grid-cols-2 laptop:grid-rows-1 p-4 laptop:px-32">
+                    <div class=" hidden laptop:block p-4">
+                        <img class="rounded-md" src="./new-img/portrait-of-professional-motivated-truck-driver-holding-thumbs-up-in-truck-cabin.webp" alt="">
+                    </div>
+                    <div class="bg-white p-4 text-right">
+                        <div class="font-bold laptop:text-4xl text-3xl"> الخطوات الأولى </div>
+                        <div class="flex py-4"></div>
+                        <div class="flex flex-col">
+                            <div class="p-4 flex flex-row-reverse items-center my-0.5">
+                                <div class="text-2xl font-semibold bg-slate-200 w-9 h-9 flex items-center justify-center rounded-full select-none">1</div>
+                                <div class="flex px-2"></div>
+                                <div>
+                                    <div class="text-2xl font-bold">سجّل</div>
+                                    <div>املأ وقدّم الطلب في أعلى الصفحة</div>
+                                </div>
+                            </div>
+                            <!-- - -->
+                            <div class="p-4 flex flex-row-reverse items-center my-0.5">
+                                <div class="text-2xl font-semibold bg-slate-200 w-9 h-9 flex items-center justify-center rounded-full select-none">2</div>
+                                <div class="flex px-2"></div>
+                                <div>
+                                    <div class="text-2xl font-bold">تدرب</div>
+                                    <div>ستتم دعوتك للتدريب بعد النظر في طلبك</div>
+                                </div>
+                            </div>
+                            <!-- - -->
+                            <div class="p-4 flex flex-row-reverse items-center my-0.5">
+                                <div class="text-2xl font-semibold bg-slate-200 w-9 h-9 flex items-center justify-center rounded-full select-none">3</div>
+                                <div class="flex px-2"></div>
+                                <div>
+                                    <div class="text-2xl font-bold">باشر القيادة</div>
+                                    <div>ابدأ في القيادة واكسب المال!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="py-8 pt-24">
+                        <h1 class="text-center font-black text-4xl">كيف تعمل كويري؟</h1>
+                    </div>
+                    <div class="pb-16 laptop:px-32 max-w-4xl m-auto h-80">
+                        <div class="swiper mySwiper2 px-10">
+                            <div class="swiper-wrapper">
+                                <!-- - -->
+                                <div style="width: 640px;display: flex;" class="swiper-slide flex flex-col items-center justify-center text-center p-4">
+                                    <img class="laptop:w-72 px-4" src="./new-img/slide-imgs/1.webp" alt="">
+                                    <div class="text-center flex flex-col items-center relative -top-16">
+                                        <div class="w-fit text-2xl p-2 text-center bg-green-600 text-white font-bold rounded-full px-4">1</div>
+                                        <div class="font-bold text-3xl text-green-600 py-2">
+                                            حمّل وسجل الدخول
+                                        </div>
+                                        <div class="text-gray-700 py-2">
+                                            بعد استكمال التدريب، يمكنك تحميل تطبيق الكباتن وتسجيل الدخول باستخدام تفاصيلك وكلمة المرور الخاصة بك.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- - -->
+                                <div style="width: 640px;display: flex;" class="swiper-slide flex flex-col items-center justify-center text-center p-4">
+                                    <img class="laptop:w-72 px-4" src="./new-img/slide-imgs/2.webp" alt="">
+                                    <div class="text-center flex flex-col items-center relative -top-16">
+                                        <div class="w-fit text-2xl p-2 text-center bg-green-600 text-white font-bold rounded-full px-4">2</div>
+                                        <div class="font-bold text-3xl text-green-600 py-2">
+                                            استقبل الحجوزات
+                                        </div>
+                                        <div class="text-gray-700 py-2">
+                                            اختر "متوفر" بعد الدخول إلى التطبيق لتبدأ بتلقي الحجوزات. ستظهر أمامك نقطة انطلاق المشوار عند تلقي أحد الحجوزات، يمكنك عندها الاختيار بين قبول أو رفض الحجز بحسب توفرك.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- - -->
+                                <div style="width: 640px;display: flex;" class="swiper-slide flex flex-col items-center justify-center text-center p-4">
+                                    <img class="laptop:w-72 px-4" src="./new-img/slide-imgs/3.webp" alt="">
+                                    <div class="text-center flex flex-col items-center relative -top-16">
+                                        <div class="w-fit text-2xl p-2 text-center bg-green-600 text-white font-bold rounded-full px-4">3</div>
+                                        <div class="font-bold text-3xl text-green-600 py-2">
+                                            اصطحاب العميل
+                                        </div>
+                                        <div class="text-gray-700 py-2">
+                                            سيرشدك التطبيق إلى نقطة الانطلاق في حال قبولك الحجز. انقر على " وصول إلى نقطة الانطلاق" عند وصولك لاصطحاب العميل.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- - -->
+                                <div style="width: 640px;display: flex;" class="swiper-slide flex flex-col items-center justify-center text-center p-4">
+                                    <img class="laptop:w-72 px-4" src="./new-img/slide-imgs/1.webp" alt="">
+                                    <div class="text-center flex flex-col items-center relative -top-16">
+                                        <div class="w-fit text-2xl p-2 text-center bg-green-600 text-white font-bold rounded-full px-4">4</div>
+                                        <div class="font-bold text-3xl text-green-600 py-2">
+                                            أنجز المشوار
+                                        </div>
+                                        <div class="text-gray-700 py-2">
+                                            يستخدم التطبيق خرائط جوجل لإرشادك إلى نقطة وصول العميل. من الممكن أيضاً أن يقوم العميل بإرشادك بنفسه.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- - -->
+                                <div style="width: 640px;display: flex;" class="swiper-slide flex flex-col items-center justify-center text-center p-4">
+                                    <img class="laptop:w-72 px-4" src="./new-img/slide-imgs/2.webp" alt="">
+                                    <div class="text-center flex flex-col items-center relative -top-16">
+                                        <div class="w-fit text-2xl p-2 text-center bg-green-600 text-white font-bold rounded-full px-4">5</div>
+                                        <div class="font-bold text-3xl text-green-600 py-2">
+                                            حقق أرباحك
+                                        </div>
+                                        <div class="text-gray-700 py-2">
+                                            ينتهي المشوار بعد توصيل العميل إلى النقطة التي اختارها، وستجد أرباحك بعد ذلك مباشرة في بوابة الكابتن. يمكنك تحصيل ربحك فوراً من المشاوير التي يدفع فيها العميل نقداً، وتتكفل كويري في دفع المشاوير التي تُدفع عن طريق البطاقة أو الرصيد.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- - -->
+                            </div>
+                            <div class="z-10 flex justify-center laptop:justify-between laptop:relative laptop:-top-60 items-center laptop:hidden relative -top-16">
+                                <div class="bg-green-50 hover:bg-green-200 duration-200 ease-in-out p-6 rounded-full youssefio1 shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="fill: black;"><path d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z"></path></svg>
+                                </div>
+                                <span class="flex p-4"></span>
+                                <div class="bg-green-50 hover:bg-green-200 duration-200 ease-in-out p-6 rounded-full youssefio2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" style="fill: black;"><path d="M10.061 19.061 17.121 12l-7.06-7.061-2.122 2.122L12.879 12l-4.94 4.939z"></path></svg>
+                                </div>
+                            </div>
+                            <!-- <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="laptop:pt-[6rem] pt-[18rem]">
+                    <div class="py-8 pt-24">
+                        <h1 class="text-center font-black text-4xl">
+                            الأسئلة المتداولة
+                        </h1>
+                    </div>
+                    <div class=" p-4 grid laptop:gap-16 gap-4 grid-cols-1 grid-rows-3 laptop:grid-cols-3 laptop:grid-rows-1 text-right laptop:px-16">
+                        <div class=" p-4">
+                            <div class="text-xl font-bold py-2">
+                                متى يمكنني المباشرة بالقيادة؟
+                            </div>
+                            مجرد أن يتم تفعيل حسابك، يمكنك تسجيل الدخول لتطبيق الكباتن (أدما) ومباشرة العمل!
+                        </div>
+                        <div class=" p-4">
+                            <div class="text-xl font-bold py-2">
+                                كيف تتم عملية فحص السيارة؟
+                            </div>
+                            تختلف عملية فحص السيارة بحسب المدينة التي تعمل فيها، ففي بعض المدن يقوم فريق من كريم بالفحص، في حين يتم ذلك عن طريق طرف ثالث في مدن أُخرى، مثل شركة ناسيتا Nacita في مصر، وشركة كارشور CarSure في باكستان.
+                        </div>
+                        <div class=" p-4">
+                            <div class="text-xl font-bold py-2">
+                                ما هي المستندات التي أحتاجها لتقديم الطلب؟
+                            </div>
+                            من ضمن المستنات المطلوبة رخصة القيادة وبطاقة الهوية وأوراق تسجيل السيارة والتأمين، وصورة حديثة لك. قد تحتاج إلى مستندات إضافية.
+                        </div>
+                    </div>
+                    <div class="flex py-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="overlay" class="hidden fixed top-0 left-0 z-50 w-screen h-screen bg-black bg-opacity-60 backdrop-blur-[2px]"></div>
+    <div id="side_menu" class="invisible bg-white shadow fixed top-0 -left-72 z-50 w-[80vw] h-screen duration-500 ease-in-out">
+        <div class="bg-opacity-40 p-4 laptop:px-16">
+            <a id="menu_berger_2" href="#" class="z-10 fill-black">
+                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="34px" height="34px"><path d="M 2 5 L 2 7 L 22 7 L 22 5 L 2 5 z M 2 11 L 2 13 L 22 13 L 22 11 L 2 11 z M 2 17 L 2 19 L 22 19 L 22 17 L 2 17 z"/></svg>
+            </a>
+        </div>
+        <div class="p-4 flex flex-col text-2xl px-8 h-full">
+            <div class="my-2">Link one</div>
+            <div class="my-2">Link Two</div>
+            <div class="my-2">Link Tree</div>
+            <div class="my-2">Link Four</div>
+        </div>
+    </div>
+
+
+    <!-- -- -->
+
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper(".mySwiper2", {
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,	
+        },
+        navigation: {
+            nextEl: ".youssefio2",
+            prevEl: ".youssefio1",
+        },
+        });
+    </script>
+
+    <!-- ===== -->
+    <script>
+        let side_menu = document.getElementById("side_menu")
+        let menu_berger = document.getElementById("menu_berger")
+        let menu_berger_2 = document.getElementById("menu_berger_2")
+        let overlay = document.getElementById("overlay")
+
+        function hideSide(){
+            side_menu.classList.replace("left-0", "-left-72");
+            overlay.classList.replace("block", "hidden");
+            setTimeout(() => {
+                side_menu.classList.add("invisible");
+            }, 0);
+        }
+        function showSide(){
+            side_menu.classList.replace("-left-72", "left-0");
+            overlay.classList.replace("hidden", "block");
+            setTimeout(() => {
+                side_menu.classList.remove("invisible");
+            }, 0);
+        }
+        menu_berger_2.addEventListener("click", function(){
+            hideSide();
+        })
+        menu_berger.addEventListener("click", function(){
+            showSide();
+        });
+    </script>
+</body>
+</html>

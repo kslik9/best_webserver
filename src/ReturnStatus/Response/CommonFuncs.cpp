@@ -45,6 +45,7 @@ std::map<std::string, std::string> init_mime_types()
     mime_types[".ogg"] = "audio/ogg";
     mime_types[".mp4"] = "video/mp4";
     mime_types[".avi"] = "video/x-msvideo";
+    mime_types[".webp"] = "image/webp";
     return mime_types;
 }
 
