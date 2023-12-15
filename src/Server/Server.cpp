@@ -166,7 +166,7 @@ void Server::waitClients()
 	while (endServer == false)
 	{
 		closeConn = false;
-		rc = poll(&fds[0], fds.size(), 3000);
+		rc = poll(&fds[0], fds.size(), 5);
 		if (rc < 0)
 		{
 			std::cout << "poll() error\n";
@@ -205,10 +205,14 @@ void Server::waitClients()
 					joinedStr = this->sockets.at(i).getJoinedStr();
 					closeConn = this->sockets.at(i).getCloseConnStat();
 					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
-					std::cout << "try to send...\n";
-					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-					std::cout << "resplen: " << http_resp.length() << "\n";
-					std::cout << "rc: " << rc << "\n";
+					size_t sent_data = 0;
+					std::string to_send(http_resp);
+					do
+					{
+						rc = send(fds[i].fd, to_send.c_str(), to_send.length(), 0);
+						sent_data += rc;
+						to_send = to_send.substr(rc);
+					} while ((sent_data <= http_resp.length()) && (rc > 0));
 					if (rc < 0)
 					{
 						std::cerr << "send() failed\n";
