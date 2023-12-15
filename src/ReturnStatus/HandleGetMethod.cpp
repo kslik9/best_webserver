@@ -53,7 +53,7 @@ AResponseMessage    *HttpRequestFlow::handleGetMethod() {
             return new OK200(this->resourcesWithRoot);
         }
     }
-    return new ResponseFromCgi(this->requestData, this->location["root"]);
+    return new InternalServerError500(this->config.errorPages["500"]);
 }
 
 

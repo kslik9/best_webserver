@@ -58,5 +58,5 @@ AResponseMessage    *HttpRequestFlow::handlePostMethod() {
             return new Forbidden403(this->config.errorPages["403"]);
         }
     }
-    return new NotFound404(this->target, this->config.errorPages["404"]);
+    return new InternalServerError500(this->config.errorPages["500"]);
 }
