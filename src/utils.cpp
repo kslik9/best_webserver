@@ -22,12 +22,12 @@ void appendToPhpFile(std::string const phpFile)
         if (fileStartsWithLine(buffer.str(), line))
             return;
         file.close();
-        std::cout << buffer.str() << std::endl;
+        // std::cout << buffer.str() << std::endl;
 
         allStr.append(line);
         allStr.append(buffer.str());
 
-        std::cout << "allstr: [" << allStr << "]\n";
+        // std::cout << "allstr: [" << allStr << "]\n";
         file.close();
     }
 

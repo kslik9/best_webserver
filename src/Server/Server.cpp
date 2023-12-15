@@ -192,7 +192,7 @@ void Server::waitClients()
 					break;
 				}
 				//add new incoming connection to the pollfd
-				std::cout << "new incoming connection " << clientSd << std::endl;
+				// std::cout << "new incoming connection " << clientSd << std::endl;
 				// setNonBlocking(clientSd);
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN;
@@ -210,26 +210,16 @@ void Server::waitClients()
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd)) {
 					joinedStr = this->sockets.at(i).getJoinedStr();
 					closeConn = this->sockets.at(i).getCloseConnStat();
-					std::cout << "yes all data was read\n";
-					// std::cout << "final result: " << GREEN_TEXT 
-					// 	<< joinedStr << RESET_COLOR << std::endl;
-
 					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					rc = send(fds[i].fd, http_resp.c_str(), http_resp.length(), 0);
-					std::cout << "fd: " << fds[i].fd << " i: " << i << std::endl;
 					if (rc < 0) {
 						std::cerr << "send() failed\n";
 						closeConn = true;
 						break;
 					}
 				}
-				else {
-					// std::cout << RED_TEXT << "part: " << this->sockets.at(i).getJoinedStr() << RESET_COLOR << "\n\n";
-					std::cout << "not data was read yet :(, waiting for second part\n";
-				}
 			}
 			if (closeConn) {
-				std::cout << "fd " << fds[i].fd << " closed, index: " << i << " fds size: " << fds.size() << std::endl;
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
