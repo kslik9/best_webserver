@@ -1,0 +1,39 @@
+[
+    {
+      "name": "John Doe",
+      "age": 25,
+      "isStudent": false,
+      "courses": ["Math", "Science", "English"],
+      "address": {
+        "street": "123 Main St",
+        "city": "Anytown",
+        "state": "CA",
+        "zipcode": "12345"
+      }
+    },
+    {
+      "name": "Jane Smith",
+      "age": 30,
+      "isStudent": true,
+      "courses": ["History", "Art", "Spanish"],
+      "address": {
+        "street": "456 Oak Ave",
+        "city": "Smallville",
+        "state": "NY",
+        "zipcode": "67890"
+      }
+    },
+    {
+      "name": "Alice Johnson",
+      "age": 22,
+      "isStudent": true,
+      "courses": ["Computer Science", "Physics", "French"],
+      "address": {
+        "street": "789 Pine Rd",
+        "city": "Villagetown",
+        "state": "TX",
+        "zipcode": "54321"
+      }
+    }
+  ]
+  
