@@ -291,11 +291,10 @@ std::string get_content(std::string partTwo, int i)
         k = partTwo.find("Content-Type", k + 1);
         size_t start = partTwo.find("\r\n", k);
         start = partTwo.find("\r\n", start + 1);
-        size_t end = partTwo.find("\n----", start + 2);
+        size_t end = partTwo.find("\n\r-----", start + 2);
         tmp = partTwo.substr(start + 2, end - start - 2);
         p++;
     }
-    // std::cout << "file= " << tmp << "}" << std::endl;
     return tmp;
 }
 int how_many_files(std::string partTwo)
