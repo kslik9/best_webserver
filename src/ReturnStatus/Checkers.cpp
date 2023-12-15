@@ -49,8 +49,6 @@ bool HttpRequestFlow::checkRequestHttpMessage()
     confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), 0, 10);
     if (confMaxBodySize > 104857600)
         return true;
-    std::cout << "body size: " << this->getBodySize() << std::endl;
-    std::cout << "conf size: " << confMaxBodySize << std::endl;
     if (this->getBodySize() > confMaxBodySize)
         return true;
     return false;
@@ -143,8 +141,6 @@ bool HttpRequestFlow::checkLocationMatchRequestUri()
                 return true;
             }
         }
-        // break;
-        std::cout << "\n";
     }
     return false;
 }
@@ -160,10 +156,6 @@ bool HttpRequestFlow::checkLocationHasRedirection()
 
 bool HttpRequestFlow::checkMethodAllowed(std::string &allowedMethod)
 {
-    std::cout << "m1: " << this->location["method1"] << std::endl;
-    std::cout << "m2: " << this->location["method2"] << std::endl;
-    std::cout << "m3: " << this->location["method3"] << std::endl;
-
     if (location["method1"] == method || location["method2"] == method || location["method3"] == method || method == "HEAD")
         return true;
     allowedMethod += location["method1"] != "none" ? location["method1"] : "";
@@ -190,7 +182,7 @@ bool HttpRequestFlow::checkContentIsDir()
     struct stat statBuf;
     if (stat(this->resourcesWithRoot.c_str(), &statBuf) != 0)
     {
-        std::cout << "error in stat\n";
+        std::cerr << "error in stat\n";
         return false;
     }
     return S_ISDIR(statBuf.st_mode);
@@ -232,10 +224,10 @@ bool HttpRequestFlow::checkAutoIndexOn()
 
 bool HttpRequestFlow::checkLocationIncludesCgi()
 {
-    std::cout << "resources with root: " << resourcesWithRoot << std::endl;
+    // std::cout << "resources with root: " << resourcesWithRoot << std::endl;
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
-    std::cout << "php file is: " << this->resourcesWithRoot << std::endl;
+    // std::cout << "php file is: " << this->resourcesWithRoot << std::endl;
 
     // appendToPhpFile(this->resourcesWithRoot);
     if (this->location["cgi_extension"] != "none" && this->location["cgi_extension"] == ".php")
@@ -332,7 +324,7 @@ bool HttpRequestFlow::handlePost()
             std::string filename, content;
 
             uploadDir = this->location["upload_directory"];
-            std::cout << "uploadDir : " << uploadDir << std::endl;
+            // std::cout << "uploadDir : " << uploadDir << std::endl;
             if (!uploadDir.empty() && !access(uploadDir.c_str(), F_OK))
                 filename = uploadDir;
             else
@@ -342,7 +334,7 @@ bool HttpRequestFlow::handlePost()
             std::ofstream outputFile(filename);
             if (outputFile.is_open())
             {
-                std::cout << "\nseccusefly\n";
+                // std::cout << "\nseccusefly\n";
                 outputFile << content;
             }
             outputFile.close();
