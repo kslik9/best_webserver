@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120px" height="120px" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>be_own_boss_icn</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="80" cy="68" r="23"></circle>
+    </defs>
+    <g id="Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="be_own_boss_icn">
+            <g id="punctuality-icon" transform="translate(9.000000, 15.000000)">
+                <g id="Group-28">
+                    <path d="M1,6 L1,71 C1,74.8659932 4.13400675,78 8,78 L84,78 C87.8659932,78 91,74.8659932 91,71 L91,6 L1,6 Z" id="Rectangle" stroke="#2E2D2E" stroke-width="2"></path>
+                    <g id="Oval-3">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <circle stroke="#2E2D2E" stroke-width="2" cx="80" cy="68" r="22"></circle>
+                    </g>
+                    <polyline id="Path-3" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round" points="79 58 79 70.1862303 86 77"></polyline>
+                    <path d="M91,16.5 L2,16.5" id="Path-4" stroke="#2E2D2E" stroke-width="2"></path>
+                    <g id="Group-4" transform="translate(9.000000, 28.000000)" stroke-width="2">
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="13.7580872" cy="2.16666667" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="25.257384" cy="2.16666667" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="36.7566807" cy="2.16666667" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="48.2559775" cy="2.16666667" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="60.0632911" cy="1.85714286" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="70.8438819" cy="2.16666667" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="13.7580872" cy="13.7222222" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="25.257384" cy="13.7222222" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="36.7566807" cy="13.7222222" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="48.2559775" cy="13.7222222" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="60.0632911" cy="13.9285714" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="13.7580872" cy="25.2777778" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="25.257384" cy="25.2777778" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="36.7566807" cy="25.2777778" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#AFB1B3" cx="13.7580872" cy="36.8333333" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="2.25879044" cy="13.7222222" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="2.25879044" cy="25.2777778" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="2.25879044" cy="36.8333333" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="25.257384" cy="36.8333333" rx="1" ry="1"></ellipse>
+                        <ellipse id="Oval-4" stroke="#2E2D2E" cx="36.7566807" cy="36.8333333" rx="1" ry="1"></ellipse>
+                    </g>
+                    <path d="M80.5,0 L80.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M68.5,0 L68.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M57.5,0 L57.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M45.5,0 L45.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M34.5,0 L34.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M22.5,0 L22.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M11.5,0 L11.5,10" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

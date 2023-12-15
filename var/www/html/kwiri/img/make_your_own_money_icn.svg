@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120px" height="120px" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>make_your_own_money_icn</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="56.7567568" y="29.5135135" width="27.2432432" height="22.7027027" rx="4"></rect>
+        <circle id="path-2" cx="23.5" cy="67.5" r="13.5"></circle>
+    </defs>
+    <g id="Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="make_your_own_money_icn">
+            <g id="wallet-icon" transform="translate(18.000000, 21.000000)">
+                <g id="Group-6">
+                    <path d="M71.7218617,6.81081081 L8.15429415,6.81081081" id="Path-4-Copy" stroke="#AFB1B3" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M68.1081081,13.6216216 L7.94594595,13.6216216 C4.184439,13.6216216 1.13513514,10.5723178 1.13513514,6.81081081 C1.13513514,3.04930387 4.184439,0 7.94594595,0 L71.5135135,0" id="Rectangle-2" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                    <path d="M36.9137416,33.4297967 L-28.9831899,37.0623579 C-28.0078959,37.7750808 -26.8169351,38.1786272 -25.5570056,38.1786272 L31.1997512,38.1786272 C34.0462583,38.1786272 36.4147227,36.1318828 36.9137416,33.4297967 Z" id="Rectangle-2" stroke="#2E2D2E" stroke-width="2" transform="translate(3.405405, 35.773222) rotate(90.000000) translate(-3.405405, -35.773222) "></path>
+                    <path d="M29.3783784,61.920834 L86.4054054,57.5718232 L86.4054054,30.0810811 C86.4054054,25.6180232 82.7873822,22 78.3243243,22 L37.4594595,22 C32.9964016,22 29.3783784,25.6180232 29.3783784,30.0810811 L29.3783784,61.920834 Z" id="Rectangle-2" stroke="#2E2D2E" stroke-width="2" transform="translate(57.891892, 42.000000) rotate(90.000000) translate(-57.891892, -42.000000) "></path>
+                    <g id="Rectangle-4">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#2E2D2E" stroke-width="2" x="57.7567568" y="30.5135135" width="25.2432432" height="20.7027027" rx="4"></rect>
+                    </g>
+                    <g id="Oval-3">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                        <circle stroke="#AFB1B3" stroke-width="1.7" cx="23.5" cy="67.5" r="12.65"></circle>
+                    </g>
+                    <polyline id="Path-3" stroke="#AFB1B3" stroke-width="1.7" stroke-linecap="round" points="24 62 24 69.055186 28 73"></polyline>
+                    <path d="M64.7027027,36.8918919 L64.7027027,46.0436439" id="Line" stroke="#2E2D2E" stroke-width="2" stroke-linecap="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
