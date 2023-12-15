@@ -61,12 +61,12 @@ void	Server::setServerAddress(unsigned short &port, std::string &hostName) {
 		return;
 	}
 	
-	// struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
+	struct sockaddr_in *ip = reinterpret_cast<struct sockaddr_in*>(res->ai_addr);
 
 	this->serverAddress.sin_family = AF_INET;
 	this->serverAddress.sin_port = htons(port);
-	// this->serverAddress.sin_addr = ip->sin_addr;
-	this->serverAddress.sin_addr.s_addr = INADDR_ANY;
+	this->serverAddress.sin_addr = ip->sin_addr;
+	// this->serverAddress.sin_addr.s_addr = INADDR_ANY;
 	freeaddrinfo(res);
 }
 
