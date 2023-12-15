@@ -27,10 +27,8 @@ AResponseMessage    *HttpRequestFlow::handleDeleteMethod() {
                     else 
                         return new InternalServerError500(this->config.errorPages["500"]);
                 }
-
             }
         }
-
     }
     //we request a file here
     else {
@@ -41,6 +39,5 @@ AResponseMessage    *HttpRequestFlow::handleDeleteMethod() {
             return new NoContent204(this->config.errorPages["204"]);
         }
     }
-
     return new InternalServerError500(this->config.errorPages["500"]);
 }

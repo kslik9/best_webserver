@@ -232,7 +232,7 @@ bool HttpRequestFlow::checkAutoIndexOn()
 
 bool HttpRequestFlow::checkLocationIncludesCgi()
 {
-    std::cout << "resources with root: " << resourcesWithRoot << std::endl;
+    // std::cout << "resources with root: " << resourcesWithRoot << std::endl;
     if (this->resourcesWithRoot.substr(this->resourcesWithRoot.length() - 4) != ".php")
         return false;
     std::cout << "php file is: " << this->resourcesWithRoot << std::endl;
