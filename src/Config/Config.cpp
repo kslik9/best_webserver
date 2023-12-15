@@ -71,8 +71,6 @@ std::string t_ry(std::string str, std::string &host, std::string name, int len, 
 		if(k < str.length())
 		{
 			k = str.find(name, k);
-			// if(str[k - 1] != ' ' || str[name.length() - k] != ' ')
-			// 	return host;
 		}
         if (k != std::string::npos) 
 		{
@@ -112,10 +110,10 @@ mp Config::get_info_for_loca(std::string str)
 	tm["cgi_extension"] = t_ry(str, tmp, "cgi_extension", 14, 1);
 	tm["index"] = t_ry(str, tmp, "index", 5, 1);
 	tm["root"] = t_ry(str, tmp, "root", 4, 1);
-	tm["method1"] = t_ry(str, tmp, "method", 8, 1);
-	tm["method2"] = t_ry(str, tmp, "method", 8, 1);
-	tm["method3"] = t_ry(str, tmp, "method", 8, 1);
-	tm["method4"] = t_ry(str, tmp, "method", 8, 1);
+	tm["method1"] = t_ry(str, tmp, "method", 7, 1);
+	tm["method2"] = t_ry(str, tmp, "method", 7, 1);
+	tm["method3"] = t_ry(str, tmp, "method", 7, 1);
+	tm["method4"] = t_ry(str, tmp, "method", 7, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 9, 1);
 	tm["redirect"] = t_ry(str, tmp, "redirect", 8, 0);
 	tm["upload_directory"] = t_ry(str, tmp, "upload_directory", 17, 1);
@@ -367,9 +365,10 @@ Config::Config(std::string conf)
 		parseConf();
 		while(i < this->servers_number)
 		{
-			// display_all(srvConf[i]);
+			display_all(srvConf[i]);
 			i++;
 		}
+		exit(0);
 	}
 }
 
