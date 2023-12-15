@@ -15,35 +15,23 @@ void    HttpRequestFlow::createHttpHeader() {
 AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
 
     //////////////////////// check if req formed well /////////////////////////////
-    if (checkNotAllowededChars()) {
-        std::cout << RED_TEXT << "request has not allowed charachters" << RESET_COLOR << std::endl;
+    if (checkNotAllowededChars())
         return new BadRequest400(this->config.errorPages["400"]);
-    }
-    if (checkUriLength()) {
-        std::cout << RED_TEXT << "uri length" << RESET_COLOR << std::endl;
+    if (checkUriLength())
         return new UriTooLong414(this->config.errorPages["414"]);
-    }
     //check if no location match the request uri
-    if (!checkLocationMatchRequestUri()) {
-        std::cout << RED_TEXT << "Not matched" << RESET_COLOR << std::endl;
+    if (!checkLocationMatchRequestUri()) 
         return new NotFound404(this->target, this->config.errorPages["404"]);
-    }
-    if (checkRequestHttpMessage()) {
-        std::cout << RED_TEXT << "body is too large" << RESET_COLOR << std::endl;
+    if (checkRequestHttpMessage())
         return new PayloadTooLarge(this->config.errorPages["413"]);
-    }
     
-    if (checkLocationHasRedirection()) {
-        std::cout << BLUE_TEXT << "redirected" << RESET_COLOR << std::endl;
+    if (checkLocationHasRedirection())
         return new MovedPermanently301(this->location["redirect"]);
-    }
 
     //check if the method allowed in location
     std::string allowedMethods;
-    if (!checkMethodAllowed(allowedMethods)) {
-        std::cout << RED_TEXT << "method not allowed hh " << location["root"] << RESET_COLOR << std::endl;
+    if (!checkMethodAllowed(allowedMethods)) 
         return new MethodNotAllowed405(allowedMethods, this->config.errorPages["405"]);
-    }
 
 
     //now we check the request method
