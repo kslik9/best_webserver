@@ -174,11 +174,12 @@ void Server::waitClients()
 		}
 		for (size_t i = 0; i < fds.size(); i++)
 		{
-			if (fds[i].revents == 0)
-			{
-				continue;
-			}
-			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
+			// if (fds[i].revents == 0)
+			// {
+			// 	std::cout << "fd: " << fds[i].fd << " " << fds[i].revents << std::endl;
+			// 	continue;
+			// }
+			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end() && fds[i].revents != 0)
 			{
 				struct sockaddr_in client_addr;
 				socklen_t client_addr_len = sizeof(client_addr);
@@ -196,12 +197,14 @@ void Server::waitClients()
 				Socket sock;
 				sockets.push_back(sock);
 			}
-			else
+			else if (fds[i].revents != 0)
 			{
+				std::cout << "jaja\n";
 				// ------------------------------------------------------------------------------------------------------
 				this->sockets.at(i).resetBuffer();
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd))
 				{
+
 					std::string joinedStr = this->sockets.at(i).getJoinedStr();
 					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					this->sockets.at(i).s_HttpResp = std::string(http_resp.c_str(), http_resp.length());
@@ -212,9 +215,11 @@ void Server::waitClients()
 			}
 			if (this->sockets.at(i).getInitiated() == true)
 			{
+				std::cout << "nana\n";
+				std::cout << "[[" << this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset] << "]]\n";
 				rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
 				std::cout << "rc: " << rc << "\n";
-				this->sockets.at(i).sent_offset += rc;
+				this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
 				this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
 				std::cout << "this->sockets.at(i).sent_offset: " << this->sockets.at(i).sent_offset << "\n";
 				std::cout << "this->sockets.at(i).full_lenght: " << this->sockets.at(i).full_lenght << "\n";
@@ -223,6 +228,7 @@ void Server::waitClients()
 			}
 			if (closeConn)
 			{
+				std::cout << "fd: " << fds[i].fd << " closed\n";
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);

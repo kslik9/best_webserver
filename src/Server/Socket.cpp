@@ -64,11 +64,13 @@ void    Socket::resetBuffer() {
 }
 
 bool    Socket::allDataRead(int fd) {
+    std::cout << "nana koko\n";
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
     std::string bufferStr(buffer, bytesReceived);
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
+
     if (bytesReceived < 0) {
 		if (this->bodySize >= this->contentLen) {
             joinedStr.append(bufferStr);
