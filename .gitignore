@@ -3,4 +3,4 @@ webserv
 a.out
 logs/
 .DS_Store
-var/
+var/www/html/assets/*

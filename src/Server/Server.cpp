@@ -215,16 +215,17 @@ void Server::waitClients()
 			}
 			if (this->sockets.at(i).getInitiated() == true)
 			{
-				std::cout << "nana\n";
-				std::cout << "[[" << this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset] << "]]\n";
-				rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
-				std::cout << "rc: " << rc << "\n";
-				this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
-				this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
-				std::cout << "this->sockets.at(i).sent_offset: " << this->sockets.at(i).sent_offset << "\n";
-				std::cout << "this->sockets.at(i).full_lenght: " << this->sockets.at(i).full_lenght << "\n";
-				if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
-					closeConn = true;
+				do
+				{
+					rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
+					this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
+					this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
+					std::cout << "sent_offset: " << this->sockets.at(i).sent_offset << "\n";
+					std::cout << "full_lenght: " << this->sockets.at(i).full_lenght << "\n";
+					std::cout << "------------------------------------------------------\n";
+					if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
+						closeConn = true;
+				} while (!closeConn);
 			}
 			if (closeConn)
 			{
@@ -232,9 +233,9 @@ void Server::waitClients()
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
+				this->sockets.at(i).eraseAll();
 				this->sockets.erase(this->sockets.begin() + i);
 			}
-			std::cout << "-----------------------\n";
 		}
 	}
 }
