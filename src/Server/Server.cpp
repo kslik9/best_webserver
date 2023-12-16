@@ -174,11 +174,7 @@ void Server::waitClients()
 		}
 		for (size_t i = 0; i < fds.size(); i++)
 		{
-			if (fds[i].revents == 0)
-			{
-				continue;
-			}
-			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end())
+			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end() && fds[i].revents != 0)
 			{
 				struct sockaddr_in client_addr;
 				socklen_t client_addr_len = sizeof(client_addr);
@@ -196,7 +192,7 @@ void Server::waitClients()
 				Socket sock;
 				sockets.push_back(sock);
 			}
-			else
+			else if (fds[i].revents != 0)
 			{
 				// ------------------------------------------------------------------------------------------------------
 				this->sockets.at(i).resetBuffer();
@@ -212,23 +208,26 @@ void Server::waitClients()
 			}
 			if (this->sockets.at(i).getInitiated() == true)
 			{
-				rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
-				std::cout << "rc: " << rc << "\n";
-				this->sockets.at(i).sent_offset += rc;
-				this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
-				std::cout << "this->sockets.at(i).sent_offset: " << this->sockets.at(i).sent_offset << "\n";
-				std::cout << "this->sockets.at(i).full_lenght: " << this->sockets.at(i).full_lenght << "\n";
-				if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
-					closeConn = true;
+				do
+				{
+					rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
+					this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
+					this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
+					std::cout << "sent_offset: " << this->sockets.at(i).sent_offset << "\n";
+					std::cout << "full_lenght: " << this->sockets.at(i).full_lenght << "\n";
+					std::cout << "------------------------------------------------------\n";
+					if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
+						closeConn = true;
+				} while (!closeConn);
 			}
 			if (closeConn)
 			{
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
+				this->sockets.at(i).eraseAll();
 				this->sockets.erase(this->sockets.begin() + i);
 			}
-			std::cout << "-----------------------\n";
 		}
 	}
 }

@@ -139,3 +139,11 @@ std::string Socket::gets_HttpResp(void) const
 {
     return this->s_HttpResp;
 }
+
+void Socket::eraseAll()
+{
+    this->s_HttpResp.clear();
+    this->full_lenght = 0;
+    this->sent_offset = 0;
+    this->initiated = false;
+}

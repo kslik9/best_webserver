@@ -31,4 +31,5 @@ class Socket {
 		bool 		getInitiated(void) const;
 		void		sets_HttpResp(std::string &newdata);
 		std::string gets_HttpResp(void) const;
+		void		eraseAll();
 };
