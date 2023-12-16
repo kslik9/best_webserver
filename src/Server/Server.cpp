@@ -166,7 +166,7 @@ void Server::waitClients()
 	while (endServer == false)
 	{
 		closeConn = false;
-		rc = poll(fds.data(), fds.size(), 3000);
+		rc = poll(fds.data(), fds.size(), 0);
 		if (rc < 0)
 		{
 			std::cout << "poll() error\n";
@@ -204,7 +204,6 @@ void Server::waitClients()
 				this->sockets.at(i).resetBuffer();
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd))
 				{
-
 					std::string joinedStr = this->sockets.at(i).getJoinedStr();
 					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
 					this->sockets.at(i).s_HttpResp = std::string(http_resp.c_str(), http_resp.length());
@@ -215,9 +214,12 @@ void Server::waitClients()
 			}
 			if (this->sockets.at(i).getInitiated() == true)
 			{
-				do
-				{
-					rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], this->sockets.at(i).full_lenght, 0);
+				// do
+				// {
+					rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], (this->sockets.at(i).full_lenght - this->sockets.at(i).sent_offset), 0);
+					std::cout << "rc: " << rc << std::endl;
+					if (rc < 0)
+						continue;
 					this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
 					this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
 					std::cout << "sent_offset: " << this->sockets.at(i).sent_offset << "\n";
@@ -225,15 +227,14 @@ void Server::waitClients()
 					std::cout << "------------------------------------------------------\n";
 					if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
 						closeConn = true;
-				} while (!closeConn);
+				// } while (!closeConn);
 			}
-			if (closeConn)
-			{
+			if (closeConn) {
 				std::cout << "fd: " << fds[i].fd << " closed\n";
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
-				this->sockets.at(i).eraseAll();
+				// this->sockets.at(i).eraseAll();
 				this->sockets.erase(this->sockets.begin() + i);
 			}
 		}
