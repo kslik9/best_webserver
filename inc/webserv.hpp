@@ -58,7 +58,7 @@ void appendToPhpFile(std::string const phpFile);
 // Consts
 #define STATIC_HTTP "static/http/"
 
-#define CLIENTS_COUNT 4000
+#define CLIENTS_COUNT 5
 #define RESET_COLOR "\033[0m"
 #define BLUE_TEXT "\033[1;34m"
 #define RED_TEXT "\033[1;31m"

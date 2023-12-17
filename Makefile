@@ -33,26 +33,32 @@ OBJS		:= $(addprefix obj/, $(OBJS))
 CC 			= c++
 RM			= rm -f
 CFLAGS		= -Wall -Wextra -Werror -std=c++98
-# CFLAGS		=
+
 NAME		= webserv
 INCLUDE		= -Iinc/
 
+FIRST_TIME := false
+
 all: $(NAME)
+	@echo completed
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(INCLUDE) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(INCLUDE) -o $(NAME)
+	@echo ${NAME} Created! 
 
 obj/%.o: %.cpp
 	@mkdir -p $(shell dirname $@)
 	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
-	@echo compiling files
+	@echo creating object file ...
 
 clean:
-	$(RM) $(OBJS)
-	$(RM) -rf obj/
+	@$(RM) $(OBJS)
+	@$(RM) -rf obj/
+	@echo object files removed
 
 fclean: clean
 	$(RM) $(NAME)
+	@echo object files and ${NAME} removed
 
 re: fclean all
 

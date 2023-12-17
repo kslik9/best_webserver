@@ -68,13 +68,10 @@ void    Socket::resetBuffer() {
 }
 
 bool    Socket::allDataRead(int fd) {
-    // std::cout << "nana koko\n";
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
-    // std::cout << "bytes received: " << bytesReceived << std::endl;
 
     std::string bufferStr(buffer, (bytesReceived < 0 ? 0 : bytesReceived));
-    // std::cout << "lalala\n";
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
     if (bytesReceived < 0) {
@@ -121,7 +118,6 @@ bool Socket::getInitiated(void) const
 
 void Socket::sets_HttpResp(std::string &newdata)
 {
-    std::cout << "aftr: " << newdata.length() << "\n";
     ssize_t len = newdata.length();
     this->s_HttpResp = std::string(newdata.c_str(), len);
 }

@@ -46,18 +46,7 @@ bool HttpRequestFlow::checkMaxBodySize()
         confMaxBodySizeStr = "104857600";
 
     confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), 0, 10);
-    std::cout << "bo: " << confMaxBodySize << std::endl;
-    // if (confMaxBodySize > 104857600)
-    // {
-    //     std::cout << "la\n";
-    //     confMaxBodySize
-    //     return true;
-    // }
     confMaxBodySize = confMaxBodySize > 104857600 ? 104857600 : confMaxBodySize;
-    std::cout << "bo: " << confMaxBodySize << std::endl;
-    std::cout << "bos: " << this->getBodySize() << std::endl;
-
-
     if (this->getBodySize() > confMaxBodySize)
         return true;
     
@@ -142,12 +131,9 @@ bool HttpRequestFlow::checkLocationMatchRequestUri()
             confLocation = trim(locationsIt->first);
             if (*extractedRoutesIt == confLocation)
             {
-                // in this step if a route match, it will store the location <map>
-                //  // std::cout << "wakayna al7bs: " << *extractedRoutesIt << "{-}" << confLocation << std::endl;
                 this->location = locationsIt->second;
                 // //this determine the resources
                 this->resources = this->target.substr(confLocation.length());
-                // std::cout << resources << "p\n";
                 return true;
             }
         }
