@@ -1,6 +1,0 @@
-obj/
-webserv
-a.out
-logs/
-.DS_Store
-var/www/html/assets/*
