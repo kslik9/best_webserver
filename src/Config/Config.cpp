@@ -368,7 +368,9 @@ Config::Config(std::string conf)
 			// display_all(srvConf[i]);
 			i++;
 		}
+
 		// exit(0);
+
 	}
 }
 

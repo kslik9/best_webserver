@@ -193,6 +193,7 @@ void Server::waitClients()
 					endServer = true;
 					break;
 				}
+
 				tempPollFd.fd = clientSd;
 				tempPollFd.events = POLLIN | POLLOUT;
 				fds.push_back(tempPollFd);
@@ -205,6 +206,7 @@ void Server::waitClients()
 				std::cout << "jaja\n";
 				// ------------------------------------------------------------------------------------------------------
 				this->sockets.at(i).resetBuffer();
+
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd))
 				{
 					std::string joinedStr = this->sockets.at(i).getJoinedStr();
@@ -239,6 +241,7 @@ void Server::waitClients()
 			}
 			if (closeConn) {
 				std::cout << "fd: " << fds[i].fd << " closed, i: " << i << std::endl;
+
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);
