@@ -158,7 +158,7 @@ void Server::waitClients()
 	for (size_t i = 0; i < this->serverSocketsFd.size(); i++)
 	{
 		tempPollFd.fd = serverSocketsFd[i];
-		tempPollFd.events = (POLLIN | POLLOUT);
+		tempPollFd.events = POLLIN;
 		fds.push_back(tempPollFd);
 		Socket sock;
 		this->sockets.push_back(sock);
@@ -166,7 +166,7 @@ void Server::waitClients()
 	while (endServer == false)
 	{
 		closeConn = false;
-		rc = poll(fds.data(), fds.size(), 0);
+		rc = poll(fds.data(), fds.size(), 3000);
 		if (rc < 0)
 		{
 			std::cout << "poll() error\n";
@@ -174,11 +174,6 @@ void Server::waitClients()
 		}
 		for (size_t i = 0; i < fds.size(); i++)
 		{
-			// if (fds[i].revents == 0)
-			// {
-			// 	std::cout << "fd: " << fds[i].fd << " " << fds[i].revents << std::endl;
-			// 	continue;
-			// }
 			if (std::find(this->serverSocketsFd.begin(), this->serverSocketsFd.end(), fds[i].fd) != this->serverSocketsFd.end()
 				&& (fds[i].revents & POLLIN)
 				)
@@ -193,31 +188,38 @@ void Server::waitClients()
 					endServer = true;
 					break;
 				}
-
 				tempPollFd.fd = clientSd;
-				tempPollFd.events = POLLIN | POLLOUT;
+				tempPollFd.events = POLLIN;
 				fds.push_back(tempPollFd);
 				currentPortInex = i;
 				Socket sock;
 				sockets.push_back(sock);
+				std::cout << "fds size: " << fds.size() << std::endl;
 			}
 			else if (fds[i].revents & POLLIN)
 			{
 				std::cout << "jaja\n";
 				// ------------------------------------------------------------------------------------------------------
 				this->sockets.at(i).resetBuffer();
-
 				if (this->sockets.at(i).allDataRead(fds.at(i).fd))
 				{
+					std::cout << "all data was read\n";
 					std::string joinedStr = this->sockets.at(i).getJoinedStr();
-					http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
-					this->sockets.at(i).s_HttpResp = std::string(http_resp.c_str(), http_resp.length());
-					this->sockets.at(i).setFull_lenght(http_resp.length());
-					this->sockets.at(i).setInitiated(this->sockets.at(i).getCloseConnStat()); // set the data as readed !
+					if (!joinedStr.empty()) {
+						std::cout << "boddddd: " << this->sockets.at(i).getContentLen2() << std::endl;
+						http_resp = buildHttpResponse(currentPortInex, joinedStr, this->sockets.at(i).getBodySize());
+						this->sockets.at(i).s_HttpResp = std::string(http_resp.c_str(), http_resp.length());
+						this->sockets.at(i).setFullLength(http_resp.length());
+						this->sockets.at(i).setInitiated(this->sockets.at(i).getCloseConnStat()); // set the data as readed !
+					}
+					else {
+						closeConn = true;
+					}
+					fds[i].events = POLLOUT;
 				}
 				// ------------------------------------------------------------------------------------------------------
 			}
-			else if (fds[i].revents & POLLOUT) {
+			else if (fds[i].revents & POLLOUT && closeConn != true) {
 				std::cout << "salam\n";
 				// closeConn = true;
 				if (this->sockets.at(i).getInitiated() == true)
@@ -225,23 +227,23 @@ void Server::waitClients()
 					std::cout << "afin azzin\n";
 					// do
 					// {
-						rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset], (this->sockets.at(i).full_lenght - this->sockets.at(i).sent_offset), 0);
+						rc = send(fds[i].fd, &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).getSentOffset()], (this->sockets.at(i).getFullLength() - this->sockets.at(i).getSentOffset()), 0);
 						std::cout << "rc: " << rc << std::endl;
 						if (rc < 0)
 							continue;
-						this->sockets.at(i).sent_offset += (rc == -1 ? 0 : rc);
-						this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).sent_offset];
-						std::cout << "sent_offset: " << this->sockets.at(i).sent_offset << "\n";
-						std::cout << "full_lenght: " << this->sockets.at(i).full_lenght << "\n";
+						// this->sockets.at(i).sentOffset += (rc == -1 ? 0 : rc);
+						this->sockets.at(i).addToSentOffset(rc == -1 ? 0 : rc);					
+						this->sockets.at(i).s_HttpResp = &this->sockets.at(i).s_HttpResp.c_str()[this->sockets.at(i).getSentOffset()];
+						std::cout << "sentOffset: " << this->sockets.at(i).getSentOffset() << "\n";
+						std::cout << "full_lenght: " << this->sockets.at(i).getFullLength() << "\n";
 						std::cout << "------------------------------------------------------\n";
-						if (this->sockets.at(i).sent_offset >= this->sockets.at(i).full_lenght)
+						if (this->sockets.at(i).getSentOffset() >= this->sockets.at(i).getFullLength())
 							closeConn = true;
 					// } while (!closeConn);
 				}
 			}
 			if (closeConn) {
 				std::cout << "fd: " << fds[i].fd << " closed, i: " << i << std::endl;
-
 				close(fds[i].fd);
 				fds[i].fd = -1;
 				fds.erase(fds.begin() + i);

@@ -1,7 +1,6 @@
 #include "OK200.hpp"
 
 
-
 OK200::OK200(std::string &resource) {
     this->statusCode = "200";
     this->statusMessage = "OK";

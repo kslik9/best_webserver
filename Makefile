@@ -44,7 +44,8 @@ $(NAME): $(OBJS)
 
 obj/%.o: %.cpp
 	@mkdir -p $(shell dirname $@)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	@echo compiling files
 
 clean:
 	$(RM) $(OBJS)
