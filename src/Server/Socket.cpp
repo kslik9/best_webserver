@@ -68,7 +68,7 @@ bool    Socket::allDataRead(int fd) {
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
 
-    std::string bufferStr(buffer, (bytesReceived == -1 ? 0: bytesReceived));
+    std::string bufferStr(buffer, (bytesReceived < 0 ? 0 : bytesReceived));
     std::cout << "lalala\n";
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
