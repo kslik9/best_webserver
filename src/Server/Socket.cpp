@@ -4,6 +4,10 @@ Socket::Socket() {
     this->contentLen = -2;
     this->bodySize = 0;
     this->closeConnection = false;
+    
+    this->sent_offset = 0;
+    this->full_lenght = 0;
+    this->initiated = false;
 }
 
 Socket::~Socket() {
@@ -60,11 +64,15 @@ void    Socket::resetBuffer() {
 }
 
 bool    Socket::allDataRead(int fd) {
+    std::cout << "nana koko\n";
     int bytesReceived;
     bytesReceived = recv(fd, buffer, BUFFER_SIZE, 0);
-    std::string bufferStr(buffer, bytesReceived);
+
+    std::string bufferStr(buffer, (bytesReceived < 0 ? 0 : bytesReceived));
+    std::cout << "lalala\n";
     setContentLen(bufferStr);
     setBodySize(bufferStr, bytesReceived);
+
     if (bytesReceived < 0) {
 		if (this->bodySize >= this->contentLen) {
             joinedStr.append(bufferStr);
@@ -92,4 +100,54 @@ std::string Socket::getJoinedStr() const {
 
 bool        Socket::getCloseConnStat() {
     return this->closeConnection;
+}
+
+void Socket::setSent_offset(ssize_t newdata)
+{
+    this->sent_offset = newdata;
+}
+
+ssize_t Socket::getSent_offset(void) const
+{
+    return this->sent_offset;
+}
+
+void Socket::setFull_lenght(ssize_t newdata)
+{
+    this->full_lenght = newdata;
+}
+
+ssize_t Socket::getFull_lenght(void) const
+{
+    return this->full_lenght;
+}
+
+void Socket::setInitiated(bool newdata)
+{
+    this->initiated = newdata;
+}
+
+bool Socket::getInitiated(void) const
+{
+    return this->initiated;
+}
+
+void Socket::sets_HttpResp(std::string &newdata)
+{
+    std::cout << "aftr: " << newdata.length() << "\n";
+    ssize_t len = newdata.length();
+    this->s_HttpResp = std::string(newdata.c_str(), len);
+}
+
+std::string Socket::gets_HttpResp(void) const
+{
+    return this->s_HttpResp;
+}
+
+void Socket::eraseAll()
+{
+    this->s_HttpResp.clear();
+    this->full_lenght = 0;
+    this->sent_offset = 0;
+    this->initiated = false;
 }
