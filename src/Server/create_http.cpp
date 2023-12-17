@@ -15,6 +15,7 @@ std::string Server::buildHttpResponse(int socketIndex, std::string requestStr, i
     //http request checker
     HttpRequestFlow  hm(request, conf.at(socketIndex));
 
+    std::cout << "body size: " << bodySize << std::endl;
     hm.setBodySize(bodySize);
     createdResponse = hm.checkRequestAndReturnHttpMessage();
     responseMessage = createdResponse->createResponse();

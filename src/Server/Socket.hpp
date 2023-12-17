@@ -3,16 +3,17 @@
 
 #define BUFFER_SIZE 1024 * 1024
 class Socket {
-	public:
-		int			contentLen;
+	private:
+		long		contentLen;
 		int			bodySize;
         std::string joinedStr;
         char        buffer[BUFFER_SIZE];
         bool        closeConnection;
-		std::string	s_HttpResp;
-		ssize_t		full_lenght;
-		ssize_t		sent_offset;
+		ssize_t		fullLength;
+		ssize_t		sentOffset;
 		bool		initiated;
+	public:
+		std::string	s_HttpResp;
 		// 
 		Socket();
 		~Socket();
@@ -23,13 +24,15 @@ class Socket {
         bool        allDataRead(int fd);
         std::string getJoinedStr() const;
         bool        getCloseConnStat();
-		void		setSent_offset(ssize_t sent_offset);
-		ssize_t		getSent_offset(void) const ;
-		void		setFull_lenght(ssize_t newdata);
-		ssize_t 	getFull_lenght(void) const;
+		void		setSentOffset(ssize_t sentOffset);
+		ssize_t		getSentOffset(void) const ;
 		void		setInitiated(bool newdata);
 		bool 		getInitiated(void) const;
 		void		sets_HttpResp(std::string &newdata);
 		std::string gets_HttpResp(void) const;
 		void		eraseAll();
+		long 		getContentLen2();
+		void		setFullLength(ssize_t fullLenghtP);
+		ssize_t		getFullLength();
+		void		addToSentOffset(long num);
 };

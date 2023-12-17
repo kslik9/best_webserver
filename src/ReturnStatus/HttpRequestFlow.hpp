@@ -14,7 +14,7 @@ class HttpRequestFlow {
         std::string                         resourcesWithRoot;
         bool                                checkNotAllowededChars();
         bool                                checkUriLength();
-        bool                                checkRequestHttpMessage();
+        bool                                checkMaxBodySize();
         bool                                checkLocationMatchRequestUri();
         bool                                checkLocationHasRedirection();
         bool                                checkMethodAllowed(std::string &allowedMethod);

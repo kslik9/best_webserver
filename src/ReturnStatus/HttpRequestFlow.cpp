@@ -22,7 +22,7 @@ AResponseMessage *HttpRequestFlow::checkRequestAndReturnHttpMessage() {
     //check if no location match the request uri
     if (!checkLocationMatchRequestUri()) 
         return new NotFound404(this->target, this->config.errorPages["404"]);
-    if (checkRequestHttpMessage())
+    if (checkMaxBodySize())
         return new PayloadTooLarge(this->config.errorPages["413"]);
     
     if (checkLocationHasRedirection())

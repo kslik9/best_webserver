@@ -36,7 +36,7 @@ bool HttpRequestFlow::checkUriLength()
     return false;
 }
 
-bool HttpRequestFlow::checkRequestHttpMessage()
+bool HttpRequestFlow::checkMaxBodySize()
 {
     long        confMaxBodySize;
     std::string confMaxBodySizeStr;
@@ -45,12 +45,22 @@ bool HttpRequestFlow::checkRequestHttpMessage()
     if (confMaxBodySizeStr.empty())
         confMaxBodySizeStr = "104857600";
 
-    
     confMaxBodySize = std::stol(confMaxBodySizeStr.c_str(), 0, 10);
-    if (confMaxBodySize > 104857600)
-        return true;
+    std::cout << "bo: " << confMaxBodySize << std::endl;
+    // if (confMaxBodySize > 104857600)
+    // {
+    //     std::cout << "la\n";
+    //     confMaxBodySize
+    //     return true;
+    // }
+    confMaxBodySize = confMaxBodySize > 104857600 ? 104857600 : confMaxBodySize;
+    std::cout << "bo: " << confMaxBodySize << std::endl;
+    std::cout << "bos: " << this->getBodySize() << std::endl;
+
+
     if (this->getBodySize() > confMaxBodySize)
         return true;
+    
     return false;
 }
 
