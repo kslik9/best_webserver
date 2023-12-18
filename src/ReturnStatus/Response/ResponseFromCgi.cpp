@@ -23,8 +23,6 @@ void ResponseFromCgi::init_env(RequestData request, std::string const &root)
 	this->keyValue["SERVER_SOFTWARE"] = "webserv/1.1";
 	this->keyValue["QUERY_STRING"] = request.getQueryString();
 	this->keyValue["CONTENT_LENGTH"] = std::to_string(this->inBody.length());
-	// this->keyValue["SERVER_NAME"] = "0.0.0.0";
-	// this->keyValue["SERVER_PORT"] = "8081";
 	// 
 }
 
@@ -55,7 +53,7 @@ char **mapToArr(std::map<std::string, std::string> mp)
 	return arr;
 }
 
-std::string ResponseFromCgi::process()
+std::string ResponseFromCgi::process(bool &error)
 {
 	std::vector<const char *> php_args;
 	php_script src;
@@ -66,7 +64,8 @@ std::string ResponseFromCgi::process()
 	{
 		std::cerr << "Error opening the file: " << src.path << std::endl;
 		delete src.file_stream;
-		return "-1"; // saaoudi dir khdemtk hna 🧏🏿‍♂️
+		error = true;
+		return "-1";
 	}
 	php_args.push_back(CGI_BIN);
 	php_args.push_back(src.path.c_str());
@@ -76,7 +75,8 @@ std::string ResponseFromCgi::process()
 	{
 		std::cerr << "Error creating pipe" << std::endl;
 		delete src.file_stream;
-		return "-1"; // saaoudi dir khdemtk hna 🧏🏿‍♂️
+		error = true;
+		return "-1";
 	}
 	pid_t child_pid = fork();
 	if (child_pid == -1)
@@ -85,7 +85,8 @@ std::string ResponseFromCgi::process()
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		delete src.file_stream;
-		return "-1"; // saaoudi dir khdemtk hna 🧏🏿‍♂️
+		error = true;
+		return "-1";
 	}
 	if (child_pid == 0)
 	{
@@ -97,7 +98,8 @@ std::string ResponseFromCgi::process()
 		if (execve(CGI_BIN, (char *const *)(&php_args[0]), envs) == -1)
 		{
 			std::cerr << "Error executing php command" << std::endl;
-			exit(EXIT_FAILURE); // saaoudi dir khdemtk hna 🧏🏿‍♂️
+			error = true;
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -116,7 +118,8 @@ std::string ResponseFromCgi::process()
 		delete src.file_stream;
 		return output.str();
 	}
-	return "-1"; // saaoudi dir khdemtk hna 🧏🏿‍♂️
+	error = true;
+	return "-1";
 }
 
 std::string ResponseFromCgi::createResponse()
@@ -125,7 +128,13 @@ std::string ResponseFromCgi::createResponse()
 
 	std::map<std::string, std::string>::iterator it;
 	response << startLine;
-	std::string php_resp = this->process();
+	bool error = false;
+
+	std::string php_resp = this->process(error);
+	if (error) {
+		InternalServerError500 internalServerError(this->errorPath);
+		return internalServerError.createResponse();
+	}
 	response << php_resp;
 	return response.str();
 }

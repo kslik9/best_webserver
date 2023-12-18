@@ -14,7 +14,7 @@ class ResponseFromCgi : public AResponseMessage {
         std::string inBody;
 	    std::vector<const char *> env_vec;
         void init_env(RequestData request, std::string const &root);
-        std::string process();
+        std::string process(bool &error);
     public:
         ResponseFromCgi(RequestData &rq, std::string const &root);
         std::string createResponse();
